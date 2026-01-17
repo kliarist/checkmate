@@ -18,14 +18,17 @@ A modern, real-time multiplayer chess web application with user accounts, matchm
 ### Frontend
 - **Framework**: React 18 with TypeScript
 - **Build Tool**: Vite
+- **Package Manager**: Bun (fast JavaScript runtime and package manager)
 - **Chess Logic**: chess.js
 - **Board UI**: react-chessboard
 - **State Management**: React Context API
 - **Styling**: CSS Modules
+- **Testing**: Vitest (unit/integration), Playwright (E2E)
 
 ### Backend
 - **Framework**: Spring Boot 3
-- **Language**: Java 17
+- **Language**: Java 21
+- **Build Tool**: Gradle 8.11+
 - **Real-time**: WebSocket (STOMP)
 - **Database**: PostgreSQL
 - **Authentication**: JWT with Spring Security
@@ -66,11 +69,11 @@ checkmate/
 
 ### Prerequisites
 
-- **Node.js**: v18+ (for frontend)
-- **Java**: JDK 17+ (for backend)
+- **Bun**: v1.0+ (for frontend - https://bun.sh)
+- **Java**: JDK 21+ (for backend)
+- **Gradle**: v8.11+ (for backend build)
 - **PostgreSQL**: v14+ (for database)
 - **Redis**: v6+ (optional, for caching)
-- **Maven**: v3.8+ (for backend build)
 
 ### Local Development Setup
 
@@ -94,8 +97,8 @@ createdb checkmate_dev
 
 ```bash
 cd backend
-mvn clean install
-mvn spring-boot:run
+./gradlew build
+./gradlew bootRun
 ```
 
 Backend will start on `http://localhost:8080`
@@ -104,8 +107,8 @@ Backend will start on `http://localhost:8080`
 
 ```bash
 cd frontend
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 Frontend will start on `http://localhost:5173`
@@ -115,15 +118,17 @@ Frontend will start on `http://localhost:5173`
 #### Frontend Tests
 ```bash
 cd frontend
-npm test                  # Run all tests
-npm run test:coverage     # Run with coverage report
+bun test                  # Run unit/integration tests
+bun run test:coverage     # Run with coverage report
+bun run test:e2e          # Run E2E tests with Playwright
+bun run test:e2e:ui       # Run E2E tests in UI mode
 ```
 
 #### Backend Tests
 ```bash
 cd backend
-mvn test                  # Run all tests
-mvn test jacoco:report    # Run with coverage report
+./gradlew test            # Run all tests
+./gradlew jacocoTestReport # Run with coverage report
 ```
 
 ## Development Guidelines

@@ -6,7 +6,7 @@ Backend API for the Checkmate chess web application.
 
 - **Framework**: Spring Boot 3.4.2
 - **Java Version**: JDK 21
-- **Build Tool**: Maven 3.9+
+- **Build Tool**: Gradle 8.11+
 - **Database**: PostgreSQL 14+
 - **Authentication**: JWT (JSON Web Tokens)
 - **Real-time**: WebSocket with STOMP
@@ -17,7 +17,7 @@ Backend API for the Checkmate chess web application.
 ## Prerequisites
 
 - JDK 21 or higher
-- Maven 3.9+
+- Gradle 8.11+ (or use included Gradle wrapper)
 - PostgreSQL 14+
 - (Optional) Redis 6+ for caching
 
@@ -51,23 +51,23 @@ spring:
 
 ```bash
 # Clean and compile
-mvn clean compile
+./gradlew clean build
 
 # Run tests
-mvn test
+./gradlew test
 
-# Package (creates JAR file)
-mvn package
+# Build without tests
+./gradlew build -x test
 ```
 
 ### 4. Run the Application
 
 ```bash
-# Using Maven
-mvn spring-boot:run
+# Using Gradle
+./gradlew bootRun
 
 # Or run the JAR directly
-java -jar target/chess-0.0.1-SNAPSHOT.jar
+java -jar build/libs/chess-0.0.1-SNAPSHOT.jar
 ```
 
 The application will start on `http://localhost:8080`
@@ -127,15 +127,15 @@ backend/
 
 ### Run All Tests
 ```bash
-mvn test
+./gradlew test
 ```
 
 ### Run with Coverage Report
 ```bash
-mvn test jacoco:report
+./gradlew test jacocoTestReport
 ```
 
-Coverage report will be available at `target/site/jacoco/index.html`
+Coverage report will be available at `build/reports/jacoco/test/html/index.html`
 
 ### Coverage Requirements
 - **Overall**: Minimum 80% line coverage
@@ -148,7 +148,7 @@ The project uses Google Java Style Guide:
 
 ```bash
 # Run Checkstyle
-mvn checkstyle:check
+./gradlew checkstyleMain checkstyleTest
 ```
 
 ### Code Quality Standards
@@ -174,12 +174,12 @@ src/main/resources/db/migration/
 ### Hot Reload
 Spring Boot DevTools enables automatic restart:
 ```bash
-mvn spring-boot:run
+./gradlew bootRun
 ```
 
 ### Debug Mode
 ```bash
-mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+./gradlew bootRun --debug-jvm
 ```
 
 ### Profiles

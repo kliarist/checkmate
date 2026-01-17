@@ -32,15 +32,15 @@ description: "Implementation tasks for Chess Web Application"
 **Purpose**: Project initialization and basic structure
 
 - [X] T001 Create project structure with frontend/ and backend/ directories
-- [X] T002 Initialize React project with TypeScript in frontend/ (npm create vite@latest frontend -- --template react-ts)
-- [X] T003 Initialize Spring Boot 3 project in backend/ (Spring Initializr: Web, WebSocket, Security, Data JPA, PostgreSQL)
+- [X] T002 Initialize React project with TypeScript in frontend/ (npm create vite@latest frontend -- --template react-ts, then migrate to Bun)
+- [X] T003 Initialize Spring Boot 3 project in backend/ (Spring Boot 3.4.2, Gradle 8.11+, JDK 21: Web, WebSocket, Security, Data JPA, PostgreSQL)
 - [X] T004 [P] Configure ESLint and Prettier for frontend code quality
 - [X] T005 [P] Configure Checkstyle for backend code quality (Google Java Style Guide)
-- [X] T006 [P] Setup Jest for frontend testing with coverage reporting
-- [X] T007 [P] Setup JUnit 5 for backend testing with coverage reporting
+- [X] T006 [P] Setup Vitest for unit/integration testing and Playwright for E2E testing with coverage reporting
+- [X] T007 [P] Setup JUnit 5 for backend testing with JaCoCo coverage reporting (via Gradle)
 - [X] T008 [P] Configure Git pre-commit hooks (Husky) for linting and conventional commits
 - [X] T009 [P] Create .gitignore for frontend (node_modules, dist) and backend (target, .class)
-- [X] T010 [P] Setup CI/CD pipeline configuration file (GitHub Actions or similar)
+- [X] T010 [P] Setup CI/CD pipeline configuration file (GitHub Actions with Bun, Gradle, Playwright)
 
 ---
 

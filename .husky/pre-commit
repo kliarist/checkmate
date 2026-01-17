@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
-# Frontend: lint-staged
-cd frontend && npx lint-staged
-# Verify conventional commit message format
+# Frontend: lint-staged with Bun
+cd frontend && bunx lint-staged
+# Back to root
 cd ..

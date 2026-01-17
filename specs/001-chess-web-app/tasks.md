@@ -39,8 +39,8 @@ description: "Implementation tasks for Chess Web Application"
 - [X] T006 [P] Setup Jest for frontend testing with coverage reporting
 - [X] T007 [P] Setup JUnit 5 for backend testing with coverage reporting
 - [X] T008 [P] Configure Git pre-commit hooks (Husky) for linting and conventional commits
-- [ ] T009 [P] Create .gitignore for frontend (node_modules, dist) and backend (target, .class)
-- [ ] T010 [P] Setup CI/CD pipeline configuration file (GitHub Actions or similar)
+- [X] T009 [P] Create .gitignore for frontend (node_modules, dist) and backend (target, .class)
+- [X] T010 [P] Setup CI/CD pipeline configuration file (GitHub Actions or similar)
 
 ---
 

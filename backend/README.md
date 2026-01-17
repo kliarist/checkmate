@@ -6,7 +6,7 @@ Backend API for the Checkmate chess web application.
 
 - **Framework**: Spring Boot 4.0.1
 - **Java Version**: JDK 21
-- **Build Tool**: Gradle 8.11+ (Groovy DSL)
+- **Build Tool**: Gradle 9.2+ (Groovy DSL)
 - **Database**: PostgreSQL 14+
 - **Database Migrations**: Liquibase (YAML format)
 - **Authentication**: JWT (JSON Web Tokens)
@@ -18,7 +18,7 @@ Backend API for the Checkmate chess web application.
 ## Prerequisites
 
 - JDK 21 or higher
-- Gradle 8.11+ (or use included Gradle wrapper)
+- Gradle 9.2+ (or use included Gradle wrapper)
 - PostgreSQL 14+
 - (Optional) Redis 6+ for caching
 

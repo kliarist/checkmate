@@ -31,7 +31,7 @@ description: "Implementation tasks for Chess Web Application"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure with frontend/ and backend/ directories
+- [X] T001 Create project structure with frontend/ and backend/ directories
 - [ ] T002 Initialize React project with TypeScript in frontend/ (npm create vite@latest frontend -- --template react-ts)
 - [ ] T003 Initialize Spring Boot 3 project in backend/ (Spring Initializr: Web, WebSocket, Security, Data JPA, PostgreSQL)
 - [ ] T004 [P] Configure ESLint and Prettier for frontend code quality

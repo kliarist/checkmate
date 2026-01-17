@@ -37,8 +37,8 @@ description: "Implementation tasks for Chess Web Application"
 - [X] T004 [P] Configure ESLint and Prettier for frontend code quality
 - [X] T005 [P] Configure Checkstyle for backend code quality (Google Java Style Guide)
 - [X] T006 [P] Setup Jest for frontend testing with coverage reporting
-- [ ] T007 [P] Setup JUnit 5 for backend testing with coverage reporting
-- [ ] T008 [P] Configure Git pre-commit hooks (Husky) for linting and conventional commits
+- [X] T007 [P] Setup JUnit 5 for backend testing with coverage reporting
+- [X] T008 [P] Configure Git pre-commit hooks (Husky) for linting and conventional commits
 - [ ] T009 [P] Create .gitignore for frontend (node_modules, dist) and backend (target, .class)
 - [ ] T010 [P] Setup CI/CD pipeline configuration file (GitHub Actions or similar)
 

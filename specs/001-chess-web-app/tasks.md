@@ -112,37 +112,37 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Backend Implementation for US1
 
-- [ ] T045 [P] [US1] Create User entity in backend/src/main/java/com/checkmate/chess/model/User.java (verify Single Responsibility)
-- [ ] T046 [P] [US1] Create Game entity in backend/src/main/java/com/checkmate/chess/model/Game.java (verify Single Responsibility)
-- [ ] T047 [P] [US1] Create Move entity in backend/src/main/java/com/checkmate/chess/model/Move.java
-- [ ] T048 [P] [US1] Create UserRepository interface in backend/src/main/java/com/checkmate/chess/repository/UserRepository.java
-- [ ] T049 [P] [US1] Create GameRepository interface in backend/src/main/java/com/checkmate/chess/repository/GameRepository.java
-- [ ] T050 [P] [US1] Create MoveRepository interface in backend/src/main/java/com/checkmate/chess/repository/MoveRepository.java
-- [ ] T051 [US1] Implement GuestService in backend/src/main/java/com/checkmate/chess/service/GuestService.java (create temporary guest users)
-- [ ] T052 [US1] Implement ChessRulesService in backend/src/main/java/com/checkmate/chess/service/ChessRulesService.java (wrap chess.js equivalent - use chess4j or similar Java library, functions <20 lines)
-- [ ] T053 [US1] Implement GameService in backend/src/main/java/com/checkmate/chess/service/GameService.java (create game, validate moves, detect game end, verify SOLID principles)
-- [ ] T054 [US1] Implement MoveService in backend/src/main/java/com/checkmate/chess/service/MoveService.java (persist moves, validate legality)
-- [ ] T055 [US1] Create GameController REST endpoints in backend/src/main/java/com/checkmate/chess/controller/GameController.java (POST /api/games/guest, GET /api/games/{id})
-- [ ] T056 [US1] Create GameWebSocketHandler in backend/src/main/java/com/checkmate/chess/websocket/GameWebSocketHandler.java (handle /topic/game/{gameId}/moves)
-- [ ] T057 [US1] Implement move synchronization logic in GameWebSocketHandler (broadcast moves to both players)
-- [ ] T058 [US1] Implement checkmate/stalemate detection in GameService using chess rules library
-- [ ] T059 [US1] Implement resignation logic in GameService (update game status, notify via WebSocket)
-- [ ] T060 [US1] Add comprehensive error handling with user-friendly messages in all services
-- [ ] T061 [US1] Add logging for game creation, moves, and game end events
+- [X] T045 [P] [US1] Create User entity in backend/src/main/java/com/checkmate/chess/model/User.java (verify Single Responsibility)
+- [X] T046 [P] [US1] Create Game entity in backend/src/main/java/com/checkmate/chess/model/Game.java (verify Single Responsibility)
+- [X] T047 [P] [US1] Create Move entity in backend/src/main/java/com/checkmate/chess/model/Move.java
+- [X] T048 [P] [US1] Create UserRepository interface in backend/src/main/java/com/checkmate/chess/repository/UserRepository.java
+- [X] T049 [P] [US1] Create GameRepository interface in backend/src/main/java/com/checkmate/chess/repository/GameRepository.java
+- [X] T050 [P] [US1] Create MoveRepository interface in backend/src/main/java/com/checkmate/chess/repository/MoveRepository.java
+- [X] T051 [US1] Implement GuestService in backend/src/main/java/com/checkmate/chess/service/GuestService.java (create temporary guest users)
+- [X] T052 [US1] Implement ChessRulesService in backend/src/main/java/com/checkmate/chess/service/ChessRulesService.java (wrap chess.js equivalent - use chess4j or similar Java library, functions <20 lines)
+- [X] T053 [US1] Implement GameService in backend/src/main/java/com/checkmate/chess/service/GameService.java (create game, validate moves, detect game end, verify SOLID principles)
+- [X] T054 [US1] Implement MoveService in backend/src/main/java/com/checkmate/chess/service/MoveService.java (persist moves, validate legality)
+- [X] T055 [US1] Create GameController REST endpoints in backend/src/main/java/com/checkmate/chess/controller/GameController.java (POST /api/games/guest, GET /api/games/{id})
+- [X] T056 [US1] Create GameWebSocketHandler in backend/src/main/java/com/checkmate/chess/websocket/GameWebSocketHandler.java (handle /topic/game/{gameId}/moves)
+- [X] T057 [US1] Implement move synchronization logic in GameWebSocketHandler (broadcast moves to both players)
+- [X] T058 [US1] Implement checkmate/stalemate detection in GameService using chess rules library
+- [X] T059 [US1] Implement resignation logic in GameService (update game status, notify via WebSocket)
+- [X] T060 [US1] Add comprehensive error handling with user-friendly messages in all services
+- [X] T061 [US1] Add logging for game creation, moves, and game end events
 
 ### Frontend Implementation for US1
 
-- [ ] T062 [P] [US1] Create GuestLandingPage component in frontend/src/pages/GuestLandingPage.tsx (with "Play as Guest" button)
-- [ ] T063 [P] [US1] Create ChessBoard component in frontend/src/components/game/ChessBoard.tsx (using react-chessboard, handles piece selection and legal moves highlighting)
-- [ ] T064 [P] [US1] Create MoveList component in frontend/src/components/game/MoveList.tsx (displays move history in algebraic notation)
-- [ ] T065 [P] [US1] Create GameEndModal component in frontend/src/components/game/GameEndModal.tsx (shows winner/draw with game summary)
-- [ ] T066 [US1] Create chess game state hook in frontend/src/hooks/useChessGame.ts (manages local game state with chess.js validation)
-- [ ] T067 [US1] Create WebSocket game connection hook in frontend/src/hooks/useGameWebSocket.ts (connects to /topic/game/{gameId}/moves)
-- [ ] T068 [US1] Implement move handling logic in useChessGame (validate locally, send via WebSocket, update on opponent move)
-- [ ] T069 [US1] Implement checkmate/stalemate detection on frontend using chess.js
-- [ ] T070 [US1] Implement resignation button and logic in ChessBoard component
-- [ ] T071 [US1] Create GamePage component in frontend/src/pages/GamePage.tsx (integrates ChessBoard, MoveList, resignation)
-- [ ] T072 [US1] Implement guest game creation API call in frontend/src/api/gameApi.ts
+- [X] T062 [P] [US1] Create GuestLandingPage component in frontend/src/pages/GuestLandingPage.tsx (with "Play as Guest" button)
+- [X] T063 [P] [US1] Create ChessBoard component in frontend/src/components/game/ChessBoard.tsx (using react-chessboard, handles piece selection and legal moves highlighting)
+- [X] T064 [P] [US1] Create MoveList component in frontend/src/components/game/MoveList.tsx (displays move history in algebraic notation)
+- [X] T065 [P] [US1] Create GameEndModal component in frontend/src/components/game/GameEndModal.tsx (shows winner/draw with game summary)
+- [X] T066 [US1] Create chess game state hook in frontend/src/hooks/useChessGame.ts (manages local game state with chess.js validation)
+- [X] T067 [US1] Create WebSocket game connection hook in frontend/src/hooks/useGameWebSocket.ts (connects to /topic/game/{gameId}/moves)
+- [X] T068 [US1] Implement move handling logic in useChessGame (validate locally, send via WebSocket, update on opponent move)
+- [X] T069 [US1] Implement checkmate/stalemate detection on frontend using chess.js
+- [X] T070 [US1] Implement resignation button and logic in ChessBoard component
+- [X] T071 [US1] Create GamePage component in frontend/src/pages/GamePage.tsx (integrates ChessBoard, MoveList, resignation)
+- [X] T072 [US1] Implement guest game creation API call in frontend/src/api/gameApi.ts
 - [ ] T073 [US1] Add smooth piece movement animations (CSS transitions, 60fps target)
 - [ ] T074 [US1] Add sound effects for moves, captures, check (using HTML5 Audio API)
 - [ ] T075 [US1] Implement board flip functionality (button to flip orientation)

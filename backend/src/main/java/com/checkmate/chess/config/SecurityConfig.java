@@ -39,10 +39,14 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .authorizeHttpRequests(
+        authorizeHttpRequests(
             auth ->
                 auth.requestMatchers(
-                        "/api/auth/**", "/api/games/guest/**", "/ws/**", "/actuator/health")
+                        "/api/auth/**",
+                        "/api/games/guest/**",
+                        "/api/games/**",
+                        "/ws/**",
+                        "/actuator/health")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

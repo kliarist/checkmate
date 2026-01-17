@@ -1,6 +1,8 @@
 package com.checkmate.chess.service;
 
-import com.checkmate.chess.dto.GameDto.*;
+import com.checkmate.chess.dto.CreateGuestGameResponse;
+import com.checkmate.chess.dto.GameStateResponse;
+import com.checkmate.chess.dto.MakeMoveResponse;
 import com.checkmate.chess.exception.ResourceNotFoundException;
 import com.checkmate.chess.model.Game;
 import com.checkmate.chess.model.Move;

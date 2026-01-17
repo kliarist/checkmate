@@ -1,6 +1,7 @@
 package com.checkmate.chess.websocket;
 
-import com.checkmate.chess.dto.GameDto.*;
+import com.checkmate.chess.dto.MakeMoveRequest;
+import com.checkmate.chess.dto.MakeMoveResponse;
 import com.checkmate.chess.service.GameService;
 import java.util.UUID;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

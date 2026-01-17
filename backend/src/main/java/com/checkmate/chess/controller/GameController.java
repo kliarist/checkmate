@@ -1,6 +1,8 @@
 package com.checkmate.chess.controller;
 
-import com.checkmate.chess.dto.GameDto.*;
+import com.checkmate.chess.dto.CreateGuestGameRequest;
+import com.checkmate.chess.dto.CreateGuestGameResponse;
+import com.checkmate.chess.dto.GameStateResponse;
 import com.checkmate.chess.dto.SuccessResponse;
 import com.checkmate.chess.service.GameService;
 import java.util.UUID;

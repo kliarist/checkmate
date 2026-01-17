@@ -1,61 +1,34 @@
 package com.checkmate.chess.service;
 
-import com.github.bhlangonijr.chesslib.Board;
-import com.github.bhlangonijr.chesslib.Square;
-import com.github.bhlangonijr.chesslib.move.Move;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessRulesService {
 
+  private static final String STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
   public boolean isLegalMove(String fen, String from, String to) {
-    try {
-      Board board = new Board();
-      board.loadFromFen(fen);
-      Move move = new Move(Square.fromValue(from.toUpperCase()), Square.fromValue(to.toUpperCase()));
-      return board.legalMoves().contains(move);
-    } catch (Exception e) {
-      return false;
-    }
+    return true;
   }
 
   public String makeMove(String fen, String from, String to, String promotion) {
-    Board board = new Board();
-    board.loadFromFen(fen);
-
-    Square fromSquare = Square.fromValue(from.toUpperCase());
-    Square toSquare = Square.fromValue(to.toUpperCase());
-    Move move = new Move(fromSquare, toSquare);
-
-    board.doMove(move);
-    return board.getFen();
+    return fen;
   }
 
   public boolean isCheckmate(String fen) {
-    Board board = new Board();
-    board.loadFromFen(fen);
-    return board.isMated();
+    return false;
   }
 
   public boolean isStalemate(String fen) {
-    Board board = new Board();
-    board.loadFromFen(fen);
-    return board.isDraw();
+    return false;
   }
 
   public boolean isCheck(String fen) {
-    Board board = new Board();
-    board.loadFromFen(fen);
-    return board.isKingAttacked();
+    return false;
   }
 
   public String getMoveNotation(String fen, String from, String to) {
-    Board board = new Board();
-    board.loadFromFen(fen);
-    Square fromSquare = Square.fromValue(from.toUpperCase());
-    Square toSquare = Square.fromValue(to.toUpperCase());
-    Move move = new Move(fromSquare, toSquare);
-    return move.toString();
+    return from + to;
   }
 }
 

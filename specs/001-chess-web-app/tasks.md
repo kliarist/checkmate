@@ -69,19 +69,19 @@ description: "Implementation tasks for Chess Web Application"
 - [X] T024 [P] Setup logging configuration (Logback) with appropriate log levels
 
 ### Frontend Core Infrastructure
-- [ ] T025 [P] Install and configure chess.js library in frontend (npm install chess.js @types/chess.js)
-- [ ] T026 [P] Install and configure react-chessboard in frontend (npm install react-chessboard)
-- [ ] T027 [P] Create React Context for authentication state in frontend/src/context/AuthContext.tsx
-- [ ] T028 [P] Create React Context for WebSocket connection in frontend/src/context/WebSocketContext.tsx
-- [ ] T029 [P] Create API client utility in frontend/src/api/client.ts (axios with JWT interceptors)
-- [ ] T030 [P] Create WebSocket client utility in frontend/src/api/websocket.ts (STOMP client)
-- [ ] T031 [P] Create routing configuration in frontend/src/App.tsx (React Router)
-- [ ] T032 [P] Create base layout components (Header, Footer, Navigation) in frontend/src/components/layout/
+- [X] T025 [P] Install and configure chess.js library in frontend (npm install chess.js @types/chess.js)
+- [X] T026 [P] Install and configure react-chessboard in frontend (npm install react-chessboard)
+- [X] T027 [P] Create React Context for authentication state in frontend/src/context/AuthContext.tsx
+- [X] T028 [P] Create React Context for WebSocket connection in frontend/src/context/WebSocketContext.tsx
+- [X] T029 [P] Create API client utility in frontend/src/api/client.ts (axios with JWT interceptors)
+- [X] T030 [P] Create WebSocket client utility in frontend/src/api/websocket.ts (STOMP client)
+- [X] T031 [P] Create routing configuration in frontend/src/App.tsx (React Router)
+- [X] T032 [P] Create base layout components (Header, Footer, Navigation) in frontend/src/components/layout/
 
 ### Performance & Monitoring
-- [ ] T033 [P] Configure performance monitoring (Spring Actuator endpoints) in backend
-- [ ] T034 [P] Setup frontend performance budgets in package.json and build config
-- [ ] T035 [P] Configure database connection pooling (HikariCP) with appropriate settings
+- [X] T033 [P] Configure performance monitoring (Spring Actuator endpoints) in backend
+- [X] T034 [P] Setup frontend performance budgets in package.json and build config
+- [X] T035 [P] Configure database connection pooling (HikariCP) with appropriate settings
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 

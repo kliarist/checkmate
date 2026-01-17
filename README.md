@@ -26,7 +26,7 @@ A modern, real-time multiplayer chess web application with user accounts, matchm
 - **Testing**: Vitest (unit/integration), Playwright (E2E)
 
 ### Backend
-- **Framework**: Spring Boot 3.4.2 (ready for Spring Boot 4)
+- **Framework**: Spring Boot 4.0.1
 - **Language**: Java 21
 - **Build Tool**: Gradle 8.11+ (Groovy DSL)
 - **Database Migrations**: Liquibase

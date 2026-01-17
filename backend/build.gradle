@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.2'
+	id 'org.springframework.boot' version '4.0.1'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'checkstyle'
 	id 'jacoco'
@@ -86,7 +86,7 @@ check.dependsOn jacocoTestCoverageVerification
 
 // Checkstyle configuration (Google Java Style Guide)
 checkstyle {
-	toolVersion = '10.12.7'
+	toolVersion = '10.21.1'
 	configFile = file("config/checkstyle/google_checks.xml")
 	ignoreFailures = false
 	maxWarnings = 0

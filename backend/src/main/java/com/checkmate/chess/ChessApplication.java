@@ -17,6 +17,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ChessApplication {
 
+  /**
+   * Main entry point for the Chess application.
+   *
+   * @param args command line arguments
+   */
   public static void main(String[] args) {
     SpringApplication.run(ChessApplication.class, args);
   }

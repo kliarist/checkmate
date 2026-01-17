@@ -33,7 +33,7 @@ description: "Implementation tasks for Chess Web Application"
 
 - [X] T001 Create project structure with frontend/ and backend/ directories
 - [X] T002 Initialize React project with TypeScript in frontend/ (npm create vite@latest frontend -- --template react-ts, then migrate to Bun)
-- [X] T003 Initialize Spring Boot 3 project in backend/ (Spring Boot 3.4.2, Gradle 8.11+ with Groovy DSL, JDK 21: Web, WebSocket, Security, Data JPA, PostgreSQL, Liquibase)
+- [X] T003 Initialize Spring Boot 4 project in backend/ (Spring Boot 4.0.1, Gradle 8.11+ with Groovy DSL, JDK 21: Web, WebSocket, Security, Data JPA, PostgreSQL, Liquibase)
 - [X] T004 [P] Configure ESLint and Prettier for frontend code quality
 - [X] T005 [P] Configure Checkstyle for backend code quality (Google Java Style Guide)
 - [X] T006 [P] Setup Vitest for unit/integration testing and Playwright for E2E testing with coverage reporting

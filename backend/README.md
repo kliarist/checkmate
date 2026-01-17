@@ -4,7 +4,7 @@ Backend API for the Checkmate chess web application.
 
 ## Technology Stack
 
-- **Framework**: Spring Boot 3.4.2 (ready for Spring Boot 4 when released)
+- **Framework**: Spring Boot 4.0.1
 - **Java Version**: JDK 21
 - **Build Tool**: Gradle 8.11+ (Groovy DSL)
 - **Database**: PostgreSQL 14+

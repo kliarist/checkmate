@@ -34,9 +34,7 @@ services:
       - checkmate-network
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: checkmate-backend:latest
     container_name: checkmate-backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/checkmate_dev

@@ -4,6 +4,32 @@
 
 - Docker Engine 20.10+
 - Docker Compose 2.0+
+- Gradle 9.2+ (for building backend image)
+- Bun 1.0+ (for building frontend image)
+
+## Building Images
+
+### Backend Image (Paketo Buildpacks)
+
+The backend uses Gradle's `bootBuildImage` task with Paketo buildpacks instead of a Dockerfile:
+
+```bash
+cd backend
+./gradlew bootBuildImage
+```
+
+This creates an optimized OCI image using Cloud Native Buildpacks with:
+- Paketo Java buildpack
+- Layered JARs for optimal caching
+- Memory calculator for JVM tuning
+- Security updates from Paketo
+
+### Frontend Image
+
+```bash
+cd frontend
+docker build -t checkmate-frontend:latest .
+```
 
 ## Quick Start
 
@@ -50,10 +76,12 @@ docker-compose down -v
 
 ### Backend Development
 
-Rebuild backend after code changes:
+Rebuild backend after code changes using Paketo buildpacks:
 
 ```bash
-docker-compose up -d --build backend
+cd backend
+./gradlew bootBuildImage
+docker-compose up -d backend
 ```
 
 View backend logs:
@@ -132,8 +160,24 @@ docker-compose restart backend
 Build production images:
 
 ```bash
-docker-compose -f docker-compose.prod.yml build
+# Backend (using Paketo buildpacks)
+cd backend
+./gradlew bootBuildImage
+
+# Frontend
+cd ../frontend
+docker build -t checkmate-frontend:latest .
 ```
+
+## Benefits of Paketo Buildpacks
+
+The backend uses Paketo buildpacks which provide:
+
+- **Automatic JVM Configuration**: Memory calculator optimizes heap/metaspace
+- **Layered Images**: Efficient caching and faster rebuilds
+- **Security**: Regularly updated base images and dependencies
+- **Best Practices**: Production-ready configurations out of the box
+- **No Dockerfile Needed**: Declarative configuration in build.gradle
 
 ## Clean Up
 

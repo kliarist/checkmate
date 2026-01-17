@@ -226,6 +226,30 @@ Spring Boot DevTools enables automatic restart:
 - `test` - Testing profile
 - `prod` - Production profile (to be configured)
 
+## Docker Image with Paketo Buildpacks
+
+Build an optimized Docker image using Cloud Native Buildpacks:
+
+```bash
+./gradlew bootBuildImage
+```
+
+This creates `checkmate-backend:latest` using Paketo buildpacks with:
+- Automatic JVM memory tuning
+- Layered JAR structure for faster rebuilds
+- Security-hardened base image
+- Production-ready defaults
+
+Run the image:
+
+```bash
+docker run -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/checkmate_dev \
+  -e SPRING_DATASOURCE_USERNAME=postgres \
+  -e SPRING_DATASOURCE_PASSWORD=postgres \
+  checkmate-backend:latest
+```
+
 ## Dependencies
 
 Key dependencies:

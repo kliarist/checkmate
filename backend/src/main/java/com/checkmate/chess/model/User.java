@@ -3,10 +3,16 @@ package com.checkmate.chess.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
-public class User {
+@Getter
+@Setter
+@NoArgsConstructor
+public final class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -56,109 +62,19 @@ public class User {
     updatedAt = LocalDateTime.now();
   }
 
-  public User() {}
-
-  public User(String email, String username, String passwordHash) {
+  public User(final String email, final String username, final String passwordHash) {
     this.email = email;
     this.username = username;
     this.passwordHash = passwordHash;
   }
 
-  public static User createGuest(String username) {
-    User guest = new User();
+  public static User createGuest(final String username) {
+    final var guest = new User();
     guest.setUsername(username);
     guest.setEmail(username + "@guest.local");
     guest.setPasswordHash("");
     guest.setIsGuest(true);
     return guest;
-  }
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPasswordHash() {
-    return passwordHash;
-  }
-
-  public void setPasswordHash(String passwordHash) {
-    this.passwordHash = passwordHash;
-  }
-
-  public Integer getEloRating() {
-    return eloRating;
-  }
-
-  public void setEloRating(Integer eloRating) {
-    this.eloRating = eloRating;
-  }
-
-  public Integer getGamesPlayed() {
-    return gamesPlayed;
-  }
-
-  public void setGamesPlayed(Integer gamesPlayed) {
-    this.gamesPlayed = gamesPlayed;
-  }
-
-  public Integer getWins() {
-    return wins;
-  }
-
-  public void setWins(Integer wins) {
-    this.wins = wins;
-  }
-
-  public Integer getLosses() {
-    return losses;
-  }
-
-  public void setLosses(Integer losses) {
-    this.losses = losses;
-  }
-
-  public Integer getDraws() {
-    return draws;
-  }
-
-  public void setDraws(Integer draws) {
-    this.draws = draws;
-  }
-
-  public Boolean getIsGuest() {
-    return isGuest;
-  }
-
-  public void setIsGuest(Boolean guest) {
-    isGuest = guest;
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public LocalDateTime getUpdatedAt() {
-    return updatedAt;
   }
 }
 

@@ -3,10 +3,16 @@ package com.checkmate.chess.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "moves")
-public class Move {
+@Getter
+@Setter
+@NoArgsConstructor
+public final class Move {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,79 +45,17 @@ public class Move {
     createdAt = LocalDateTime.now();
   }
 
-  public Move() {}
-
   public Move(
-      Game game,
-      Integer moveNumber,
-      String playerColor,
-      String algebraicNotation,
-      String fenAfterMove) {
+      final Game game,
+      final Integer moveNumber,
+      final String playerColor,
+      final String algebraicNotation,
+      final String fenAfterMove) {
     this.game = game;
     this.moveNumber = moveNumber;
     this.playerColor = playerColor;
     this.algebraicNotation = algebraicNotation;
     this.fenAfterMove = fenAfterMove;
-  }
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public Game getGame() {
-    return game;
-  }
-
-  public void setGame(Game game) {
-    this.game = game;
-  }
-
-  public Integer getMoveNumber() {
-    return moveNumber;
-  }
-
-  public void setMoveNumber(Integer moveNumber) {
-    this.moveNumber = moveNumber;
-  }
-
-  public String getPlayerColor() {
-    return playerColor;
-  }
-
-  public void setPlayerColor(String playerColor) {
-    this.playerColor = playerColor;
-  }
-
-  public String getAlgebraicNotation() {
-    return algebraicNotation;
-  }
-
-  public void setAlgebraicNotation(String algebraicNotation) {
-    this.algebraicNotation = algebraicNotation;
-  }
-
-  public String getFenAfterMove() {
-    return fenAfterMove;
-  }
-
-  public void setFenAfterMove(String fenAfterMove) {
-    this.fenAfterMove = fenAfterMove;
-  }
-
-  public Integer getTimeRemaining() {
-    return timeRemaining;
-  }
-
-  public void setTimeRemaining(Integer timeRemaining) {
-    this.timeRemaining = timeRemaining;
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
   }
 }
 

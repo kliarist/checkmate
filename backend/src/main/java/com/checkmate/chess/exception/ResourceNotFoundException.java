@@ -1,7 +1,7 @@
 package com.checkmate.chess.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
-  public ResourceNotFoundException(String message) {
+public final class ResourceNotFoundException extends RuntimeException {
+  public ResourceNotFoundException(final String message) {
     super(message);
   }
 }

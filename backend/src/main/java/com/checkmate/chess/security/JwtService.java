@@ -2,21 +2,18 @@ package com.checkmate.chess.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Date;
+import java.util.Map;
+import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
 @Service
-public class JwtService {
+public final class JwtService {
 
   @Value("${jwt.secret}")
   private String secret;
@@ -24,25 +21,25 @@ public class JwtService {
   @Value("${jwt.expiration}")
   private long jwtExpiration;
 
-  public String extractUsername(String token) {
+  public String extractUsername(final String token) {
     return extractClaim(token, Claims::getSubject);
   }
 
-  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = extractAllClaims(token);
+  public <T> T extractClaim(final String token, final Function<Claims, T> claimsResolver) {
+    final var claims = extractAllClaims(token);
     return claimsResolver.apply(claims);
   }
 
-  public String generateToken(UserDetails userDetails) {
-    return generateToken(new HashMap<>(), userDetails);
+  public String generateToken(final UserDetails userDetails) {
+    return generateToken(Map.of(), userDetails);
   }
 
-  public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+  public String generateToken(final Map<String, Object> extraClaims, final UserDetails userDetails) {
     return buildToken(extraClaims, userDetails, jwtExpiration);
   }
 
   private String buildToken(
-      Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+      final Map<String, Object> extraClaims, final UserDetails userDetails, final long expiration) {
     return Jwts.builder()
         .claims(extraClaims)
         .subject(userDetails.getUsername())
@@ -52,20 +49,20 @@ public class JwtService {
         .compact();
   }
 
-  public boolean isTokenValid(String token, UserDetails userDetails) {
-    final String username = extractUsername(token);
+  public boolean isTokenValid(final String token, final UserDetails userDetails) {
+    final var username = extractUsername(token);
     return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
   }
 
-  private boolean isTokenExpired(String token) {
+  private boolean isTokenExpired(final String token) {
     return extractExpiration(token).before(new Date());
   }
 
-  private Date extractExpiration(String token) {
+  private Date extractExpiration(final String token) {
     return extractClaim(token, Claims::getExpiration);
   }
 
-  private Claims extractAllClaims(String token) {
+  private Claims extractAllClaims(final String token) {
     return Jwts.parser()
         .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret)))
         .build()
@@ -74,7 +71,7 @@ public class JwtService {
   }
 
   private Key getSignInKey() {
-    byte[] keyBytes = Decoders.BASE64.decode(secret);
+    final var keyBytes = Decoders.BASE64.decode(secret);
     return Keys.hmacShaKeyFor(keyBytes);
   }
 }

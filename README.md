@@ -16,9 +16,9 @@ A modern, real-time multiplayer chess web application with user accounts, matchm
 ## Tech Stack
 
 ### Frontend
+- **Runtime & Package Manager**: Bun 1.0+ (fast JavaScript runtime)
 - **Framework**: React 18 with TypeScript
-- **Build Tool**: Vite
-- **Package Manager**: Bun (fast JavaScript runtime and package manager)
+- **Build Tool**: Vite 7 (dev server with HMR, production bundler)
 - **Chess Logic**: chess.js
 - **Board UI**: react-chessboard
 - **State Management**: React Context API
@@ -26,9 +26,10 @@ A modern, real-time multiplayer chess web application with user accounts, matchm
 - **Testing**: Vitest (unit/integration), Playwright (E2E)
 
 ### Backend
-- **Framework**: Spring Boot 3
+- **Framework**: Spring Boot 3.4.2 (ready for Spring Boot 4)
 - **Language**: Java 21
-- **Build Tool**: Gradle 8.11+
+- **Build Tool**: Gradle 8.11+ (Groovy DSL)
+- **Database Migrations**: Liquibase
 - **Real-time**: WebSocket (STOMP)
 - **Database**: PostgreSQL
 - **Authentication**: JWT with Spring Security

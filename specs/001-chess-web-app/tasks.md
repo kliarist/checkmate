@@ -33,7 +33,7 @@ description: "Implementation tasks for Chess Web Application"
 
 - [X] T001 Create project structure with frontend/ and backend/ directories
 - [X] T002 Initialize React project with TypeScript in frontend/ (npm create vite@latest frontend -- --template react-ts, then migrate to Bun)
-- [X] T003 Initialize Spring Boot 3 project in backend/ (Spring Boot 3.4.2, Gradle 8.11+, JDK 21: Web, WebSocket, Security, Data JPA, PostgreSQL)
+- [X] T003 Initialize Spring Boot 3 project in backend/ (Spring Boot 3.4.2, Gradle 8.11+ with Groovy DSL, JDK 21: Web, WebSocket, Security, Data JPA, PostgreSQL, Liquibase)
 - [X] T004 [P] Configure ESLint and Prettier for frontend code quality
 - [X] T005 [P] Configure Checkstyle for backend code quality (Google Java Style Guide)
 - [X] T006 [P] Setup Vitest for unit/integration testing and Playwright for E2E testing with coverage reporting
@@ -52,7 +52,7 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Database Setup
 - [ ] T011 Setup PostgreSQL database locally and configure connection in backend/src/main/resources/application.yml
-- [ ] T012 Create database migration tool configuration (Flyway or Liquibase)
+- [ ] T012 Create database migration tool configuration (Liquibase)
 - [ ] T013 Create initial database schema migration: users table (id, email, password_hash, username, created_at, elo_rating, games_played, wins, losses, draws)
 - [ ] T014 Create games table migration (id, white_player_id, black_player_id, game_type, time_control, current_fen, pgn, status, result, end_reason, created_at, ended_at)
 - [ ] T015 Create moves table migration (id, game_id, move_number, player_color, algebraic_notation, fen_after_move, time_remaining, timestamp)

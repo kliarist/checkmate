@@ -4,10 +4,11 @@ Backend API for the Checkmate chess web application.
 
 ## Technology Stack
 
-- **Framework**: Spring Boot 3.4.2
+- **Framework**: Spring Boot 3.4.2 (ready for Spring Boot 4 when released)
 - **Java Version**: JDK 21
-- **Build Tool**: Gradle 8.11+
+- **Build Tool**: Gradle 8.11+ (Groovy DSL)
 - **Database**: PostgreSQL 14+
+- **Database Migrations**: Liquibase (YAML format)
 - **Authentication**: JWT (JSON Web Tokens)
 - **Real-time**: WebSocket with STOMP
 - **Testing**: JUnit 5, Spring Boot Test
@@ -160,14 +161,52 @@ The project uses Google Java Style Guide:
 
 ## Database Migrations
 
-Database schema changes are managed using Flyway:
+Database schema changes are managed using Liquibase with YAML format:
 
 ```
-src/main/resources/db/migration/
-├── V1__initial_schema.sql
-├── V2__add_ratings.sql
-└── ...
+src/main/resources/db/changelog/
+├── db.changelog-master.yaml          # Master changelog
+└── changes/
+    ├── v1.0.0-initial-schema.yaml   # Initial schema
+    ├── v1.1.0-add-ratings.yaml      # Future migrations
+    └── ...
 ```
+
+### Running Migrations
+
+Liquibase runs automatically on application startup. To run manually:
+
+```bash
+# Run all pending migrations
+./gradlew update
+
+# Rollback last changeset
+./gradlew rollback
+
+# Generate SQL for review (without applying)
+./gradlew updateSQL
+```
+
+### Creating New Migrations
+
+Create a new YAML file in `src/main/resources/db/changelog/changes/`:
+
+```yaml
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: your-name
+      comment: Description of changes
+      changes:
+        - createTable:
+            tableName: example
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+```
+
+Then include it in `db.changelog-master.yaml`.
 
 ## Development Tips
 

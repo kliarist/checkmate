@@ -4,9 +4,9 @@ Frontend for the Checkmate chess web application.
 
 ## Technology Stack
 
+- **Runtime & Package Manager**: Bun 1.0+ (JavaScript runtime and package manager)
 - **Framework**: React 18 with TypeScript
-- **Build Tool**: Vite 7
-- **Package Manager**: Bun 1.0+
+- **Build Tool**: Vite 7 (dev server with HMR + production bundler)
 - **Chess Logic**: chess.js
 - **Board UI**: react-chessboard
 - **State Management**: React Context API
@@ -14,6 +14,8 @@ Frontend for the Checkmate chess web application.
 - **Unit/Integration Testing**: Vitest + React Testing Library
 - **E2E Testing**: Playwright
 - **Code Quality**: ESLint + Prettier
+
+**Note**: Bun is used as the runtime and package manager (replacing npm/yarn), while Vite provides the dev server with Hot Module Replacement and production bundling. This combination offers the best of both: Bun's speed for package management and Vite's excellent DX for React development.
 
 ## Prerequisites
 

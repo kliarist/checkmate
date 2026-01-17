@@ -145,7 +145,7 @@ jobs:
       - name: Run Checkstyle
         run: ./gradlew checkstyleMain checkstyleTest
 
-      - name: Run tests with coverage
+      - name: Run tests with coverage (includes Liquibase migrations)
         run: ./gradlew test jacocoTestReport
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/checkmate_test

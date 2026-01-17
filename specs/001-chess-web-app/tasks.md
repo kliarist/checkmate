@@ -35,8 +35,8 @@ description: "Implementation tasks for Chess Web Application"
 - [X] T002 Initialize React project with TypeScript in frontend/ (npm create vite@latest frontend -- --template react-ts)
 - [X] T003 Initialize Spring Boot 3 project in backend/ (Spring Initializr: Web, WebSocket, Security, Data JPA, PostgreSQL)
 - [X] T004 [P] Configure ESLint and Prettier for frontend code quality
-- [ ] T005 [P] Configure Checkstyle for backend code quality (Google Java Style Guide)
-- [ ] T006 [P] Setup Jest for frontend testing with coverage reporting
+- [X] T005 [P] Configure Checkstyle for backend code quality (Google Java Style Guide)
+- [X] T006 [P] Setup Jest for frontend testing with coverage reporting
 - [ ] T007 [P] Setup JUnit 5 for backend testing with coverage reporting
 - [ ] T008 [P] Configure Git pre-commit hooks (Husky) for linting and conventional commits
 - [ ] T009 [P] Create .gitignore for frontend (node_modules, dist) and backend (target, .class)

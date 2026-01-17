@@ -51,22 +51,22 @@ description: "Implementation tasks for Chess Web Application"
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
 ### Database Setup
-- [ ] T011 Setup PostgreSQL database locally and configure connection in backend/src/main/resources/application.yml
-- [ ] T012 Create database migration tool configuration (Liquibase)
-- [ ] T013 Create initial database schema migration: users table (id, email, password_hash, username, created_at, elo_rating, games_played, wins, losses, draws)
-- [ ] T014 Create games table migration (id, white_player_id, black_player_id, game_type, time_control, current_fen, pgn, status, result, end_reason, created_at, ended_at)
-- [ ] T015 Create moves table migration (id, game_id, move_number, player_color, algebraic_notation, fen_after_move, time_remaining, timestamp)
-- [ ] T016 Create game_invitations table migration (id, creator_id, invitation_code, time_control, game_type, created_at, expires_at, status)
-- [ ] T017 Add database indexes on frequently queried columns (users.email, games.white_player_id, games.black_player_id, moves.game_id)
+- [X] T011 Setup PostgreSQL database locally and configure connection in backend/src/main/resources/application.yml
+- [X] T012 Create database migration tool configuration (Liquibase)
+- [X] T013 Create initial database schema migration: users table (id, email, password_hash, username, created_at, elo_rating, games_played, wins, losses, draws)
+- [X] T014 Create games table migration (id, white_player_id, black_player_id, game_type, time_control, current_fen, pgn, status, result, end_reason, created_at, ended_at)
+- [X] T015 Create moves table migration (id, game_id, move_number, player_color, algebraic_notation, fen_after_move, time_remaining, timestamp)
+- [X] T016 Create game_invitations table migration (id, creator_id, invitation_code, time_control, game_type, created_at, expires_at, status)
+- [X] T017 Add database indexes on frequently queried columns (users.email, games.white_player_id, games.black_player_id, moves.game_id)
 
 ### Backend Core Infrastructure
-- [ ] T018 [P] Configure Spring Security for JWT authentication in backend/src/main/java/com/checkmate/chess/config/SecurityConfig.java
-- [ ] T019 [P] Implement JWT utility class in backend/src/main/java/com/checkmate/chess/security/JwtUtils.java (token generation, validation)
-- [ ] T020 [P] Configure Spring WebSocket with STOMP in backend/src/main/java/com/checkmate/chess/config/WebSocketConfig.java
-- [ ] T021 [P] Create global exception handler in backend/src/main/java/com/checkmate/chess/exception/GlobalExceptionHandler.java
-- [ ] T022 [P] Create base response DTOs (SuccessResponse, ErrorResponse) in backend/src/main/java/com/checkmate/chess/dto/
-- [ ] T023 [P] Configure CORS for frontend-backend communication in SecurityConfig
-- [ ] T024 [P] Setup logging configuration (Logback) with appropriate log levels
+- [X] T018 [P] Configure Spring Security for JWT authentication in backend/src/main/java/com/checkmate/chess/config/SecurityConfig.java
+- [X] T019 [P] Implement JWT utility class in backend/src/main/java/com/checkmate/chess/security/JwtUtils.java (token generation, validation)
+- [X] T020 [P] Configure Spring WebSocket with STOMP in backend/src/main/java/com/checkmate/chess/config/WebSocketConfig.java
+- [X] T021 [P] Create global exception handler in backend/src/main/java/com/checkmate/chess/exception/GlobalExceptionHandler.java
+- [X] T022 [P] Create base response DTOs (SuccessResponse, ErrorResponse) in backend/src/main/java/com/checkmate/chess/dto/
+- [X] T023 [P] Configure CORS for frontend-backend communication in SecurityConfig
+- [X] T024 [P] Setup logging configuration (Logback) with appropriate log levels
 
 ### Frontend Core Infrastructure
 - [ ] T025 [P] Install and configure chess.js library in frontend (npm install chess.js @types/chess.js)

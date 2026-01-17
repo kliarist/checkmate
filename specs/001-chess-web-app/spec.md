@@ -15,6 +15,7 @@
 - **Real-time**: WebSocket (Spring WebSocket)
 - **Chess Logic**: chess.js library
 - **Board UI**: react-chessboard or chessground
+- **Commit Style**: Conventional Commits (type(scope): description)
 
 These constraints will be considered during the planning phase (`/speckit.plan`).
 

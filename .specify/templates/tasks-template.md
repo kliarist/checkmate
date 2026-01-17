@@ -51,6 +51,9 @@ description: "Task list template for feature implementation"
 - [ ] T001 Create project structure per implementation plan
 - [ ] T002 Initialize [language] project with [framework] dependencies
 - [ ] T003 [P] Configure linting and formatting tools
+- [ ] T004 [P] Setup static analysis tools for code quality (complexity, SOLID violations)
+- [ ] T005 [P] Configure test framework with coverage reporting
+- [ ] T006 [P] Setup pre-commit hooks for code quality checks
 
 ---
 
@@ -62,12 +65,15 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T007 Setup database schema and migrations framework
+- [ ] T008 [P] Implement authentication/authorization framework
+- [ ] T009 [P] Setup API routing and middleware structure
+- [ ] T010 Create base models/entities that all stories depend on (verify SOLID compliance)
+- [ ] T011 Configure error handling and logging infrastructure (all error paths handled)
+- [ ] T012 Setup environment configuration management
+- [ ] T013 [P] Configure performance monitoring and profiling tools
+- [ ] T014 [P] Setup accessibility testing tools (if applicable)
+- [ ] T015 Define and configure performance budgets in CI/CD
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -82,18 +88,27 @@ Examples of foundational tasks (adjust based on your project):
 ### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+> Tests MUST follow AAA pattern and be independent
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T016 [P] [US1] Unit tests for [component] in tests/unit/test_[name].py (target: <10ms each)
+- [ ] T017 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T018 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T019 [P] [US1] Create [Entity1] model in src/models/[entity1].py (verify Single Responsibility)
+- [ ] T020 [P] [US1] Create [Entity2] model in src/models/[entity2].py (verify Single Responsibility)
+- [ ] T021 [US1] Implement [Service] in src/services/[service].py (verify SOLID, DRY, functions <20 lines)
+- [ ] T022 [US1] Implement [endpoint/feature] in src/[location]/[file].py (verify error handling)
+- [ ] T023 [US1] Add input validation with clear error messages
+- [ ] T024 [US1] Add logging for user story 1 operations
+- [ ] T025 [US1] Performance test against budgets (verify <200ms p95)
+- [ ] T026 [US1] Accessibility review (if UI involved - keyboard nav, WCAG 2.1 AA)
+
+**Constitution Verification**:
+- [ ] T027 [US1] Code review checklist: SOLID, clean code, error handling
+- [ ] T028 [US1] Verify test coverage ≥80% and Test Pyramid ratio
+- [ ] T029 [US1] Run static analysis and complexity checks (pass with zero warnings)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

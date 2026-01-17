@@ -31,7 +31,52 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+This feature MUST comply with all five core principles from the constitution:
+
+### I. Code Quality Principles ✓
+- [ ] Design follows SOLID principles (Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion)
+- [ ] No code duplication (DRY) - common functionality abstracted into reusable components
+- [ ] Solution is simple and avoids over-engineering (KISS)
+- [ ] Only implements specified requirements, no speculative features (YAGNI)
+- [ ] Clear separation of concerns (business logic, presentation, data access)
+- [ ] Uses composition over inheritance where appropriate
+- [ ] Follows Law of Demeter (minimal coupling between modules)
+
+### II. Clean Code Practices ✓
+- [ ] All names (variables, functions, classes) are descriptive and intention-revealing
+- [ ] Functions are small (<20 lines) and focused on single tasks
+- [ ] Nesting levels limited to 2-3 maximum
+- [ ] Code is self-documenting; comments explain "why" not "what"
+- [ ] Error handling is explicit and comprehensive
+- [ ] Code improvements made wherever touched (Boy Scout Rule)
+
+### III. Testing Standards ✓
+- [ ] Test strategy defined following Test Pyramid (70% unit, 20% integration, 10% e2e)
+- [ ] Critical business logic has near 100% test coverage
+- [ ] All tests are independent and can run in any order
+- [ ] Tests use AAA pattern (Arrange-Act-Assert)
+- [ ] Test names are descriptive and explain expected behavior
+- [ ] Tests focus on public APIs, not private implementation details
+- [ ] No redundant tests - each test adds unique value
+
+### IV. User Experience Consistency ✓
+- [ ] UI follows established design system (if applicable)
+- [ ] WCAG 2.1 AA accessibility standards met
+- [ ] Loading states and progress indicators for all async operations
+- [ ] Error messages are clear, actionable, and user-friendly
+- [ ] Responsive design for all supported devices
+- [ ] Keyboard navigation support for all interactive elements
+
+### V. Performance Requirements ✓
+- [ ] Performance budgets defined (page load, API response, bundle size, memory)
+- [ ] Lazy loading strategy for resources
+- [ ] Caching strategy defined at appropriate levels
+- [ ] Database queries optimized with proper indexing
+- [ ] Assets optimized (images compressed, CSS/JS minified)
+- [ ] Performance monitoring and profiling plan in place
+- [ ] System designed to handle 1000 concurrent users
+
+**Violations**: If any principle cannot be met, document in "Complexity Tracking" section below with justification.
 
 ## Project Structure
 

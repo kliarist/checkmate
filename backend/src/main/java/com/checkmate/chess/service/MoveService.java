@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public final class MoveService {
+public class MoveService {
 
   private final MoveRepository moveRepository;
 

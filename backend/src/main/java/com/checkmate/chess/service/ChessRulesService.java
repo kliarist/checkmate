@@ -3,7 +3,7 @@ package com.checkmate.chess.service;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class ChessRulesService {
+public class ChessRulesService {
 
   private static final String STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 

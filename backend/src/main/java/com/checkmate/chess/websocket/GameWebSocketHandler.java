@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @RequiredArgsConstructor
-public final class GameWebSocketHandler {
+public class GameWebSocketHandler {
 
   private final GameService gameService;
 

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public final class GuestService {
+public class GuestService {
 
   private final UserRepository userRepository;
 

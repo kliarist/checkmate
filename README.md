@@ -27,9 +27,9 @@ A modern, real-time multiplayer chess web application with user accounts, matchm
 
 ### Backend
 - **Framework**: Spring Boot 4.0.1
-- **Language**: Java 21
+- **Language**: Java 25 (with Lombok, var, final)
 - **Build Tool**: Gradle 9.2+ (Groovy DSL)
-- **Database Migrations**: Liquibase
+- **Database Migrations**: Liquibase (SQL format)
 - **Real-time**: WebSocket (STOMP)
 - **Database**: PostgreSQL
 - **Authentication**: JWT with Spring Security
@@ -71,7 +71,7 @@ checkmate/
 ### Prerequisites
 
 - **Bun**: v1.0+ (for frontend - https://bun.sh)
-- **Java**: JDK 21+ (for backend)
+- **Java**: JDK 25+ (for backend)
 - **Gradle**: v9.2+ (for backend build)
 - **PostgreSQL**: v14+ (for database)
 - **Redis**: v6+ (optional, for caching)

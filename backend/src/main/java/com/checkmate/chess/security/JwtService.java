@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class JwtService {
+public class JwtService {
 
   @Value("${jwt.secret}")
   private String secret;

@@ -2,6 +2,7 @@ spring:
   application:
     name: checkmate
 
+
   datasource:
     url: jdbc:postgresql://localhost:5432/checkmate_dev
     username: postgres
@@ -36,11 +37,6 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
 
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      timeout: 2000ms
 
 management:
   endpoints:

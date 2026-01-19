@@ -21,7 +21,7 @@ Backend API for the Checkmate chess web application.
 - JDK 25 or higher
 - Gradle 9.2+ (or use included Gradle wrapper)
 - PostgreSQL 14+
-- (Optional) Redis 6+ for caching
+- Redis 6+ (optional - not required for MVP, can be added later)
 
 ## Getting Started
 

@@ -33,7 +33,7 @@ A modern, real-time multiplayer chess web application with user accounts, matchm
 - **Real-time**: WebSocket (STOMP)
 - **Database**: PostgreSQL
 - **Authentication**: JWT with Spring Security
-- **Caching**: Redis (for active games)
+- **Caching**: Redis (optional - not included in MVP)
 
 ## Project Structure
 
@@ -74,7 +74,7 @@ checkmate/
 - **Java**: JDK 25+ (for backend)
 - **Gradle**: v9.2+ (for backend build)
 - **PostgreSQL**: v14+ (for database)
-- **Redis**: v6+ (optional, for caching)
+- **Redis**: v6+ (optional - for caching, not required for MVP)
 
 ### Local Development Setup
 

@@ -1,0 +1,98 @@
+/* Chess Board Animations */
+.chess-piece {
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+.chess-piece:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+/* Square highlights */
+.square-highlight {
+  animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* Move animation */
+.piece-moving {
+  animation: moveSmooth 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+@keyframes moveSmooth {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Capture animation */
+.piece-captured {
+  animation: captureEffect 0.3s ease-out;
+}
+
+@keyframes captureEffect {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8) rotate(10deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* Check animation */
+.king-in-check {
+  animation: checkFlash 1s ease-in-out infinite;
+}
+
+@keyframes checkFlash {
+  0%, 100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0.3);
+  }
+}
+
+/* Loading state */
+.board-loading {
+  opacity: 0.6;
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+/* Performance optimization */
+@media (prefers-reduced-motion: reduce) {
+  .chess-piece,
+  .square-highlight,
+  .piece-moving,
+  .piece-captured,
+  .king-in-check {
+    animation: none;
+    transition: none;
+  }
+}
+

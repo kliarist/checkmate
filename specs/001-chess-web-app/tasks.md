@@ -143,11 +143,11 @@ description: "Implementation tasks for Chess Web Application"
 - [X] T070 [US1] Implement resignation button and logic in ChessBoard component
 - [X] T071 [US1] Create GamePage component in frontend/src/pages/GamePage.tsx (integrates ChessBoard, MoveList, resignation)
 - [X] T072 [US1] Implement guest game creation API call in frontend/src/api/gameApi.ts
-- [ ] T073 [US1] Add smooth piece movement animations (CSS transitions, 60fps target)
-- [ ] T074 [US1] Add sound effects for moves, captures, check (using HTML5 Audio API)
-- [ ] T075 [US1] Implement board flip functionality (button to flip orientation)
-- [ ] T076 [US1] Add loading states for game creation and move processing
-- [ ] T077 [US1] Add error messages for connection failures and invalid moves (clear, actionable text)
+- [X] T073 [US1] Add smooth piece movement animations (CSS transitions, 60fps target)
+- [X] T074 [US1] Add sound effects for moves, captures, check (using HTML5 Audio API)
+- [X] T075 [US1] Implement board flip functionality (button to flip orientation)
+- [X] T076 [US1] Add loading states for game creation and move processing
+- [X] T077 [US1] Add error messages for connection failures and invalid moves (clear, actionable text)
 
 ### Accessibility for US1
 
@@ -165,10 +165,10 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Constitution Verification for US1
 
-- [ ] T086 [US1] Code review checklist: SOLID principles, DRY (no duplicate chess logic), functions <20 lines
+- [X] T086 [US1] Code review checklist: SOLID principles, DRY (no duplicate chess logic), functions <20 lines
 - [ ] T087 [US1] Verify test coverage ≥80% overall, 100% for chess validation logic
 - [ ] T088 [US1] Verify Test Pyramid ratio (70% unit, 20% integration, 10% e2e)
-- [ ] T089 [US1] Run ESLint/Checkstyle and fix all warnings (zero warnings required)
+- [X] T089 [US1] Run ESLint/Checkstyle and fix all warnings (zero warnings required)
 - [ ] T090 [US1] Accessibility audit with Lighthouse (score ≥90 required)
 
 **Checkpoint**: At this point, guests can play complete chess games. This is a deployable MVP.

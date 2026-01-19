@@ -1,5 +1,6 @@
 package com.checkmate.chess.config;
 
+import com.checkmate.chess.exception.SecurityConfigurationException;
 import com.checkmate.chess.security.JwtAuthenticationFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,26 +31,31 @@ public class SecurityConfig {
   private final UserDetailsService userDetailsService;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable())
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .authorizeHttpRequests(
-            auth ->
-                auth.requestMatchers(
-                        "/api/auth/**",
-                        "/api/games/guest/**",
-                        "/api/games/**",
-                        "/ws/**",
-                        "/actuator/health")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated())
-        .sessionManagement(
-            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authenticationProvider(authenticationProvider())
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+  @SuppressWarnings("Convert2MethodRef")
+  public SecurityFilterChain securityFilterChain(final HttpSecurity http) {
+    try {
+      http.csrf(csrf -> csrf.disable())
+          .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+          .authorizeHttpRequests(
+              auth ->
+                  auth.requestMatchers(
+                          "/api/auth/**",
+                          "/api/games/guest/**",
+                          "/api/games/**",
+                          "/ws/**",
+                          "/actuator/health")
+                      .permitAll()
+                      .anyRequest()
+                      .authenticated())
+          .sessionManagement(
+              session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          .authenticationProvider(authenticationProvider())
+          .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
+      return http.build();
+    } catch (Exception e) {
+      throw new SecurityConfigurationException("Failed to configure security", e);
+    }
   }
 
   @Bean
@@ -60,9 +66,12 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(final AuthenticationConfiguration config)
-      throws Exception {
-    return config.getAuthenticationManager();
+  public AuthenticationManager authenticationManager(final AuthenticationConfiguration config) {
+    try {
+      return config.getAuthenticationManager();
+    } catch (Exception e) {
+      throw new SecurityConfigurationException("Failed to get authentication manager", e);
+    }
   }
 
   @Bean

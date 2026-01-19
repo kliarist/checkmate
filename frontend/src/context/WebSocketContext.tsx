@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { Client, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { useAuth } from './AuthContext';
 
 interface WebSocketContextType {
   isConnected: boolean;
@@ -12,25 +11,13 @@ interface WebSocketContextType {
 const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
 
 export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { token } = useAuth();
   const [isConnected, setIsConnected] = useState(false);
   const clientRef = useRef<Client | null>(null);
   const subscriptionsRef = useRef<Map<string, StompSubscription>>(new Map());
 
   useEffect(() => {
-    if (!token) {
-      if (clientRef.current) {
-        clientRef.current.deactivate();
-        setIsConnected(false);
-      }
-      return;
-    }
-
     const client = new Client({
       webSocketFactory: () => new SockJS(`${import.meta.env.VITE_API_URL}/ws`),
-      connectHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
       onConnect: () => {
         setIsConnected(true);
       },
@@ -50,7 +37,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       subscriptionsRef.current.clear();
       client.deactivate();
     };
-  }, [token]);
+  }, []);
 
   const subscribe = (destination: string, callback: (message: any) => void) => {
     if (!clientRef.current || !isConnected) {

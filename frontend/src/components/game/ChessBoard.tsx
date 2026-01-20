@@ -93,7 +93,7 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
       <div
         key={square}
         style={{
-          width: '25%',
+          width: '12.5%',
           position: 'relative',
           aspectRatio: '1 / 1',
         }}
@@ -120,7 +120,12 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
               onDragStart={(e) => handleDragStart(e, square)}
               onDragEnd={handleDragEnd}
               style={{
-                fontSize: 'clamp(2rem, 8vw, 6rem)',
+                width: '70%',
+                height: '70%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '4em',
                 cursor: 'grab',
                 opacity: isDragging ? 0.5 : 1,
                 color: piece.color === 'w' ? '#fff' : '#000',
@@ -137,9 +142,9 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
           <div
             style={{
               position: 'absolute',
-              bottom: '2px',
-              left: '2px',
-              fontSize: 'clamp(0.6rem, 1.2vw, 1rem)',
+              bottom: '4px',
+              left: '4px',
+              fontSize: '0.75em',
               fontWeight: 'bold',
               color: isLight ? '#b58863' : '#f0d9b5',
               userSelect: 'none',
@@ -170,6 +175,7 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
           border: '2px solid #333',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
           boxSizing: 'border-box',
+          fontSize: 'min(10vw, 80px)',
         }}
       >
         {squares.map((square, index) => {

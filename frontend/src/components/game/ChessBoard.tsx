@@ -118,13 +118,13 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
             onDragStart={(e) => handleDragStart(e, square)}
             onDragEnd={handleDragEnd}
             style={{
-              fontSize: '56px',
-              cursor: 'grab',
+              fontSize: '60px',
+              cursor: isDragging ? 'grabbing' : 'grab',
               opacity: isDragging ? 0.5 : 1,
-              color: piece.color === 'w' ? '#fff' : '#000',
+              color: piece.color === 'w' ? '#f0f0f0' : '#333',
               textShadow: piece.color === 'w'
-                ? '0 0 2px #000, 0 0 4px #000'
-                : '0 0 2px #fff, 0 0 4px #fff',
+                ? '1px 1px 2px #000, 0 0 1px #000'
+                : '1px 1px 2px #fff, 0 0 1px #fff',
               userSelect: 'none',
               lineHeight: 1,
             }}

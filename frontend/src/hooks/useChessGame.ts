@@ -48,13 +48,13 @@ export const useChessGame = (gameId: string) => {
     }
   };
 
-  const makeMove = (from: string, to: string) => {
+  const makeMove = (from: string, to: string): boolean => {
     try {
       const move = chess.move({ from, to });
       if (!move) {
         setError('Invalid move. Please try again.');
         setTimeout(() => setError(''), 3000);
-        return;
+        return false;
       }
 
       setFen(chess.fen());
@@ -63,7 +63,8 @@ export const useChessGame = (gameId: string) => {
 
       if (!isConnected) {
         setError('Connection lost. Reconnecting...');
-        return;
+        chess.undo(); // Undo the move if not connected
+        return false;
       }
 
       send(`/app/game/${gameId}/move`, { from, to, promotion: null });
@@ -78,10 +79,13 @@ export const useChessGame = (gameId: string) => {
         setError('Check!');
         setTimeout(() => setError(''), 2000);
       }
+
+      return true;
     } catch (err: any) {
       console.error('Invalid move:', err);
       setError('Invalid move. Please try a different move.');
       setTimeout(() => setError(''), 3000);
+      return false;
     }
   };
 

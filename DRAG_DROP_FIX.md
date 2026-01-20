@@ -1,9 +1,11 @@
-# Chess Drag-and-Drop Fix
+# Chess Drag-and-Drop and Sizing Fix
 
 ## Issue
 The chess pieces on the board were not responding to drag-and-drop interactions. Users could see the chessboard but couldn't make moves.
 
-## Root Cause
+**Update 1**: Chess piece and board sizing was also incorrect, with pieces appearing too large or misaligned within squares.
+
+**Update 2**: The chessboard was too small at 600px, making it difficult to play comfortably.
 1. **Invalid Import**: The code was importing `Square` type from `chess.js` library, but this library doesn't export that type, causing a module error.
 2. **Missing Return Value**: The `makeMove` function didn't return a boolean to indicate success/failure, so the ChessBoard component couldn't validate moves properly.
 3. **Library Incompatibility**: The `react-chessboard` library had TypeScript compatibility issues with the current setup.

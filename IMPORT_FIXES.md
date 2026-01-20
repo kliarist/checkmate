@@ -38,6 +38,26 @@ import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 ---
 
+### 3. ✅ SockJS Global Error
+**Error**: `Uncaught ReferenceError: global is not defined`
+
+**Fix**:
+```typescript
+// vite.config.ts
+export default defineConfig({
+  define: {
+    global: 'globalThis',
+  },
+  // ...rest of config
+});
+```
+
+**File**: `vite.config.ts`
+
+**Why**: SockJS expects Node.js `global` object. Vite doesn't polyfill it by default. We map `global` to `globalThis` (standard in browsers).
+
+---
+
 ## Why These Errors Happened
 
 ### Vite + TypeScript + ES Modules
@@ -139,6 +159,7 @@ import SockJS from 'sockjs-client';
 
 - [X] STOMP import fixed (`StompSubscription` removed)
 - [X] Axios import fixed (using `import type`)
+- [X] SockJS global polyfill added (`global` mapped to `globalThis`)
 - [X] WebSocket context compiles
 - [X] API client compiles
 - [X] No import errors in browser console
@@ -175,10 +196,11 @@ import SockJS from 'sockjs-client';
 
 1. ✅ Fix STOMP import (remove StompSubscription)
 2. ✅ Fix Axios import (use import type)
-3. ✅ Remove Redis dependency
-4. ✅ Add UserDetailsService
-5. ✅ Remove WebSocket auth dependency
-6. ✅ Update documentation
+3. ✅ Fix SockJS global error (add globalThis polyfill)
+4. ✅ Remove Redis dependency
+5. ✅ Add UserDetailsService
+6. ✅ Remove WebSocket auth dependency
+7. ✅ Update documentation
 
 ---
 

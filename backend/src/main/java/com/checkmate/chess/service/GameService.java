@@ -6,9 +6,11 @@ import com.checkmate.chess.dto.MakeMoveResponse;
 import com.checkmate.chess.exception.ResourceNotFoundException;
 import com.checkmate.chess.model.Game;
 import com.checkmate.chess.repository.GameRepository;
+import com.checkmate.chess.security.JwtService;
 import java.util.Random;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ public class GameService {
   private final GuestService guestService;
   private final MoveService moveService;
   private final ChessRulesService chessRulesService;
+  private final JwtService jwtService;
 
   @Transactional
   public CreateGuestGameResponse createGuestGame(final String guestUsername) {
@@ -33,8 +36,16 @@ public class GameService {
     var game = new Game(whitePlayer, blackPlayer, "GUEST");
     game = gameRepository.save(game);
 
+    // Generate JWT token for guest user authentication
+    final var userDetails = User.builder()
+        .username(guestUser.getUsername())
+        .password(guestUser.getPasswordHash())
+        .authorities("ROLE_GUEST")
+        .build();
+    final var token = jwtService.generateToken(userDetails);
+
     return new CreateGuestGameResponse(
-        game.getId(), guestUser.getId(), guestIsWhite ? "white" : "black");
+        game.getId(), guestUser.getId(), guestIsWhite ? "white" : "black", token);
   }
 
   public Game findById(final UUID gameId) {

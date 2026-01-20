@@ -11,11 +11,22 @@ export const GuestLandingPage = () => {
   const handlePlayAsGuest = async () => {
     setLoading(true);
     setError('');
+
+    // Clear any old tokens to prevent JWT signature mismatch
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
     try {
       const response = await apiClient.post('/api/games/guest', {
         guestUsername: username || null,
       });
-      const { gameId } = response.data.data;
+      const { gameId, token } = response.data.data;
+
+      // Store new JWT token for guest authentication
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+
       navigate(`/game/${gameId}`);
     } catch (err: any) {
       console.error('Failed to create game:', err);

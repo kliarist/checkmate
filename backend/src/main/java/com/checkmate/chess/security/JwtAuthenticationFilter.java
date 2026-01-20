@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
@@ -35,19 +37,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       return;
     }
 
-    final var jwt = authHeader.substring(7);
-    final var userEmail = jwtService.extractUsername(jwt);
+    try {
+      final var jwt = authHeader.substring(7);
+      final var userEmail = jwtService.extractUsername(jwt);
 
-    if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      final var userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+      if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        final var userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-      if (jwtService.isTokenValid(jwt, userDetails)) {
-        final var authToken =
-            new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        if (jwtService.isTokenValid(jwt, userDetails)) {
+          final var authToken =
+              new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
+          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
       }
+    } catch (Exception e) {
+      // Log and continue without authentication for invalid tokens
+      // This allows permitAll endpoints to work even with invalid tokens
+      log.debug("JWT validation failed: {}", e.getMessage());
     }
 
     filterChain.doFilter(request, response);

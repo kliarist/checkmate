@@ -92,57 +92,64 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
     return (
       <div
         key={square}
-        onClick={() => handleSquareClick(square)}
-        onDragOver={handleDragOver}
-        onDrop={(e) => handleDrop(e, square)}
         style={{
-          width: '12.5%',
-          paddingBottom: '12.5%',
+          width: '25%',
+          height: '25%',
           position: 'relative',
-          backgroundColor: isLight ? '#f0d9b5' : '#b58863',
-          border: isSelected ? '3px solid #646cff' : 'none',
-          cursor: piece ? 'pointer' : 'default',
+          aspectRatio: '1 / 1',
         }}
       >
-        {piece && (
-          <div
-            draggable
-            onDragStart={(e) => handleDragStart(e, square)}
-            onDragEnd={handleDragEnd}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '3.5rem',
-              cursor: 'grab',
-              opacity: isDragging ? 0.5 : 1,
-              color: piece.color === 'w' ? '#fff' : '#000',
-              textShadow: piece.color === 'w'
-                ? '0 0 2px #000, 0 0 4px #000'
-                : '0 0 2px #fff, 0 0 4px #fff',
-            }}
-          >
-            {PIECE_SYMBOLS[piece.color === 'w' ? piece.type.toUpperCase() : piece.type.toLowerCase()]}
-          </div>
-        )}
         <div
+          onClick={() => handleSquareClick(square)}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, square)}
           style={{
             position: 'absolute',
-            bottom: '2px',
-            left: '2px',
-            fontSize: '0.7rem',
-            fontWeight: 'bold',
-            color: isLight ? '#b58863' : '#f0d9b5',
-            userSelect: 'none',
+            inset: 0,
+            backgroundColor: isLight ? '#f0d9b5' : '#b58863',
+            border: isSelected ? '3px solid #646cff' : 'none',
+            boxSizing: 'border-box',
+            cursor: piece ? 'pointer' : 'default',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          {colIndex === 0 && String(8 - rowIndex)}
-          {rowIndex === 7 && square[0]}
+          {piece && (
+            <div
+              draggable
+              onDragStart={(e) => handleDragStart(e, square)}
+              onDragEnd={handleDragEnd}
+              style={{
+                fontSize: 'clamp(2rem, 8vw, 6rem)',
+                cursor: 'grab',
+                opacity: isDragging ? 0.5 : 1,
+                color: piece.color === 'w' ? '#fff' : '#000',
+                textShadow: piece.color === 'w'
+                  ? '0 0 2px #000, 0 0 4px #000'
+                  : '0 0 2px #fff, 0 0 4px #fff',
+                userSelect: 'none',
+                lineHeight: 1,
+              }}
+            >
+              {PIECE_SYMBOLS[piece.color === 'w' ? piece.type.toUpperCase() : piece.type.toLowerCase()]}
+            </div>
+          )}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '2px',
+              left: '2px',
+              fontSize: 'clamp(0.6rem, 1.2vw, 1rem)',
+              fontWeight: 'bold',
+              color: isLight ? '#b58863' : '#f0d9b5',
+              userSelect: 'none',
+              lineHeight: 1,
+            }}
+          >
+            {colIndex === 0 && String(8 - rowIndex)}
+            {rowIndex === 7 && square[0]}
+          </div>
         </div>
       </div>
     );
@@ -151,15 +158,19 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
   const squares = boardOrientation === 'white' ? SQUARES : [...SQUARES].reverse();
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ width: '100%', margin: '0 auto' }}>
       <div
         ref={boardRef}
         style={{
           display: 'flex',
           flexWrap: 'wrap',
           width: '100%',
+          maxWidth: '800px',
+          margin: '0 auto',
+          aspectRatio: '1 / 1',
           border: '2px solid #333',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+          boxSizing: 'border-box',
         }}
       >
         {squares.map((square, index) => {
@@ -178,6 +189,7 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
+            fontSize: '1rem',
           }}
         >
           Flip Board

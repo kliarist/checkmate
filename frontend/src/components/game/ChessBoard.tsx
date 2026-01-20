@@ -20,6 +20,7 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
   return (
     <div style={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
       <Chessboard
+        key={fen}
         position={fen}
         onPieceDrop={handlePieceDrop}
         boardOrientation={boardOrientation}

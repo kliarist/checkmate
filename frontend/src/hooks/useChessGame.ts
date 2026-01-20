@@ -50,14 +50,20 @@ export const useChessGame = (gameId: string) => {
 
   const makeMove = (from: string, to: string): boolean => {
     try {
+      console.log('Making move:', from, 'to', to);
+      console.log('Current FEN before move:', fen);
+
       const move = chess.move({ from, to });
       if (!move) {
+        console.log('Invalid move rejected');
         setError('Invalid move. Please try again.');
         setTimeout(() => setError(''), 3000);
         return false;
       }
 
-      setFen(chess.fen());
+      const newFen = chess.fen();
+      console.log('Move successful! New FEN:', newFen);
+      setFen(newFen);
       setMoves([...moves, { notation: move.san, number: chess.moveNumber() }]);
       setError('');
 

@@ -59,6 +59,10 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
       setDraggedPiece({ square, piece: piece.type });
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', square);
+      // Create a transparent drag image to use default piece visibility
+      const dragImage = new Image();
+      dragImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      e.dataTransfer.setDragImage(dragImage, 0, 0);
     }
   };
 
@@ -110,11 +114,11 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
       >
         {piece && (
           <div
-            draggable
+            draggable={true}
             onDragStart={(e) => handleDragStart(e, square)}
             onDragEnd={handleDragEnd}
             style={{
-              fontSize: '48px',
+              fontSize: '56px',
               cursor: 'grab',
               opacity: isDragging ? 0.5 : 1,
               color: piece.color === 'w' ? '#fff' : '#000',

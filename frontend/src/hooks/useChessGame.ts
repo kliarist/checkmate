@@ -113,14 +113,29 @@ export const useChessGame = (gameId: string) => {
 
   const resign = async () => {
     try {
+      // Get player ID from JWT token
+      const token = localStorage.getItem('token');
+      let playerId = 'guest';
+
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          playerId = payload.sub || payload.userId || 'guest';
+        } catch (e) {
+          console.error('Failed to parse token:', e);
+        }
+      }
+
       await apiClient.post(`/api/games/${gameId}/resign`, null, {
-        params: { playerId: 'guest' },
+        params: { playerId },
       });
+
       setIsGameOver(true);
       setResult('You resigned');
     } catch (err: any) {
       console.error('Failed to resign:', err);
-      setError('Failed to resign. Please try again.');
+      setError(err.response?.data?.message || 'Failed to resign. Please try again.');
+      setTimeout(() => setError(''), 3000);
     }
   };
 

@@ -94,7 +94,6 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
         key={square}
         style={{
           width: '25%',
-          height: '25%',
           position: 'relative',
           aspectRatio: '1 / 1',
         }}

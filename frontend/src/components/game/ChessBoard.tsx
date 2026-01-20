@@ -49,16 +49,4 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
     </div>
   );
 };
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
-        >
-          Flip Board
-        </button>
-      </div>
-    </div>
-  );
-};
 

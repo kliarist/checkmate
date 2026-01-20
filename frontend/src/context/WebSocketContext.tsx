@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
-import { Client, StompSubscription } from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 interface WebSocketContextType {
@@ -13,7 +13,7 @@ const WebSocketContext = createContext<WebSocketContextType | undefined>(undefin
 export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const clientRef = useRef<Client | null>(null);
-  const subscriptionsRef = useRef<Map<string, StompSubscription>>(new Map());
+  const subscriptionsRef = useRef<Map<string, any>>(new Map());
 
   useEffect(() => {
     const client = new Client({

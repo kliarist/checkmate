@@ -20,11 +20,14 @@ export const GuestLandingPage = () => {
       const response = await apiClient.post('/api/games/guest', {
         guestUsername: username || null,
       });
-      const { gameId, token } = response.data.data;
+      const { gameId, guestUserId, token } = response.data.data;
 
-      // Store new JWT token for guest authentication
+      // Store JWT token and guest user ID for authentication
       if (token) {
         localStorage.setItem('token', token);
+      }
+      if (guestUserId) {
+        localStorage.setItem('guestUserId', guestUserId);
       }
 
       navigate(`/game/${gameId}`);

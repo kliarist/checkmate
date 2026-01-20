@@ -113,17 +113,13 @@ export const useChessGame = (gameId: string) => {
 
   const resign = async () => {
     try {
-      // Get player ID from JWT token
-      const token = localStorage.getItem('token');
-      let playerId = 'guest';
+      // Get guest user ID from localStorage (stored during game creation)
+      const playerId = localStorage.getItem('guestUserId');
 
-      if (token) {
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          playerId = payload.sub || payload.userId || 'guest';
-        } catch (e) {
-          console.error('Failed to parse token:', e);
-        }
+      if (!playerId) {
+        setError('Player ID not found. Please refresh and try again.');
+        setTimeout(() => setError(''), 3000);
+        return;
       }
 
       await apiClient.post(`/api/games/${gameId}/resign`, null, {

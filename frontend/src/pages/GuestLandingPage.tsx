@@ -11,8 +11,6 @@ export const GuestLandingPage = () => {
   const handlePlayAsGuest = async () => {
     setLoading(true);
     setError('');
-
-    // Clear any old tokens to prevent JWT signature mismatch
     localStorage.removeItem('token');
     localStorage.removeItem('user');
 
@@ -22,102 +20,101 @@ export const GuestLandingPage = () => {
       });
       const { gameId, guestUserId, token } = response.data.data;
 
-      // Store JWT token and guest user ID for authentication
-      if (token) {
-        localStorage.setItem('token', token);
-      }
-      if (guestUserId) {
-        localStorage.setItem('guestUserId', guestUserId);
-      }
+      if (token) localStorage.setItem('token', token);
+      if (guestUserId) localStorage.setItem('guestUserId', guestUserId);
 
       navigate(`/game/${gameId}`);
     } catch (err: any) {
-      console.error('Failed to create game:', err);
-      setError(err.response?.data?.message || 'Failed to create game. Please try again.');
+      setError(err.response?.data?.message || 'Failed to create game');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ textAlign: 'center', padding: '4rem' }}>
-      <h1>Welcome to Checkmate Chess</h1>
-      <p>Play chess instantly without registration</p>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#242424',
+      margin: 0,
+      padding: 0,
+    }}>
+      <div style={{
+        fontSize: '4rem',
+        marginBottom: '0.5rem',
+        color: '#b58863',
+      }}>♞</div>
+
+      <h1 style={{
+        fontSize: '1.5rem',
+        fontWeight: '400',
+        letterSpacing: '0.3em',
+        margin: '0 0 3rem 0',
+        color: '#e0e0e0',
+        textTransform: 'uppercase',
+      }}>
+        CheckMate
+      </h1>
 
       {error && (
         <div style={{
-          color: '#f44336',
-          backgroundColor: '#ffebee',
-          padding: '1rem',
-          borderRadius: '4px',
+          color: '#ff6b6b',
           marginBottom: '1rem',
-          maxWidth: '400px',
-          margin: '1rem auto'
+          fontSize: '0.85rem',
         }}>
           {error}
         </div>
       )}
 
-      <div style={{ marginTop: '2rem' }}>
-        <input
-          type="text"
-          placeholder="Enter your name (optional)"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          disabled={loading}
-          style={{
-            padding: '0.5rem',
-            fontSize: '1rem',
-            marginRight: '1rem',
-            opacity: loading ? 0.6 : 1
-          }}
-        />
-        <button
-          onClick={handlePlayAsGuest}
-          disabled={loading}
-          style={{
-            padding: '0.5rem 2rem',
-            fontSize: '1rem',
-            backgroundColor: loading ? '#cccccc' : '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            position: 'relative',
-          }}
-        >
-          {loading ? (
-            <>
-              <span style={{ opacity: 0 }}>Play as Guest</span>
-              <span style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)'
-              }}>
-                Creating...
-              </span>
-            </>
-          ) : (
-            'Play as Guest'
-          )}
-        </button>
-      </div>
+      <input
+        type="text"
+        placeholder="Your name"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        disabled={loading}
+        style={{
+          width: '240px',
+          padding: '0.75rem 1rem',
+          fontSize: '1rem',
+          backgroundColor: '#2a2a2a',
+          border: '1px solid #3a3a3a',
+          borderRadius: '4px',
+          color: '#e0e0e0',
+          textAlign: 'center',
+          outline: 'none',
+          marginBottom: '1rem',
+        }}
+      />
 
-      {loading && (
-        <div style={{ marginTop: '2rem' }}>
-          <div className="spinner" style={{
-            border: '4px solid #f3f3f3',
-            borderTop: '4px solid #4CAF50',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto'
-          }} />
-        </div>
-      )}
+      <button
+        onClick={handlePlayAsGuest}
+        disabled={loading}
+        style={{
+          width: '240px',
+          padding: '0.75rem',
+          fontSize: '1rem',
+          fontWeight: '500',
+          backgroundColor: loading ? '#3a3a3a' : '#b58863',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: loading ? 'not-allowed' : 'pointer',
+        }}
+      >
+        {loading ? '...' : 'Play'}
+      </button>
+
+      <style>{`
+        ::placeholder { color: #666; }
+        input:focus { border-color: #b58863; }
+      `}</style>
     </div>
   );
 };
-

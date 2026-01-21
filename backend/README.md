@@ -12,7 +12,7 @@ Backend API for the Checkmate chess web application.
 - **Authentication**: JWT (JSON Web Tokens)
 - **Real-time**: WebSocket with STOMP
 - **Code Quality**: Lombok (boilerplate reduction)
-- **Testing**: JUnit 5, Spring Boot Test
+- **Testing**: JUnit 5, Spring Boot Test, AssertJ (fluent assertions)
 - **Code Style**: Checkstyle (Google Java Style Guide)
 - **Coverage**: JaCoCo
 
@@ -142,6 +142,29 @@ Coverage report will be available at `build/reports/jacoco/test/html/index.html`
 ### Coverage Requirements
 - **Overall**: Minimum 80% line coverage
 - **Critical Logic**: 100% coverage (chess rules, authentication)
+
+### Testing Best Practices
+
+We use **AssertJ** for fluent and readable assertions:
+
+```java
+// Instead of JUnit assertions:
+assertEquals(expected, actual);
+assertTrue(condition);
+
+// Use AssertJ fluent API:
+assertThat(actual).isEqualTo(expected);
+assertThat(condition).isTrue();
+assertThat(user).isNotNull();
+assertThat(user.getUsername()).startsWith("guest_");
+assertThat(list).hasSize(3).contains(item1, item2);
+```
+
+AssertJ provides:
+- **Fluent API**: More readable test code
+- **Better error messages**: Clear failure descriptions
+- **Rich assertions**: Collections, exceptions, dates, etc.
+- **IDE autocomplete**: Discoverable assertion methods
 
 ## Code Quality
 

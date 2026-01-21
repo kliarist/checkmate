@@ -33,6 +33,7 @@ A modern, real-time multiplayer chess web application with user accounts, matchm
 - **Real-time**: WebSocket (STOMP)
 - **Database**: PostgreSQL
 - **Authentication**: JWT with Spring Security
+- **Testing**: JUnit 5, Spring Boot Test, AssertJ
 - **Caching**: Redis (optional - not included in MVP)
 
 ## Project Structure
@@ -149,6 +150,8 @@ This project follows strict code quality principles:
 - **Coverage Target**: Minimum 80% overall, 100% for critical business logic
 - **TDD Approach**: Write tests first, then implement
 - **Test Independence**: Each test must run independently
+- **Backend Assertions**: Use AssertJ for fluent, readable assertions
+- **Frontend Testing**: Use Vitest with React Testing Library
 
 ### Commit Convention
 

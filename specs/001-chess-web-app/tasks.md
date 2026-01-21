@@ -97,16 +97,16 @@ description: "Implementation tasks for Chess Web Application"
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T036 [P] [US1] Unit tests for Game entity validation in backend/src/test/java/com/checkmate/chess/model/GameTest.java
-- [ ] T037 [P] [US1] Unit tests for chess move validation wrapper in backend/src/test/java/com/checkmate/chess/service/ChessRulesServiceTest.java (100% coverage required)
-- [ ] T038 [P] [US1] Unit tests for guest user creation in backend/src/test/java/com/checkmate/chess/service/GuestServiceTest.java
-- [ ] T039 [P] [US1] Integration test for create guest game endpoint in backend/src/test/java/com/checkmate/chess/controller/GameControllerTest.java
+- [X] T036 [P] [US1] Unit tests for Game entity validation in backend/src/test/java/com/checkmate/chess/model/GameTest.java
+- [X] T037 [P] [US1] Unit tests for chess move validation wrapper in backend/src/test/java/com/checkmate/chess/service/ChessRulesServiceTest.java (100% coverage required)
+- [X] T038 [P] [US1] Unit tests for guest user creation in backend/src/test/java/com/checkmate/chess/service/GuestServiceTest.java
+- [X] T039 [P] [US1] Integration test for create guest game endpoint in backend/src/test/java/com/checkmate/chess/controller/GameControllerTest.java
 - [ ] T040 [P] [US1] Integration test for WebSocket move handling in backend/src/test/java/com/checkmate/chess/websocket/GameWebSocketHandlerTest.java
 - [ ] T041 [P] [US1] E2E test for complete guest game flow using Testcontainers with PostgreSQL
 
 ### Frontend Tests for US1 (TDD - Write First)
 
-- [ ] T042 [P] [US1] Unit tests for ChessBoard component in frontend/src/__tests__/components/ChessBoard.test.tsx
+- [X] T042 [P] [US1] Unit tests for ChessBoard component in frontend/src/__tests__/components/ChessBoard.test.tsx
 - [ ] T043 [P] [US1] Unit tests for chess move validation using chess.js in frontend/src/__tests__/utils/chessValidation.test.ts
 - [ ] T044 [P] [US1] Integration test for guest game creation flow in frontend/src/__tests__/integration/guestGame.test.tsx
 

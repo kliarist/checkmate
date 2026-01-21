@@ -156,8 +156,8 @@ export const GuestLandingPage = () => {
             style={{
               width: '100%',
               padding: '0.875rem',
-              fontSize: '0.9rem',
-              fontWeight: '400',
+              fontSize: '1rem',
+              fontWeight: '500',
               backgroundColor: 'transparent',
               color: '#999',
               border: '1px solid #3a3a3a',

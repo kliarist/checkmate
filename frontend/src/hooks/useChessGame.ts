@@ -125,8 +125,7 @@ export const useChessGame = (gameId: string) => {
     }
 
     setConnectionError(false);
-    const unsubscribe = subscribe(`/topic/game/${gameId}/moves`, handleWebSocketMove);
-    return unsubscribe;
+    return subscribe(`/topic/game/${gameId}/moves`, handleWebSocketMove);
   }, [gameId, isConnected, subscribe, handleWebSocketMove]);
 
   const makeMove = useCallback((from: string, to: string): boolean => {
@@ -136,11 +135,12 @@ export const useChessGame = (gameId: string) => {
       let move = null;
       try {
         move = chess.move({ from, to });
-      } catch (e: any) {
+      } catch (moveError: any) {
         try {
           move = chess.move({ from, to, promotion: 'q' });
-        } catch {
-          move = null;
+        } catch (promotionError) {
+          console.error('[useChessGame] Invalid move with promotion:', promotionError);
+          return false;
         }
       }
 

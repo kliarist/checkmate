@@ -67,10 +67,10 @@ export const ChessBoard = ({
       flexDirection: 'column',
       alignItems: 'center',
       gap: '1rem',
+      maxWidth: '700px',
     }}>
       <Chessboard
-        id="BasicBoard"
-        boardWidth={600}
+        boardWidth={700}
         position={fen}
         boardOrientation={boardOrientation}
         onPieceDrop={onDrop}

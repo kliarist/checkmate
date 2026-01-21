@@ -58,61 +58,47 @@ export const GamePage = () => {
 
   return (
     <div style={{
-      display: 'grid',
-      gridTemplateColumns: '1fr auto 380px',
-      gap: '2rem',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100vw',
       height: '100vh',
       backgroundColor: '#242424',
       padding: '2rem',
       boxSizing: 'border-box',
+      overflow: 'hidden',
     }}>
-      {/* Left spacer */}
-      <div />
-
-      {/* Center - Chess Board */}
+      {/* Centered Content Container */}
       <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: 'grid',
+        gridTemplateColumns: 'minmax(auto, 700px) minmax(300px, 350px)',
+        gap: '2rem',
+        maxWidth: '1400px',
       }}>
-        {error && (
-          <div style={{
-            backgroundColor: '#ffebee',
-            color: '#c62828',
-            padding: '0.75rem 1rem',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-            fontSize: '0.9rem',
-          }}>
-            {error}
-          </div>
-        )}
-
+        {/* Chess Board */}
         <div style={{
-          marginBottom: '1rem',
-          color: '#999',
-          fontSize: '0.9rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-          Playing as {playerColor === 'white' ? '⚪ White' : '⚫ Black'}
+          <ChessBoard
+            fen={fen}
+            onMove={makeMove}
+            playerColor={playerColor}
+            onResign={resign}
+            onOfferDraw={handleOfferDraw}
+          />
         </div>
 
-        <ChessBoard
-          fen={fen}
-          onMove={makeMove}
-          playerColor={playerColor}
-          onResign={resign}
-          onOfferDraw={handleOfferDraw}
-        />
-      </div>
-
-      {/* Right Sidebar - Moves and Chat */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        height: 'calc(100vh - 4rem)',
-      }}>
+        {/* Right Sidebar - Moves and Chat */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          height: 'calc(100vh - 4rem)',
+          overflow: 'hidden',
+        }}>
         {/* Move History */}
         <div style={{
           backgroundColor: '#2a2a2a',
@@ -149,6 +135,7 @@ export const GamePage = () => {
       </div>
 
       {isGameOver && <GameEndModal result={result} onClose={() => window.location.href = '/'} />}
+    </div>
     </div>
   );
 };

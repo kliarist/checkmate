@@ -61,9 +61,6 @@ export const useChessGame = (gameId: string) => {
       } else if (message.isStalemate) {
         setIsGameOver(true);
         setResult('Stalemate - Draw');
-      } else if (message.isCheck) {
-        setError('Check!');
-        setTimeout(() => setError(''), 2000);
       }
     } catch (err) {
       console.error('[useChessGame] Failed to process move:', err);
@@ -133,8 +130,6 @@ export const useChessGame = (gameId: string) => {
       }
 
       if (!move) {
-        setError('Invalid move. Please try again.');
-        setTimeout(() => setError(''), 3000);
         return false;
       }
 
@@ -159,16 +154,11 @@ export const useChessGame = (gameId: string) => {
       } else if (chess.isStalemate()) {
         setIsGameOver(true);
         setResult('Stalemate - Draw');
-      } else if (chess.isCheck()) {
-        setError('Check!');
-        setTimeout(() => setError(''), 2000);
       }
 
       return true;
     } catch (err: any) {
       console.error('[useChessGame] Invalid move exception:', err);
-      setError('Invalid move. Please try a different move.');
-      setTimeout(() => setError(''), 3000);
       return false;
     }
   }, [gameId]);

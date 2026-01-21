@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { WebSocketProvider } from './context/WebSocketContext';
 import { GuestLandingPage } from './pages/GuestLandingPage';
 import { GamePage } from './pages/GamePage';
+import { TestBoard } from './components/game/TestBoard';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/register" element={<div>Register</div>} />
             <Route path="/play" element={<div>Play</div>} />
             <Route path="/game/:id" element={<GamePage />} />
+            <Route path="/test" element={<TestBoard />} />
           </Routes>
         </Router>
       </WebSocketProvider>

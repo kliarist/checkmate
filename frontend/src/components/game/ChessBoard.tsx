@@ -1,35 +1,74 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 
 interface ChessBoardProps {
   fen: string;
   onMove: (from: string, to: string) => boolean;
+  playerColor?: 'white' | 'black';
 }
 
-export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
-  const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white');
+export const ChessBoard = ({ fen, onMove, playerColor = 'white' }: ChessBoardProps) => {
+  const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>(playerColor);
+  const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
+  const [optionSquares, setOptionSquares] = useState<Record<string, React.CSSProperties>>({});
 
-  const handlePieceDrop = (sourceSquare: string, targetSquare: string): boolean => {
-    return onMove(sourceSquare, targetSquare);
-  };
+  // Update board orientation when playerColor prop changes
+  useEffect(() => {
+    setBoardOrientation(playerColor);
+  }, [playerColor]);
 
-  const flipBoard = () => {
+  function onDrop(sourceSquare: string, targetSquare: string): boolean {
+    const result = onMove(sourceSquare, targetSquare);
+    setSelectedSquare(null);
+    setOptionSquares({});
+    return result;
+  }
+
+  function onSquareClick(square: string) {
+    if (!selectedSquare) {
+      setSelectedSquare(square);
+      setOptionSquares({
+        [square]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+      });
+    } else {
+      onMove(selectedSquare, square);
+      setSelectedSquare(null);
+      setOptionSquares({});
+    }
+  }
+
+  function flipBoard() {
     setBoardOrientation((prev) => (prev === 'white' ? 'black' : 'white'));
-  };
+  }
+
+  // Memoize board styles to prevent unnecessary re-renders
+  const boardStyle = useMemo(() => ({
+    borderRadius: '4px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+  }), []);
+
+  const darkSquareStyle = useMemo(() => ({ backgroundColor: '#b58863' }), []);
+  const lightSquareStyle = useMemo(() => ({ backgroundColor: '#f0d9b5' }), []);
 
   return (
-    <div style={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}>
       <Chessboard
-        key={fen}
+        id="BasicBoard"
+        boardWidth={560}
         position={fen}
-        onPieceDrop={handlePieceDrop}
         boardOrientation={boardOrientation}
-        customBoardStyle={{
-          borderRadius: '4px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-        }}
-        customDarkSquareStyle={{ backgroundColor: '#b58863' }}
-        customLightSquareStyle={{ backgroundColor: '#f0d9b5' }}
+        onPieceDrop={onDrop}
+        onSquareClick={onSquareClick}
+        customSquareStyles={optionSquares}
+        customBoardStyle={boardStyle}
+        customDarkSquareStyle={darkSquareStyle}
+        customLightSquareStyle={lightSquareStyle}
+        animationDuration={200}
       />
       <div style={{ textAlign: 'center', marginTop: '1rem' }}>
         <button
@@ -50,4 +89,3 @@ export const ChessBoard = ({ fen, onMove }: ChessBoardProps) => {
     </div>
   );
 };
-

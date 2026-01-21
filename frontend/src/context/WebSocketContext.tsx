@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
@@ -17,15 +17,17 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => new SockJS(`${import.meta.env.VITE_API_URL}/ws`),
+      webSocketFactory: () => new SockJS(`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/ws`),
       onConnect: () => {
+        console.log('[WebSocket] Connected');
         setIsConnected(true);
       },
       onDisconnect: () => {
+        console.log('[WebSocket] Disconnected');
         setIsConnected(false);
       },
       onStompError: (frame) => {
-        console.error('STOMP error', frame);
+        console.error('[WebSocket] STOMP error', frame);
       },
     });
 
@@ -39,8 +41,9 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     };
   }, []);
 
-  const subscribe = (destination: string, callback: (message: any) => void) => {
-    if (!clientRef.current || !isConnected) {
+  const subscribe = useCallback((destination: string, callback: (message: any) => void) => {
+    if (!clientRef.current?.connected) {
+      console.log('[WebSocket] Cannot subscribe, not connected');
       return () => {};
     }
 
@@ -55,16 +58,18 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       subscription.unsubscribe();
       subscriptionsRef.current.delete(destination);
     };
-  };
+  }, []);
 
-  const send = (destination: string, body: any) => {
-    if (clientRef.current && isConnected) {
+  const send = useCallback((destination: string, body: any) => {
+    if (clientRef.current?.connected) {
       clientRef.current.publish({
         destination,
         body: JSON.stringify(body),
       });
+    } else {
+      console.warn('[WebSocket] Cannot send, not connected');
     }
-  };
+  }, []);
 
   return (
     <WebSocketContext.Provider value={{ isConnected, subscribe, send }}>

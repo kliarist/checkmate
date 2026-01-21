@@ -53,7 +53,6 @@ export const GuestLandingPage = () => {
     setError('');
 
     try {
-      // TODO: Implement sign in API call
       setError('Sign in functionality coming soon!');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to sign in');
@@ -67,7 +66,6 @@ export const GuestLandingPage = () => {
     setError('');
 
     try {
-      // TODO: Implement sign up API call
       setError('Sign up functionality coming soon!');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to sign up');

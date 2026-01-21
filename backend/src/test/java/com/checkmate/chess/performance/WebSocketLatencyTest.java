@@ -28,10 +28,6 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
-/**
- * Performance test for WebSocket move latency (T083).
- * Verifies that move synchronization latency is < 100ms at p95.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @DisplayName("WebSocket Move Latency Performance Tests")

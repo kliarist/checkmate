@@ -4,10 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { GuestLandingPage } from '../../../pages/GuestLandingPage';
 import apiClient from '../../../api/client';
 
-/**
- * Integration tests for guest game creation flow (T044).
- * Tests end-to-end flow from landing page to game creation.
- */
 describe('Guest Game Creation Flow', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -25,7 +21,6 @@ describe('Guest Game Creation Flow', () => {
   });
 
   it('should show loading state when creating game', async () => {
-    // Mock API call with delay
     vi.spyOn(apiClient, 'post').mockImplementation(() =>
       new Promise(resolve => setTimeout(() => resolve({
         data: {
@@ -49,7 +44,6 @@ describe('Guest Game Creation Flow', () => {
     const playButton = screen.getByText(/Play as Guest/i);
     fireEvent.click(playButton);
 
-    // Should show loading state
     await waitFor(() => {
       const loadingElement = screen.queryByText(/Creating game/i) ||
                             screen.queryByText(/Loading/i);
@@ -116,7 +110,6 @@ describe('Guest Game Creation Flow', () => {
       expect(apiClient.post).toHaveBeenCalled();
     });
 
-    // Navigation happens after successful game creation
     await waitFor(() => {
       expect(window.location.pathname).toMatch(/\/game\/\d+/);
     }, { timeout: 3000 });
@@ -223,7 +216,6 @@ describe('Guest Game Creation Flow', () => {
     const playButton = screen.getByText(/Play as Guest/i);
     fireEvent.click(playButton);
 
-    // Button should be disabled during creation
     await waitFor(() => {
       expect(playButton.hasAttribute('disabled')).toBe(true);
     });
@@ -251,13 +243,11 @@ describe('Guest Game Creation Flow', () => {
 
     const playButton = screen.getByText(/Play as Guest/i);
 
-    // Click multiple times rapidly
     fireEvent.click(playButton);
     fireEvent.click(playButton);
     fireEvent.click(playButton);
 
     await waitFor(() => {
-      // Should only create one game
       expect(apiClient.post).toHaveBeenCalledTimes(1);
     });
   });
@@ -319,7 +309,6 @@ describe('Guest Game Creation Flow', () => {
       expect(apiClient.post).toHaveBeenCalled();
     });
 
-    // Verify starting position
     const call = apiClient.post.mock.results[0];
     await call.value.then((response: any) => {
       expect(response.data.data.currentFen).toBe(

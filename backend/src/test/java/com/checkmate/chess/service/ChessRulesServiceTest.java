@@ -7,11 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-/**
- * Unit tests for ChessRulesService (T037).
- * Requires 100% coverage for chess move validation logic.
- * Tests all legal/illegal moves, special moves, and game state detection.
- */
 @DisplayName("Chess Rules Service Tests")
 class ChessRulesServiceTest {
 

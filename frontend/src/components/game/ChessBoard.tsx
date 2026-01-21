@@ -10,7 +10,6 @@ interface ChessBoardProps {
   onOfferDraw?: () => void;
 }
 
-// Chess board squares for keyboard navigation
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const RANKS = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
@@ -28,12 +27,17 @@ export const ChessBoard = ({
   const [focusedSquare, setFocusedSquare] = useState<string>('e2');
   const boardContainerRef = useRef<HTMLDivElement>(null);
 
-  // Update board orientation when playerColor prop changes
   useEffect(() => {
     setBoardOrientation(playerColor);
   }, [playerColor]);
 
-  // Keyboard navigation handler
+  const announceSquare = useCallback((square: string) => {
+    const liveRegion = document.getElementById('chess-announcer');
+    if (liveRegion) {
+      liveRegion.textContent = `Focused on square ${square}`;
+    }
+  }, []);
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!focusedSquare) return;
 
@@ -87,12 +91,10 @@ export const ChessBoard = ({
     const newSquare = FILES[newFileIndex] + RANKS[newRankIndex];
     if (newSquare !== focusedSquare) {
       setFocusedSquare(newSquare);
-      // Announce square change for screen readers
       announceSquare(newSquare);
     }
-  }, [focusedSquare, selectedSquare, onMove]);
+  }, [focusedSquare, selectedSquare, onMove, announceSquare]);
 
-  // Add keyboard event listener
   useEffect(() => {
     const container = boardContainerRef.current;
     if (!container) return;
@@ -101,46 +103,24 @@ export const ChessBoard = ({
     return () => container.removeEventListener('keydown', handleKeyDown as any);
   }, [handleKeyDown]);
 
-  // Announce square for screen readers
-  const announceSquare = (square: string) => {
-    const announcement = `Focused on square ${square}`;
-    const liveRegion = document.getElementById('chess-announcer');
-    if (liveRegion) {
-      liveRegion.textContent = announcement;
-    }
-  };
-
-  // Update board orientation when playerColor prop changes
-  useEffect(() => {
-    setBoardOrientation(playerColor);
-  }, [playerColor]);
-
-  function onDrop(sourceSquare: string, targetSquare: string): boolean {
-    const result = onMove(sourceSquare, targetSquare);
-    setSelectedSquare(null);
-    setOptionSquares({});
-    return result;
-  }
-
-  function onSquareClick(square: string) {
-    if (!selectedSquare) {
+  const onSquareClick = useCallback((square: string) => {
+    if (selectedSquare) {
+      onMove(selectedSquare, square);
+      setSelectedSquare(null);
+      setOptionSquares({});
+    } else {
       setSelectedSquare(square);
       setOptionSquares({
         [square]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
       });
-    } else {
-      onMove(selectedSquare, square);
-      setSelectedSquare(null);
-      setOptionSquares({});
     }
-  }
+  }, [selectedSquare, onMove]);
 
-  const handleFlipBoard = () => {
+  const handleFlipBoard = useCallback(() => {
     setBoardOrientation((prev) => (prev === 'white' ? 'black' : 'white'));
     onFlipBoard?.();
-  };
+  }, [onFlipBoard]);
 
-  // Memoize board styles to prevent unnecessary re-renders
   const boardStyle = useMemo(() => ({
     borderRadius: '4px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
@@ -166,25 +146,20 @@ export const ChessBoard = ({
       }}
       onFocus={() => setFocusedSquare('e2')}
     >
-      {/* Screen reader instructions */}
       <div id="chess-instructions" style={{ position: 'absolute', left: '-9999px' }}>
         Use arrow keys to navigate squares. Press Enter or Space to select and move pieces. Press Escape to cancel selection.
       </div>
 
-      {/* Live region for screen reader announcements */}
-      <div
+      <output
         id="chess-announcer"
-        role="status"
         aria-live="polite"
         aria-atomic="true"
         style={{ position: 'absolute', left: '-9999px' }}
       />
 
       <Chessboard
-        boardWidth={700}
         position={fen}
         boardOrientation={boardOrientation}
-        onPieceDrop={onDrop}
         onSquareClick={onSquareClick}
         customSquareStyles={{
           ...optionSquares,
@@ -199,17 +174,18 @@ export const ChessBoard = ({
         customDarkSquareStyle={darkSquareStyle}
         customLightSquareStyle={lightSquareStyle}
         animationDuration={200}
-        arePiecesDraggable={true}
+        arePiecesDraggable={false}
       />
 
-      {/* Action buttons below the board */}
-      <div
+      <fieldset
         style={{
           display: 'flex',
           gap: '0.5rem',
           justifyContent: 'center',
+          border: 'none',
+          padding: 0,
+          margin: 0,
         }}
-        role="group"
         aria-label="Game controls"
       >
         <button
@@ -286,7 +262,7 @@ export const ChessBoard = ({
         >
           🏳
         </button>
-      </div>
+      </fieldset>
     </div>
   );
 };

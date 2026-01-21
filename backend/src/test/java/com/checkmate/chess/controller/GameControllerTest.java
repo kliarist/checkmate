@@ -20,10 +20,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Integration tests for GameController (T039).
- * Tests REST endpoints for game creation and retrieval.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional

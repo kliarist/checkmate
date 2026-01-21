@@ -20,7 +20,6 @@ export const GamePage = () => {
   } = useChessGame(id!);
 
   const handleOfferDraw = () => {
-    // TODO: Implement draw offer functionality
     alert('Draw offer functionality coming soon!');
   };
 
@@ -68,14 +67,12 @@ export const GamePage = () => {
       boxSizing: 'border-box',
       overflow: 'hidden',
     }}>
-      {/* Centered Content Container */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(auto, 700px) minmax(300px, 350px)',
         gap: '2rem',
         maxWidth: '1400px',
       }}>
-        {/* Chess Board */}
         <div style={{
           display: 'flex',
           flexDirection: 'column',
@@ -91,7 +88,6 @@ export const GamePage = () => {
           />
         </div>
 
-        {/* Right Sidebar - Moves and Chat */}
         <div style={{
           display: 'flex',
           flexDirection: 'column',
@@ -99,7 +95,6 @@ export const GamePage = () => {
           height: 'calc(100vh - 4rem)',
           overflow: 'hidden',
         }}>
-        {/* Move History */}
         <div style={{
           backgroundColor: '#2a2a2a',
           borderRadius: '4px',
@@ -125,7 +120,6 @@ export const GamePage = () => {
           </div>
         </div>
 
-        {/* Chat Panel */}
         <div style={{
           height: '60%',
           overflow: 'hidden',

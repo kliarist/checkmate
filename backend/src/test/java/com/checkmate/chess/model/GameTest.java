@@ -10,10 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-/**
- * Unit tests for Game entity validation (T036).
- * Tests game state management, validation rules, and business logic.
- */
 @DisplayName("Game Entity Tests")
 class GameTest {
 

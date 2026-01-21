@@ -1,10 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Chess } from 'chess.js';
 
-/**
- * Unit tests for chess move validation using chess.js (T043).
- * Tests chess rules, move validation, and game state detection.
- */
 describe('Chess Validation Utilities', () => {
   describe('Basic Move Validation', () => {
     it('should validate legal pawn move', () => {
@@ -134,7 +130,6 @@ describe('Chess Validation Utilities', () => {
 
     it('should detect threefold repetition', () => {
       const chess = new Chess();
-      // Repeat position 3 times
       chess.move('Nf3');
       chess.move('Nf6');
       chess.move('Ng1');

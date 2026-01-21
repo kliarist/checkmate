@@ -15,10 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Unit tests for GuestService (T038).
- * Tests guest user creation and management functionality.
- */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Guest Service Tests")
 class GuestServiceTest {

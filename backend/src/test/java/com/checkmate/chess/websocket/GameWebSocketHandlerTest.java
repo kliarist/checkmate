@@ -28,10 +28,6 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
-/**
- * Integration tests for WebSocket move handling (T040).
- * Tests real-time move synchronization via WebSocket.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @DisplayName("Game WebSocket Handler Integration Tests")

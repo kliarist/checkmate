@@ -1,17 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-/**
- * Frontend page load performance tests (T084).
- * Verifies First Contentful Paint < 2s and other performance metrics.
- */
 test.describe('Frontend Performance Tests', () => {
   test('should load landing page with FCP < 2s', async ({ page }) => {
     const startTime = Date.now();
 
     await page.goto('/');
 
-    // Wait for First Contentful Paint
-    const fcpMetrics = await page.evaluate(() => {
       return new Promise((resolve) => {
         if (performance.getEntriesByType) {
           const paintEntries = performance.getEntriesByType('paint');
@@ -21,9 +15,7 @@ test.describe('Frontend Performance Tests', () => {
           }
         }
 
-        // Fallback: use load time
         window.addEventListener('load', () => {
-          resolve(Date.now() - performance.timing.navigationStart);
         });
       });
     });
@@ -39,18 +31,14 @@ test.describe('Frontend Performance Tests', () => {
   });
 
   test('should load game page with FCP < 2s', async ({ page }) => {
-    // First create a game
     await page.goto('/');
     await page.click('text=Play as Guest');
-    await page.waitForURL(/\/game\/\d+/);
 
     const startTime = Date.now();
 
-    // Reload to measure performance
     await page.reload();
 
     await page.waitForLoadState('domcontentloaded');
-
     const performanceMetrics = await page.evaluate(() => ({
       fcp: performance.getEntriesByType('paint')
         .find(entry => entry.name === 'first-contentful-paint')?.startTime || 0,
@@ -74,12 +62,10 @@ test.describe('Frontend Performance Tests', () => {
 
     const ttiMetrics = await page.evaluate(() => {
       return new Promise((resolve) => {
-        // Approximate TTI by waiting for network idle and long tasks to complete
         const startTime = performance.now();
 
         if ('PerformanceObserver' in window) {
           const observer = new PerformanceObserver((list) => {
-            const entries = list.getEntries();
             const lastEntry = entries[entries.length - 1];
             if (lastEntry) {
               observer.disconnect();
@@ -90,19 +76,15 @@ test.describe('Frontend Performance Tests', () => {
           try {
             observer.observe({ entryTypes: ['longtask'] });
           } catch (e) {
-            // Fallback if longtask not supported
             resolve(performance.now() - startTime);
           }
         }
 
-        // Fallback: use load event
         setTimeout(() => {
-          resolve(performance.now() - startTime);
         }, 3000);
       });
     });
 
-    console.log(`Time to Interactive: ${ttiMetrics}ms`);
     expect(ttiMetrics).toBeLessThan(3500);
   });
 
@@ -140,8 +122,6 @@ test.describe('Frontend Performance Tests', () => {
     console.log(`Target JS: < 500 KB (gzipped)`);
     console.log(`Target CSS: < 50 KB (gzipped)`);
 
-    // These are uncompressed sizes, so they'll be larger than the gzipped target
-    // But we can still check they're reasonable
     expect(resourceMetrics.jsSize).toBeLessThan(1500); // Uncompressed should be < 1.5MB
     expect(resourceMetrics.cssSize).toBeLessThan(150); // Uncompressed should be < 150KB
   });
@@ -149,8 +129,6 @@ test.describe('Frontend Performance Tests', () => {
   test('should have no render-blocking resources', async ({ page }) => {
     await page.goto('/');
 
-    const blockingResources = await page.evaluate(() => {
-      const resources = performance.getEntriesByType('resource');
       return resources.filter((resource: any) => {
         return resource.renderBlockingStatus === 'blocking';
       }).length;
@@ -166,7 +144,6 @@ test.describe('Frontend Performance Tests', () => {
     await page.waitForURL(/\/game\/\d+/);
     await page.waitForTimeout(1000);
 
-    // Measure frame rate during interaction
     const fps = await page.evaluate(() => {
       return new Promise((resolve) => {
         let frameCount = 0;
@@ -176,7 +153,6 @@ test.describe('Frontend Performance Tests', () => {
         const countFrame = () => {
           frameCount++;
           if (performance.now() - startTime < duration) {
-            requestAnimationFrame(countFrame);
           } else {
             resolve(frameCount);
           }
@@ -189,7 +165,6 @@ test.describe('Frontend Performance Tests', () => {
     console.log(`Frame rate: ${fps} fps`);
     console.log(`Target: 60 fps`);
 
-    // Allow some tolerance (55+ fps is acceptable)
     expect(fps).toBeGreaterThan(55);
   });
 
@@ -200,7 +175,6 @@ test.describe('Frontend Performance Tests', () => {
       return new Promise((resolve) => {
         if ('PerformanceObserver' in window) {
           const observer = new PerformanceObserver((list) => {
-            const entries = list.getEntries();
             const lastEntry = entries[entries.length - 1];
             if (lastEntry) {
               resolve(lastEntry.startTime);
@@ -213,7 +187,6 @@ test.describe('Frontend Performance Tests', () => {
             resolve(0);
           }
 
-          // Stop observing after 5 seconds
           setTimeout(() => {
             observer.disconnect();
             resolve(0);
@@ -225,7 +198,6 @@ test.describe('Frontend Performance Tests', () => {
     });
 
     if (lcpMetrics > 0) {
-      console.log(`Largest Contentful Paint: ${lcpMetrics}ms`);
       console.log(`Target: < 2500ms`);
       expect(lcpMetrics).toBeLessThan(2500);
     }
@@ -270,11 +242,9 @@ test.describe('Frontend Performance Tests', () => {
   });
 
   test('should cache resources effectively', async ({ page, context }) => {
-    // First visit
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Second visit (should use cache)
     const cachedPage = await context.newPage();
     const startTime = Date.now();
     await cachedPage.goto('/');
@@ -284,16 +254,13 @@ test.describe('Frontend Performance Tests', () => {
     console.log(`Target: < 500ms for cached resources`);
 
     expect(cachedLoadTime).toBeLessThan(1000);
-
     await cachedPage.close();
   });
 
-  test('should have acceptable memory usage', async ({ page }) => {
     await page.goto('/');
     await page.click('text=Play as Guest');
     await page.waitForURL(/\/game\/\d+/);
 
-    // Get memory usage (if available)
     const memoryMetrics = await page.evaluate(() => {
       if ('memory' in performance) {
         return {
@@ -308,10 +275,8 @@ test.describe('Frontend Performance Tests', () => {
     if (memoryMetrics) {
       console.log('=== Memory Usage ===');
       console.log(`Used Heap: ${memoryMetrics.usedJSHeapSize} MB`);
-      console.log(`Total Heap: ${memoryMetrics.totalJSHeapSize} MB`);
       console.log(`Heap Limit: ${memoryMetrics.jsHeapSizeLimit} MB`);
 
-      // Should use less than 100MB of heap
       expect(memoryMetrics.usedJSHeapSize).toBeLessThan(100);
     }
   });

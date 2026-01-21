@@ -16,10 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-/**
- * Load tests for concurrent game handling (T085).
- * Simulates 50 concurrent games with 100 players making moves.
- */
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 @DisplayName("Concurrent Game Load Tests")

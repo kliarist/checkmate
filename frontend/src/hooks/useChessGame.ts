@@ -30,6 +30,16 @@ export const useChessGame = (gameId: string) => {
   const pendingMoveRef = useRef<string | null>(null);
 
   /**
+   * Announce message to screen readers
+   */
+  const announceToScreenReader = useCallback((message: string) => {
+    const announcer = document.getElementById('chess-announcer');
+    if (announcer) {
+      announcer.textContent = message;
+    }
+  }, []);
+
+  /**
    * Handle moves received via WebSocket (from opponent or echoed back from our own move)
    */
   const handleWebSocketMove = useCallback((message: any) => {
@@ -55,18 +65,23 @@ export const useChessGame = (gameId: string) => {
         number: chessRef.current.moveNumber()
       }]);
 
+      // Announce move to screen reader
+      announceToScreenReader(`Opponent played ${moveNotation}`);
+
       if (message.isCheckmate) {
         setIsGameOver(true);
         setResult('Checkmate!');
+        announceToScreenReader('Checkmate! Game over.');
       } else if (message.isStalemate) {
         setIsGameOver(true);
         setResult('Stalemate - Draw');
+        announceToScreenReader('Stalemate. Game is a draw.');
       }
     } catch (err) {
       console.error('[useChessGame] Failed to process move:', err);
       setError('Failed to process move. Game may be out of sync.');
     }
-  }, []);
+  }, [announceToScreenReader]);
 
   const loadGame = useCallback(async () => {
     setLoading(true);
@@ -138,6 +153,9 @@ export const useChessGame = (gameId: string) => {
       setMoves(prevMoves => [...prevMoves, { notation: move.san, number: chess.moveNumber() }]);
       setError('');
 
+      // Announce move to screen reader
+      announceToScreenReader(`You played ${move.san}`);
+
       if (isConnectedRef.current) {
         try {
           pendingMoveRef.current = `${from}${to}`;
@@ -151,9 +169,11 @@ export const useChessGame = (gameId: string) => {
       if (chess.isCheckmate()) {
         setIsGameOver(true);
         setResult('Checkmate!');
+        announceToScreenReader('Checkmate! You won the game.');
       } else if (chess.isStalemate()) {
         setIsGameOver(true);
         setResult('Stalemate - Draw');
+        announceToScreenReader('Stalemate. Game is a draw.');
       }
 
       return true;

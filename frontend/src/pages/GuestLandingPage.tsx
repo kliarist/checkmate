@@ -15,12 +15,15 @@ const KnightLogo = () => (
 );
 
 export const GuestLandingPage = () => {
+  const [mode, setMode] = useState<'main' | 'signin' | 'signup'>('main');
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handlePlayAsGuest = async () => {
+  const handlePlayAnonymously = async () => {
     setLoading(true);
     setError('');
     localStorage.removeItem('token');
@@ -43,6 +46,262 @@ export const GuestLandingPage = () => {
     }
   };
 
+  const handleSignIn = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // TODO: Implement sign in API call
+      setError('Sign in functionality coming soon!');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to sign in');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUp = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // TODO: Implement sign up API call
+      setError('Sign up functionality coming soon!');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to sign up');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Main menu view
+  if (mode === 'main') {
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#242424',
+        margin: 0,
+        padding: 0,
+      }}>
+        <div style={{ marginBottom: '1rem' }}>
+          <KnightLogo />
+        </div>
+
+        <h1 style={{
+          fontSize: '1.5rem',
+          fontWeight: '400',
+          letterSpacing: '0.3em',
+          margin: '0 0 3rem 0',
+          color: '#e0e0e0',
+          textTransform: 'uppercase',
+        }}>
+          CheckMate
+        </h1>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '280px' }}>
+          <button
+            onClick={() => setMode('signin')}
+            style={{
+              width: '100%',
+              padding: '0.875rem',
+              fontSize: '1rem',
+              fontWeight: '500',
+              backgroundColor: '#b58863',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Sign In
+          </button>
+
+          <button
+            onClick={() => setMode('signup')}
+            style={{
+              width: '100%',
+              padding: '0.875rem',
+              fontSize: '1rem',
+              fontWeight: '500',
+              backgroundColor: '#3a3a3a',
+              color: '#e0e0e0',
+              border: '1px solid #4a4a4a',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Sign Up
+          </button>
+
+          <div style={{
+            textAlign: 'center',
+            margin: '0.5rem 0',
+            color: '#666',
+            fontSize: '0.85rem',
+          }}>
+            or
+          </div>
+
+          <button
+            onClick={handlePlayAnonymously}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '0.875rem',
+              fontSize: '0.9rem',
+              fontWeight: '400',
+              backgroundColor: 'transparent',
+              color: '#999',
+              border: '1px solid #3a3a3a',
+              borderRadius: '4px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {loading ? '...' : 'Play Anonymously'}
+          </button>
+        </div>
+
+        {error && (
+          <div style={{
+            color: '#ff6b6b',
+            marginTop: '1rem',
+            fontSize: '0.85rem',
+          }}>
+            {error}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Sign In view
+  if (mode === 'signin') {
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#242424',
+        margin: 0,
+        padding: 0,
+      }}>
+        <div style={{ width: '300px' }}>
+          <button
+            onClick={() => { setMode('main'); setError(''); }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#999',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              marginBottom: '2rem',
+              padding: 0,
+            }}
+          >
+            ← Back
+          </button>
+
+          <h2 style={{
+            fontSize: '1.5rem',
+            fontWeight: '400',
+            color: '#e0e0e0',
+            marginBottom: '2rem',
+          }}>
+            Sign In
+          </h2>
+
+          {error && (
+            <div style={{
+              color: '#ff6b6b',
+              marginBottom: '1rem',
+              fontSize: '0.85rem',
+            }}>
+              {error}
+            </div>
+          )}
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '0.75rem 1rem',
+              fontSize: '1rem',
+              backgroundColor: '#2a2a2a',
+              border: '1px solid #3a3a3a',
+              borderRadius: '4px',
+              color: '#e0e0e0',
+              outline: 'none',
+              marginBottom: '0.75rem',
+              boxSizing: 'border-box',
+            }}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '0.75rem 1rem',
+              fontSize: '1rem',
+              backgroundColor: '#2a2a2a',
+              border: '1px solid #3a3a3a',
+              borderRadius: '4px',
+              color: '#e0e0e0',
+              outline: 'none',
+              marginBottom: '1rem',
+              boxSizing: 'border-box',
+            }}
+          />
+
+          <button
+            onClick={handleSignIn}
+            disabled={loading || !email || !password}
+            style={{
+              width: '100%',
+              padding: '0.875rem',
+              fontSize: '1rem',
+              fontWeight: '500',
+              backgroundColor: loading || !email || !password ? '#3a3a3a' : '#b58863',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: loading || !email || !password ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {loading ? '...' : 'Sign In'}
+          </button>
+        </div>
+
+        <style>{`
+          ::placeholder { color: #666; }
+          input:focus { border-color: #b58863; }
+        `}</style>
+      </div>
+    );
+  }
+
+  // Sign Up view
   return (
     <div style={{
       position: 'fixed',
@@ -58,68 +317,119 @@ export const GuestLandingPage = () => {
       margin: 0,
       padding: 0,
     }}>
-      <div style={{ marginBottom: '1rem' }}>
-        <KnightLogo />
-      </div>
+      <div style={{ width: '300px' }}>
+        <button
+          onClick={() => { setMode('main'); setError(''); }}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#999',
+            cursor: 'pointer',
+            fontSize: '0.9rem',
+            marginBottom: '2rem',
+            padding: 0,
+          }}
+        >
+          ← Back
+        </button>
 
-      <h1 style={{
-        fontSize: '1.5rem',
-        fontWeight: '400',
-        letterSpacing: '0.3em',
-        margin: '0 0 3rem 0',
-        color: '#e0e0e0',
-        textTransform: 'uppercase',
-      }}>
-        CheckMate
-      </h1>
-
-      {error && (
-        <div style={{
-          color: '#ff6b6b',
-          marginBottom: '1rem',
-          fontSize: '0.85rem',
-        }}>
-          {error}
-        </div>
-      )}
-
-      <input
-        type="text"
-        placeholder="Your name"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        disabled={loading}
-        style={{
-          width: '240px',
-          padding: '0.75rem 1rem',
-          fontSize: '1rem',
-          backgroundColor: '#2a2a2a',
-          border: '1px solid #3a3a3a',
-          borderRadius: '4px',
+        <h2 style={{
+          fontSize: '1.5rem',
+          fontWeight: '400',
           color: '#e0e0e0',
-          textAlign: 'center',
-          outline: 'none',
-          marginBottom: '1rem',
-        }}
-      />
+          marginBottom: '2rem',
+        }}>
+          Sign Up
+        </h2>
 
-      <button
-        onClick={handlePlayAsGuest}
-        disabled={loading}
-        style={{
-          width: '240px',
-          padding: '0.75rem',
-          fontSize: '1rem',
-          fontWeight: '500',
-          backgroundColor: loading ? '#3a3a3a' : '#b58863',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: loading ? 'not-allowed' : 'pointer',
-        }}
-      >
-        {loading ? '...' : 'Play'}
-      </button>
+        {error && (
+          <div style={{
+            color: '#ff6b6b',
+            marginBottom: '1rem',
+            fontSize: '0.85rem',
+          }}>
+            {error}
+          </div>
+        )}
+
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          disabled={loading}
+          style={{
+            width: '100%',
+            padding: '0.75rem 1rem',
+            fontSize: '1rem',
+            backgroundColor: '#2a2a2a',
+            border: '1px solid #3a3a3a',
+            borderRadius: '4px',
+            color: '#e0e0e0',
+            outline: 'none',
+            marginBottom: '0.75rem',
+            boxSizing: 'border-box',
+          }}
+        />
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={loading}
+          style={{
+            width: '100%',
+            padding: '0.75rem 1rem',
+            fontSize: '1rem',
+            backgroundColor: '#2a2a2a',
+            border: '1px solid #3a3a3a',
+            borderRadius: '4px',
+            color: '#e0e0e0',
+            outline: 'none',
+            marginBottom: '0.75rem',
+            boxSizing: 'border-box',
+          }}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={loading}
+          style={{
+            width: '100%',
+            padding: '0.75rem 1rem',
+            fontSize: '1rem',
+            backgroundColor: '#2a2a2a',
+            border: '1px solid #3a3a3a',
+            borderRadius: '4px',
+            color: '#e0e0e0',
+            outline: 'none',
+            marginBottom: '1rem',
+            boxSizing: 'border-box',
+          }}
+        />
+
+        <button
+          onClick={handleSignUp}
+          disabled={loading || !username || !email || !password}
+          style={{
+            width: '100%',
+            padding: '0.875rem',
+            fontSize: '1rem',
+            fontWeight: '500',
+            backgroundColor: loading || !username || !email || !password ? '#3a3a3a' : '#b58863',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: loading || !username || !email || !password ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {loading ? '...' : 'Sign Up'}
+        </button>
+      </div>
 
       <style>{`
         ::placeholder { color: #666; }

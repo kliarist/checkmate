@@ -6,6 +6,7 @@ test.describe('Frontend Performance Tests', () => {
 
     await page.goto('/');
 
+    const fcpMetrics = await page.evaluate(() => {
       return new Promise((resolve) => {
         if (performance.getEntriesByType) {
           const paintEntries = performance.getEntriesByType('paint');
@@ -16,6 +17,7 @@ test.describe('Frontend Performance Tests', () => {
         }
 
         window.addEventListener('load', () => {
+          resolve(Date.now() - performance.timing.navigationStart);
         });
       });
     });
@@ -33,12 +35,14 @@ test.describe('Frontend Performance Tests', () => {
   test('should load game page with FCP < 2s', async ({ page }) => {
     await page.goto('/');
     await page.click('text=Play as Guest');
+    await page.waitForURL(/\/game\/\d+/);
 
     const startTime = Date.now();
 
     await page.reload();
 
     await page.waitForLoadState('domcontentloaded');
+
     const performanceMetrics = await page.evaluate(() => ({
       fcp: performance.getEntriesByType('paint')
         .find(entry => entry.name === 'first-contentful-paint')?.startTime || 0,
@@ -66,6 +70,7 @@ test.describe('Frontend Performance Tests', () => {
 
         if ('PerformanceObserver' in window) {
           const observer = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
             const lastEntry = entries[entries.length - 1];
             if (lastEntry) {
               observer.disconnect();
@@ -81,10 +86,12 @@ test.describe('Frontend Performance Tests', () => {
         }
 
         setTimeout(() => {
+          resolve(performance.now() - startTime);
         }, 3000);
       });
     });
 
+    console.log(`Time to Interactive: ${ttiMetrics}ms`);
     expect(ttiMetrics).toBeLessThan(3500);
   });
 
@@ -122,20 +129,22 @@ test.describe('Frontend Performance Tests', () => {
     console.log(`Target JS: < 500 KB (gzipped)`);
     console.log(`Target CSS: < 50 KB (gzipped)`);
 
-    expect(resourceMetrics.jsSize).toBeLessThan(1500); // Uncompressed should be < 1.5MB
-    expect(resourceMetrics.cssSize).toBeLessThan(150); // Uncompressed should be < 150KB
+    expect(resourceMetrics.jsSize).toBeLessThan(1500);
+    expect(resourceMetrics.cssSize).toBeLessThan(150);
   });
 
   test('should have no render-blocking resources', async ({ page }) => {
     await page.goto('/');
 
+    const blockingResources = await page.evaluate(() => {
+      const resources = performance.getEntriesByType('resource');
       return resources.filter((resource: any) => {
         return resource.renderBlockingStatus === 'blocking';
       }).length;
     });
 
     console.log(`Render-blocking resources: ${blockingResources}`);
-    expect(blockingResources).toBeLessThanOrEqual(2); // Allow favicon and one critical CSS
+    expect(blockingResources).toBeLessThanOrEqual(2);
   });
 
   test('should achieve 60fps during piece animations', async ({ page }) => {
@@ -147,12 +156,13 @@ test.describe('Frontend Performance Tests', () => {
     const fps = await page.evaluate(() => {
       return new Promise((resolve) => {
         let frameCount = 0;
-        const duration = 1000; // 1 second
+        const duration = 1000;
         const startTime = performance.now();
 
         const countFrame = () => {
           frameCount++;
           if (performance.now() - startTime < duration) {
+            requestAnimationFrame(countFrame);
           } else {
             resolve(frameCount);
           }
@@ -175,6 +185,7 @@ test.describe('Frontend Performance Tests', () => {
       return new Promise((resolve) => {
         if ('PerformanceObserver' in window) {
           const observer = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
             const lastEntry = entries[entries.length - 1];
             if (lastEntry) {
               resolve(lastEntry.startTime);
@@ -198,6 +209,7 @@ test.describe('Frontend Performance Tests', () => {
     });
 
     if (lcpMetrics > 0) {
+      console.log(`Largest Contentful Paint: ${lcpMetrics}ms`);
       console.log(`Target: < 2500ms`);
       expect(lcpMetrics).toBeLessThan(2500);
     }
@@ -254,9 +266,11 @@ test.describe('Frontend Performance Tests', () => {
     console.log(`Target: < 500ms for cached resources`);
 
     expect(cachedLoadTime).toBeLessThan(1000);
+
     await cachedPage.close();
   });
 
+  test('should have acceptable memory usage', async ({ page }) => {
     await page.goto('/');
     await page.click('text=Play as Guest');
     await page.waitForURL(/\/game\/\d+/);
@@ -275,6 +289,7 @@ test.describe('Frontend Performance Tests', () => {
     if (memoryMetrics) {
       console.log('=== Memory Usage ===');
       console.log(`Used Heap: ${memoryMetrics.usedJSHeapSize} MB`);
+      console.log(`Total Heap: ${memoryMetrics.totalJSHeapSize} MB`);
       console.log(`Heap Limit: ${memoryMetrics.jsHeapSizeLimit} MB`);
 
       expect(memoryMetrics.usedJSHeapSize).toBeLessThan(100);

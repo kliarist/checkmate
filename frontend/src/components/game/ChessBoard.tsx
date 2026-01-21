@@ -161,16 +161,12 @@ export const ChessBoard = ({
         position={fen}
         boardOrientation={boardOrientation}
         onSquareClick={onSquareClick}
-        customSquareStyles={{
-          ...optionSquares,
-          ...(focusedSquare ? {
-            [focusedSquare]: {
-              boxShadow: '0 0 0 3px #4a9eff inset',
-              ...optionSquares[focusedSquare]
-            }
-          } : {})
+        customSquareStyles={optionSquares}
+        customBoardStyle={{
+          ...boardStyle,
+          width: '700px',
+          height: '700px',
         }}
-        customBoardStyle={boardStyle}
         customDarkSquareStyle={darkSquareStyle}
         customLightSquareStyle={lightSquareStyle}
         animationDuration={200}

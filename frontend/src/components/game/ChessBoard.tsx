@@ -5,9 +5,19 @@ interface ChessBoardProps {
   fen: string;
   onMove: (from: string, to: string) => boolean;
   playerColor?: 'white' | 'black';
+  onFlipBoard?: () => void;
+  onResign?: () => void;
+  onOfferDraw?: () => void;
 }
 
-export const ChessBoard = ({ fen, onMove, playerColor = 'white' }: ChessBoardProps) => {
+export const ChessBoard = ({
+  fen,
+  onMove,
+  playerColor = 'white',
+  onFlipBoard,
+  onResign,
+  onOfferDraw,
+}: ChessBoardProps) => {
   const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>(playerColor);
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [optionSquares, setOptionSquares] = useState<Record<string, React.CSSProperties>>({});
@@ -37,9 +47,10 @@ export const ChessBoard = ({ fen, onMove, playerColor = 'white' }: ChessBoardPro
     }
   }
 
-  function flipBoard() {
+  const handleFlipBoard = () => {
     setBoardOrientation((prev) => (prev === 'white' ? 'black' : 'white'));
-  }
+    onFlipBoard?.();
+  };
 
   // Memoize board styles to prevent unnecessary re-renders
   const boardStyle = useMemo(() => ({
@@ -52,14 +63,14 @@ export const ChessBoard = ({ fen, onMove, playerColor = 'white' }: ChessBoardPro
 
   return (
     <div style={{
-      width: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      gap: '1rem',
     }}>
       <Chessboard
         id="BasicBoard"
-        boardWidth={560}
+        boardWidth={600}
         position={fen}
         boardOrientation={boardOrientation}
         onPieceDrop={onDrop}
@@ -70,20 +81,74 @@ export const ChessBoard = ({ fen, onMove, playerColor = 'white' }: ChessBoardPro
         customLightSquareStyle={lightSquareStyle}
         animationDuration={200}
       />
-      <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+
+      {/* Action buttons below the board */}
+      <div style={{
+        display: 'flex',
+        gap: '0.5rem',
+        justifyContent: 'center',
+      }}>
         <button
-          onClick={flipBoard}
+          onClick={handleFlipBoard}
+          title="Flip Board"
           style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: '#2196F3',
-            color: 'white',
+            padding: '0.5rem',
+            width: '36px',
+            height: '36px',
+            backgroundColor: '#3a3a3a',
+            color: '#e0e0e0',
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontSize: '1rem',
+            fontSize: '1.1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          Flip Board
+          ⇅
+        </button>
+
+        <button
+          onClick={onOfferDraw}
+          title="Offer Draw"
+          style={{
+            padding: '0.5rem',
+            width: '36px',
+            height: '36px',
+            backgroundColor: '#3a3a3a',
+            color: '#e0e0e0',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '1.1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          🤝
+        </button>
+
+        <button
+          onClick={onResign}
+          title="Resign"
+          style={{
+            padding: '0.5rem',
+            width: '36px',
+            height: '36px',
+            backgroundColor: '#f44336',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '1.1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          🏳
         </button>
       </div>
     </div>

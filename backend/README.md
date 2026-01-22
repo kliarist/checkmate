@@ -168,6 +168,29 @@ AssertJ provides:
 
 ## Code Quality
 
+### Coding Guidelines
+
+**Strict Rules:**
+- ❌ **NO `var` keyword** - Always use explicit types for clarity
+- ❌ **NO comments** - Code must be self-documenting
+- ✅ **Use `final`** - All parameters and local variables should be final
+- ✅ **Explicit types** - Full type declarations for all variables
+
+**Good:**
+```java
+final String username = user.getUsername();
+final List<Game> games = gameRepository.findAll();
+final boolean isValid = validator.validate(input);
+```
+
+**Bad:**
+```java
+var username = user.getUsername();          // ❌ NO var
+String username = user.getUsername();       // ❌ Missing final
+final var games = gameRepository.findAll(); // ❌ NO var
+// This gets the username                   // ❌ NO comments
+```
+
 ### Checkstyle
 The project uses Google Java Style Guide:
 
@@ -182,6 +205,7 @@ The project uses Google Java Style Guide:
 - No code duplication (DRY)
 - Comprehensive error handling
 - Meaningful variable names
+- Self-documenting code (no comments needed)
 
 ## Database Migrations
 

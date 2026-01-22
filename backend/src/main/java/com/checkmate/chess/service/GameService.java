@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,23 +27,22 @@ public class GameService {
 
   @Transactional
   public CreateGuestGameResponse createGuestGame(final String guestUsername) {
-    final var guestUser = guestService.createGuestUser(guestUsername);
-    final var computerUser = guestService.createGuestUser("Computer");
+    final com.checkmate.chess.model.User guestUser = guestService.createGuestUser(guestUsername);
+    final com.checkmate.chess.model.User computerUser = guestService.createGuestUser("Computer");
 
-    final var guestIsWhite = new Random().nextBoolean();
-    final var whitePlayer = guestIsWhite ? guestUser : computerUser;
-    final var blackPlayer = guestIsWhite ? computerUser : guestUser;
+    final boolean guestIsWhite = new Random().nextBoolean();
+    final com.checkmate.chess.model.User whitePlayer = guestIsWhite ? guestUser : computerUser;
+    final com.checkmate.chess.model.User blackPlayer = guestIsWhite ? computerUser : guestUser;
 
-    var game = new Game(whitePlayer, blackPlayer, "GUEST");
+    Game game = new Game(whitePlayer, blackPlayer, "GUEST");
     game = gameRepository.save(game);
 
-    // Generate JWT token for guest user authentication
-    final var userDetails = User.builder()
+    final UserDetails userDetails = User.builder()
         .username(guestUser.getUsername())
         .password(guestUser.getPasswordHash())
         .authorities("ROLE_GUEST")
         .build();
-    final var token = jwtService.generateToken(userDetails);
+    final String token = jwtService.generateToken(userDetails);
 
     return new CreateGuestGameResponse(
         game.getId(), guestUser.getId(), guestIsWhite ? "white" : "black", token);
@@ -55,7 +55,7 @@ public class GameService {
   }
 
   public GameStateResponse getGameState(final UUID gameId) {
-    final var game = findById(gameId);
+    final Game game = findById(gameId);
     return new GameStateResponse(
         game.getId(),
         game.getCurrentFen(),
@@ -68,7 +68,7 @@ public class GameService {
 
   @Transactional
   public MakeMoveResponse makeMove(final UUID gameId, final String from, final String to, final String promotion) {
-    final var game = findById(gameId);
+    final Game game = findById(gameId);
 
     if (!"IN_PROGRESS".equals(game.getStatus())) {
       throw new IllegalStateException("Game is not in progress");
@@ -78,17 +78,17 @@ public class GameService {
       throw new IllegalArgumentException("Illegal move");
     }
 
-    final var newFen = chessRulesService.makeMove(game.getCurrentFen(), from, to, promotion);
-    final var notation = chessRulesService.getMoveNotation(game.getCurrentFen(), from, to);
+    final String newFen = chessRulesService.makeMove(game.getCurrentFen(), from, to, promotion);
+    final String notation = chessRulesService.getMoveNotation(game.getCurrentFen(), from, to);
 
     moveService.saveMove(game, notation, newFen);
 
     game.setCurrentFen(newFen);
     gameRepository.save(game);
 
-    final var isCheckmate = chessRulesService.isCheckmate(newFen);
-    final var isStalemate = chessRulesService.isStalemate(newFen);
-    final var isCheck = chessRulesService.isCheck(newFen);
+    final boolean isCheckmate = chessRulesService.isCheckmate(newFen);
+    final boolean isStalemate = chessRulesService.isStalemate(newFen);
+    final boolean isCheck = chessRulesService.isCheck(newFen);
 
     if (isCheckmate) {
       game.endGame("CHECKMATE", "Checkmate");
@@ -103,7 +103,7 @@ public class GameService {
 
   @Transactional
   public void resignGame(final UUID gameId, final UUID playerId) {
-    final var game = findById(gameId);
+    final Game game = findById(gameId);
     game.endGame("RESIGNATION", "Player resigned");
     gameRepository.save(game);
   }

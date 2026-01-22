@@ -15,7 +15,7 @@ public class GuestService {
 
   @Transactional
   public User createGuestUser(final String username) {
-    var guestUsername = username != null
+    String guestUsername = username != null
         ? username
         : "Guest-" + UUID.randomUUID().toString().substring(0, 8);
 
@@ -23,7 +23,7 @@ public class GuestService {
       guestUsername = "Guest-" + UUID.randomUUID().toString().substring(0, 8);
     }
 
-    final var guest = User.createGuest(guestUsername);
+    final User guest = User.createGuest(guestUsername);
     return userRepository.save(guest);
   }
 }

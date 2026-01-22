@@ -1,19 +1,19 @@
 package com.checkmate.chess.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import jakarta.annotation.Nonnull;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
@@ -25,9 +25,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(
-      @NonNull final HttpServletRequest request,
-      @NonNull final HttpServletResponse response,
-      @NonNull final FilterChain filterChain)
+      final HttpServletRequest request,
+      @Nonnull final HttpServletResponse response,
+      @Nonnull final FilterChain filterChain)
       throws ServletException, IOException {
 
     final var authHeader = request.getHeader("Authorization");
@@ -53,8 +53,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
       }
     } catch (Exception e) {
-      // Log and continue without authentication for invalid tokens
-      // This allows permitAll endpoints to work even with invalid tokens
       log.debug("JWT validation failed: {}", e.getMessage());
     }
 

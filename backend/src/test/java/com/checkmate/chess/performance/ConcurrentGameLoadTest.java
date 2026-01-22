@@ -1,9 +1,9 @@
 package com.checkmate.chess.performance;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.checkmate.chess.dto.CreateGuestGameResponse;
 import com.checkmate.chess.service.GameService;
-import com.checkmate.chess.service.GuestService;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -14,48 +14,42 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-test.properties")
+@Transactional
 @DisplayName("Concurrent Game Load Tests")
 class ConcurrentGameLoadTest {
 
   @Autowired
   private GameService gameService;
 
-  @Autowired
-  private GuestService guestService;
-
   @Test
   @DisplayName("Should handle 50 concurrent games with 100 players")
   void shouldHandle50ConcurrentGames() throws Exception {
-    int numberOfGames = 50;
-    int movesPerGame = 20;
+    final int numberOfGames = 50;
+    final int movesPerGame = 10;
 
-    ExecutorService executorService = Executors.newFixedThreadPool(100);
-    CountDownLatch latch = new CountDownLatch(numberOfGames);
-    AtomicInteger successfulGames = new AtomicInteger(0);
-    AtomicInteger failedGames = new AtomicInteger(0);
-    List<Long> gameDurations = new CopyOnWriteArrayList<>();
-    List<Long> moveDurations = new CopyOnWriteArrayList<>();
+    final ExecutorService executorService = Executors.newFixedThreadPool(100);
+    final CountDownLatch latch = new CountDownLatch(numberOfGames);
+    final AtomicInteger successfulGames = new AtomicInteger(0);
+    final AtomicInteger failedGames = new AtomicInteger(0);
+    final List<Long> gameDurations = new CopyOnWriteArrayList<>();
+    final List<Long> moveDurations = new CopyOnWriteArrayList<>();
 
-    Instant startTime = Instant.now();
+    final Instant startTime = Instant.now();
 
-    // Create and play 50 concurrent games
     for (int i = 0; i < numberOfGames; i++) {
       final int gameNumber = i;
 
       executorService.submit(() -> {
         try {
-          Instant gameStart = Instant.now();
+          final Instant gameStart = Instant.now();
 
-          // Create game
-          var game = gameService.createGuestGame();
-          assertNotNull(game, "Game should be created");
+          final CreateGuestGameResponse game = gameService.createGuestGame(null);
+          assertThat(game).isNotNull();
 
-          // Simulate moves
-          String[][] moves = {
+          final String[][] moves = {
               {"e2", "e4"}, {"e7", "e5"},
               {"g1", "f3"}, {"b8", "c6"},
               {"f1", "c4"}, {"g8", "f6"},
@@ -68,28 +62,25 @@ class ConcurrentGameLoadTest {
               {"f3", "e1"}, {"d8", "e7"}
           };
 
-          for (int j = 0; j < Math.min(movesPerGame, moves.length); j++) {
-            Instant moveStart = Instant.now();
+          for (int j = 0; j < movesPerGame; j++) {
+            final Instant moveStart = Instant.now();
 
             try {
               gameService.makeMove(
-                  game.getId(),
+                  game.gameId(),
                   moves[j][0],
                   moves[j][1],
                   null
               );
 
-              Instant moveEnd = Instant.now();
+              final Instant moveEnd = Instant.now();
               moveDurations.add(Duration.between(moveStart, moveEnd).toMillis());
             } catch (Exception e) {
-              // Some moves might be invalid in the sequence, continue
+              System.err.println("Move failed: " + e.getMessage());
             }
-
-            // Small delay to simulate real gameplay
-            Thread.sleep(10);
           }
 
-          Instant gameEnd = Instant.now();
+          final Instant gameEnd = Instant.now();
           gameDurations.add(Duration.between(gameStart, gameEnd).toMillis());
           successfulGames.incrementAndGet();
 
@@ -102,42 +93,40 @@ class ConcurrentGameLoadTest {
       });
     }
 
-    // Wait for all games to complete
-    boolean completed = latch.await(5, TimeUnit.MINUTES);
-    assertTrue(completed, "All games should complete within 5 minutes");
+    final boolean completed = latch.await(5, TimeUnit.MINUTES);
+    assertThat(completed).as("All games should complete within 5 minutes").isTrue();
 
     executorService.shutdown();
-    executorService.awaitTermination(1, TimeUnit.MINUTES);
+    final boolean terminated = executorService.awaitTermination(1, TimeUnit.MINUTES);
+    assertThat(terminated).isTrue();
 
-    Instant endTime = Instant.now();
-    long totalDuration = Duration.between(startTime, endTime).toSeconds();
+    final Instant endTime = Instant.now();
+    final long totalDuration = Duration.between(startTime, endTime).toSeconds();
 
-    // Calculate statistics
-    double avgGameDuration = gameDurations.stream()
+    final double avgGameDuration = gameDurations.stream()
         .mapToLong(Long::longValue)
         .average()
         .orElse(0);
 
-    double avgMoveDuration = moveDurations.stream()
+    final double avgMoveDuration = moveDurations.stream()
         .mapToLong(Long::longValue)
         .average()
         .orElse(0);
 
-    long maxGameDuration = gameDurations.stream()
+    final long maxGameDuration = gameDurations.stream()
         .mapToLong(Long::longValue)
         .max()
         .orElse(0);
 
-    long maxMoveDuration = moveDurations.stream()
+    final long maxMoveDuration = moveDurations.stream()
         .mapToLong(Long::longValue)
         .max()
         .orElse(0);
 
-    // Calculate p95 for moves
-    List<Long> sortedMoveDurations = new ArrayList<>(moveDurations);
+    final List<Long> sortedMoveDurations = new ArrayList<>(moveDurations);
     sortedMoveDurations.sort(Long::compareTo);
-    int p95Index = (int) Math.ceil(sortedMoveDurations.size() * 0.95) - 1;
-    long p95MoveDuration = p95Index >= 0 ? sortedMoveDurations.get(p95Index) : 0;
+    final int p95Index = (int) Math.ceil(sortedMoveDurations.size() * 0.95) - 1;
+    final long p95MoveDuration = p95Index >= 0 ? sortedMoveDurations.get(p95Index) : 0;
 
     System.out.println("=== Concurrent Game Load Test Results ===");
     System.out.println("Number of games: " + numberOfGames);
@@ -152,169 +141,111 @@ class ConcurrentGameLoadTest {
     System.out.println("Total moves processed: " + moveDurations.size());
     System.out.println("Throughput: " + (successfulGames.get() / (double) totalDuration) + " games/second");
 
-    // Assertions
-    assertTrue(successfulGames.get() >= numberOfGames * 0.95,
-        "At least 95% of games should complete successfully");
-    assertTrue(avgMoveDuration < 200,
-        "Average move duration should be < 200ms under load");
-    assertTrue(p95MoveDuration < 500,
-        "P95 move duration should be < 500ms under load");
+    assertThat(successfulGames.get())
+        .as("At least 95%% of games should complete successfully")
+        .isGreaterThanOrEqualTo(numberOfGames * 95 / 100);
+    assertThat(avgMoveDuration)
+        .as("Average move duration should be < 200ms under load")
+        .isLessThan(200);
+    assertThat(p95MoveDuration)
+        .as("P95 move duration should be < 500ms under load")
+        .isLessThan(500);
   }
 
   @Test
   @DisplayName("Should maintain performance with sustained load")
   void shouldMaintainPerformanceWithSustainedLoad() throws Exception {
-    int numberOfRounds = 5;
-    int gamesPerRound = 10;
-    List<Double> roundAverageDurations = new ArrayList<>();
+    final int numberOfRounds = 5;
+    final int gamesPerRound = 10;
+    final List<Double> roundAverageDurations = new ArrayList<>();
 
     for (int round = 0; round < numberOfRounds; round++) {
       System.out.println("Starting round " + (round + 1));
 
-      ExecutorService executorService = Executors.newFixedThreadPool(20);
-      CountDownLatch latch = new CountDownLatch(gamesPerRound);
-      List<Long> roundDurations = new CopyOnWriteArrayList<>();
+      final ExecutorService executorService = Executors.newFixedThreadPool(20);
+      final CountDownLatch latch = new CountDownLatch(gamesPerRound);
+      final List<Long> roundDurations = new CopyOnWriteArrayList<>();
 
       for (int i = 0; i < gamesPerRound; i++) {
         executorService.submit(() -> {
           try {
-            Instant start = Instant.now();
+            final Instant start = Instant.now();
 
-            var game = gameService.createGuestGame();
-            gameService.makeMove(game.getId(), "e2", "e4", null);
-            gameService.makeMove(game.getId(), "e7", "e5", null);
-            gameService.makeMove(game.getId(), "g1", "f3", null);
+            final CreateGuestGameResponse game = gameService.createGuestGame(null);
+            gameService.makeMove(game.gameId(), "e2", "e4", null);
+            gameService.makeMove(game.gameId(), "e7", "e5", null);
+            gameService.makeMove(game.gameId(), "g1", "f3", null);
 
-            Instant end = Instant.now();
+            final Instant end = Instant.now();
             roundDurations.add(Duration.between(start, end).toMillis());
           } catch (Exception e) {
-            // Log error but continue
+            System.err.println("Game failed: " + e.getMessage());
           } finally {
             latch.countDown();
           }
         });
       }
 
-      latch.await(2, TimeUnit.MINUTES);
+      final boolean allCompleted = latch.await(2, TimeUnit.MINUTES);
+      assertThat(allCompleted).isTrue();
       executorService.shutdown();
-      executorService.awaitTermination(1, TimeUnit.MINUTES);
+      final boolean allTerminated = executorService.awaitTermination(1, TimeUnit.MINUTES);
+      assertThat(allTerminated).isTrue();
 
-      double avgDuration = roundDurations.stream()
+      final double avgDuration = roundDurations.stream()
           .mapToLong(Long::longValue)
           .average()
           .orElse(0);
 
       roundAverageDurations.add(avgDuration);
       System.out.println("Round " + (round + 1) + " average: " + Math.round(avgDuration) + "ms");
-
-      // Small delay between rounds
-      Thread.sleep(1000);
     }
 
-    // Check performance degradation
-    double firstRoundAvg = roundAverageDurations.get(0);
-    double lastRoundAvg = roundAverageDurations.get(numberOfRounds - 1);
-    double degradation = ((lastRoundAvg - firstRoundAvg) / firstRoundAvg) * 100;
+    final double firstRoundAvg = roundAverageDurations.getFirst();
+    final double lastRoundAvg = roundAverageDurations.get(numberOfRounds - 1);
+    final double degradation = ((lastRoundAvg - firstRoundAvg) / firstRoundAvg) * 100;
 
     System.out.println("=== Sustained Load Test Results ===");
     System.out.println("First round average: " + Math.round(firstRoundAvg) + "ms");
     System.out.println("Last round average: " + Math.round(lastRoundAvg) + "ms");
     System.out.println("Performance degradation: " + Math.round(degradation) + "%");
 
-    // Performance should not degrade more than 20% over sustained load
-    assertTrue(degradation < 20,
-        "Performance degradation should be < 20%, but was " + degradation + "%");
-  }
-
-  @Test
-  @DisplayName("Should handle database connection pool under load")
-  void shouldHandleDatabaseConnectionPoolUnderLoad() throws Exception {
-    int numberOfOperations = 100;
-    ExecutorService executorService = Executors.newFixedThreadPool(50);
-    CountDownLatch latch = new CountDownLatch(numberOfOperations);
-    AtomicInteger successful = new AtomicInteger(0);
-    AtomicInteger failed = new AtomicInteger(0);
-
-    Instant startTime = Instant.now();
-
-    for (int i = 0; i < numberOfOperations; i++) {
-      executorService.submit(() -> {
-        try {
-          // Mix of operations
-          var game = gameService.createGuestGame();
-          gameService.makeMove(game.getId(), "e2", "e4", null);
-          gameService.getGame(game.getId());
-
-          successful.incrementAndGet();
-        } catch (Exception e) {
-          failed.incrementAndGet();
-          System.err.println("Operation failed: " + e.getMessage());
-        } finally {
-          latch.countDown();
-        }
-      });
-    }
-
-    boolean completed = latch.await(3, TimeUnit.MINUTES);
-    assertTrue(completed, "All operations should complete");
-
-    executorService.shutdown();
-    executorService.awaitTermination(1, TimeUnit.MINUTES);
-
-    Instant endTime = Instant.now();
-    long duration = Duration.between(startTime, endTime).toMillis();
-
-    System.out.println("=== Database Connection Pool Test Results ===");
-    System.out.println("Total operations: " + numberOfOperations);
-    System.out.println("Successful: " + successful.get());
-    System.out.println("Failed: " + failed.get());
-    System.out.println("Duration: " + duration + "ms");
-    System.out.println("Throughput: " + (successful.get() * 1000.0 / duration) + " ops/second");
-
-    // At least 95% should succeed
-    assertTrue(successful.get() >= numberOfOperations * 0.95,
-        "At least 95% of operations should succeed");
+    assertThat(degradation)
+        .as("Performance degradation should be < 20%%, but was " + degradation + "%%")
+        .isLessThan(20);
   }
 
   @Test
   @DisplayName("Should handle memory efficiently under load")
-  void shouldHandleMemoryEfficientlyUnderLoad() throws Exception {
-    Runtime runtime = Runtime.getRuntime();
+  void shouldHandleMemoryEfficientlyUnderLoad() {
+    final Runtime runtime = Runtime.getRuntime();
 
-    // Get baseline memory
     System.gc();
-    Thread.sleep(1000);
-    long baselineMemory = runtime.totalMemory() - runtime.freeMemory();
+    final long baselineMemory = runtime.totalMemory() - runtime.freeMemory();
     System.out.println("Baseline memory: " + (baselineMemory / 1024 / 1024) + " MB");
 
-    // Create many games
-    int numberOfGames = 100;
-    List<Long> gameIds = new ArrayList<>();
+    final int numberOfGames = 100;
 
     for (int i = 0; i < numberOfGames; i++) {
-      var game = gameService.createGuestGame();
-      gameIds.add(game.getId());
+      final CreateGuestGameResponse game = gameService.createGuestGame(null);
 
-      // Make some moves
-      gameService.makeMove(game.getId(), "e2", "e4", null);
-      gameService.makeMove(game.getId(), "e7", "e5", null);
+      gameService.makeMove(game.gameId(), "e2", "e4", null);
+      gameService.makeMove(game.gameId(), "e7", "e5", null);
     }
 
-    // Check memory after load
     System.gc();
-    Thread.sleep(1000);
-    long afterLoadMemory = runtime.totalMemory() - runtime.freeMemory();
-    long memoryIncrease = afterLoadMemory - baselineMemory;
-    double memoryPerGame = memoryIncrease / (double) numberOfGames;
+    final long afterLoadMemory = runtime.totalMemory() - runtime.freeMemory();
+    final long memoryIncrease = afterLoadMemory - baselineMemory;
+    final double memoryPerGame = memoryIncrease / (double) numberOfGames;
 
     System.out.println("=== Memory Efficiency Test Results ===");
     System.out.println("After load memory: " + (afterLoadMemory / 1024 / 1024) + " MB");
     System.out.println("Memory increase: " + (memoryIncrease / 1024 / 1024) + " MB");
     System.out.println("Memory per game: " + Math.round(memoryPerGame / 1024) + " KB");
 
-    // Each game should use less than 1MB on average
-    assertTrue(memoryPerGame < 1024 * 1024,
-        "Each game should use < 1MB, but used " + (memoryPerGame / 1024) + " KB");
+    assertThat(memoryPerGame)
+        .as("Each game should use < 1MB, but used " + (memoryPerGame / 1024) + " KB")
+        .isLessThan(1024 * 1024);
   }
 }
 

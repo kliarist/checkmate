@@ -144,6 +144,25 @@ This project follows strict code quality principles:
 - **KISS**: Keep It Simple, Stupid - favor simplicity
 - **YAGNI**: You Aren't Gonna Need It - implement only what's needed
 
+### Backend Java Coding Standards
+
+**Mandatory Rules:**
+- ❌ **NO `var` keyword** - Always use explicit types
+- ❌ **NO comments** - Code must be self-documenting
+- ✅ **Use `final`** for all parameters and local variables
+- ✅ **Explicit type declarations** for all variables
+
+```java
+// ✅ CORRECT
+final String username = user.getUsername();
+final List<Game> games = gameRepository.findAll();
+
+// ❌ INCORRECT
+var username = user.getUsername();       // NO var
+String username = user.getUsername();    // Missing final
+// Comment explaining code                // NO comments
+```
+
 ### Testing Standards
 
 - **Test Pyramid**: 70% unit tests, 20% integration tests, 10% e2e tests

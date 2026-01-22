@@ -1,6 +1,7 @@
 package com.checkmate.chess.service;
 
 import com.github.bhlangonijr.chesslib.Board;
+import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import org.springframework.stereotype.Service;
@@ -33,21 +34,26 @@ public class ChessRulesService {
 
       Move move;
       if (promotion != null && !promotion.isEmpty()) {
-        // Handle pawn promotion
-        final var promotionPiece = switch (promotion.toLowerCase()) {
-          case "q" -> com.github.bhlangonijr.chesslib.Piece.WHITE_QUEEN;
-          case "r" -> com.github.bhlangonijr.chesslib.Piece.WHITE_ROOK;
-          case "b" -> com.github.bhlangonijr.chesslib.Piece.WHITE_BISHOP;
-          case "n" -> com.github.bhlangonijr.chesslib.Piece.WHITE_KNIGHT;
-          default -> com.github.bhlangonijr.chesslib.Piece.WHITE_QUEEN;
+        final Piece promotionPiece = switch (promotion.toLowerCase()) {
+          case "q" -> Piece.WHITE_QUEEN;
+          case "r" -> Piece.WHITE_ROOK;
+          case "b" -> Piece.WHITE_BISHOP;
+          case "n" -> Piece.WHITE_KNIGHT;
+          default -> Piece.WHITE_QUEEN;
         };
         move = new Move(fromSquare, toSquare, promotionPiece);
       } else {
         move = new Move(fromSquare, toSquare);
       }
 
+      if (!board.legalMoves().contains(move)) {
+        throw new IllegalArgumentException("Invalid move: " + from + " to " + to);
+      }
+
       board.doMove(move);
       return board.getFen();
+    } catch (IllegalArgumentException e) {
+      throw e;
     } catch (Exception e) {
       throw new IllegalArgumentException("Invalid move: " + from + " to " + to, e);
     }
@@ -92,7 +98,6 @@ public class ChessRulesService {
       final Square toSquare = Square.valueOf(to.toUpperCase());
       final Move move = new Move(fromSquare, toSquare);
 
-      // Return SAN notation if possible, otherwise UCI notation
       return move.toString();
     } catch (Exception e) {
       return from + to;

@@ -1,6 +1,7 @@
 package com.checkmate.chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,7 +76,7 @@ class ChessRulesServiceTest {
 
     assertThat(newFen)
         .isNotNull()
-        .contains("w KQkq e3");
+        .contains("b KQkq e3");
   }
 
   @Test
@@ -83,9 +84,9 @@ class ChessRulesServiceTest {
   void shouldHandleInvalidMoveGracefully() {
     final String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-    final String newFen = chessRulesService.makeMove(fen, "e2", "e5", null);
-
-    assertThat(newFen).isNull();
+    assertThatThrownBy(() -> chessRulesService.makeMove(fen, "e2", "e5", null))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("Invalid move");
   }
 
   @Test
@@ -111,7 +112,7 @@ class ChessRulesServiceTest {
   @Test
   @DisplayName("Should validate castle kingside")
   void shouldValidateCastleKingside() {
-    final String fen = "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 0 1";
+    final String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQK2R w KQkq - 0 1";
 
     final boolean isValid = chessRulesService.isLegalMove(fen, "e1", "g1");
 
@@ -131,7 +132,7 @@ class ChessRulesServiceTest {
   @Test
   @DisplayName("Should handle pawn promotion")
   void shouldHandlePawnPromotion() {
-    final String fen = "8/P7/8/8/8/8/8/8 w - - 0 1";
+    final String fen = "4k3/P7/8/8/8/8/8/4K3 w - - 0 1";
 
     final String newFen = chessRulesService.makeMove(fen, "a7", "a8", "q");
 

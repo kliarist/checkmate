@@ -32,7 +32,8 @@ class GuestServiceTest {
     when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
       final User user = invocation.getArgument(0);
       user.setId(java.util.UUID.randomUUID());
-      user.onCreate();
+      user.setCreatedAt(java.time.LocalDateTime.now());
+      user.setUpdatedAt(java.time.LocalDateTime.now());
       return user;
     });
   }
@@ -97,10 +98,10 @@ class GuestServiceTest {
   void shouldInitializeGameStatisticsToZero() {
     final User created = guestService.createGuestUser(null);
 
-    assertThat(created.getGamesPlayed()).isEqualTo(0);
-    assertThat(created.getWins()).isEqualTo(0);
-    assertThat(created.getLosses()).isEqualTo(0);
-    assertThat(created.getDraws()).isEqualTo(0);
+    assertThat(created.getGamesPlayed()).isZero();
+    assertThat(created.getWins()).isZero();
+    assertThat(created.getLosses()).isZero();
+    assertThat(created.getDraws()).isZero();
   }
 
   @Test

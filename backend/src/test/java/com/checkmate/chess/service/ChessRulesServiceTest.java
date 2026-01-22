@@ -73,8 +73,9 @@ class ChessRulesServiceTest {
 
     final String newFen = chessRulesService.makeMove(fen, "e2", "e4", null);
 
-    assertThat(newFen).isNotNull();
-    assertThat(newFen).contains("w KQkq e3");
+    assertThat(newFen)
+        .isNotNull()
+        .contains("w KQkq e3");
   }
 
   @Test

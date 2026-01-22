@@ -45,10 +45,8 @@ export const useChessGame = (gameId: string) => {
   const handleWebSocketMove = useCallback((message: any) => {
     const moveNotation = message.algebraicNotation;
 
-    // Check if this is an echo of our own pending move
     if (pendingMoveRef.current && moveNotation === pendingMoveRef.current) {
       pendingMoveRef.current = null;
-      // Sync with server FEN in case of any discrepancy
       if (message.fen && message.fen !== chessRef.current.fen()) {
         chessRef.current.load(message.fen);
         setFen(message.fen);
@@ -56,7 +54,6 @@ export const useChessGame = (gameId: string) => {
       return;
     }
 
-    // This is an opponent's move - apply it
     try {
       chessRef.current.load(message.fen);
       setFen(message.fen);
@@ -65,7 +62,6 @@ export const useChessGame = (gameId: string) => {
         number: chessRef.current.moveNumber()
       }]);
 
-      // Announce move to screen reader
       announceToScreenReader(`Opponent played ${moveNotation}`);
 
       if (message.isCheckmate) {
@@ -153,12 +149,11 @@ export const useChessGame = (gameId: string) => {
       setMoves(prevMoves => [...prevMoves, { notation: move.san, number: chess.moveNumber() }]);
       setError('');
 
-      // Announce move to screen reader
       announceToScreenReader(`You played ${move.san}`);
 
       if (isConnectedRef.current) {
         try {
-          pendingMoveRef.current = `${from}${to}`;
+          pendingMoveRef.current = move.san;
           sendRef.current(`/app/game/${gameId}/move`, { from, to, promotion: move.promotion || null });
         } catch (e) {
           console.error('[useChessGame] Failed to send move:', e);
@@ -181,7 +176,7 @@ export const useChessGame = (gameId: string) => {
       console.error('[useChessGame] Invalid move exception:', err);
       return false;
     }
-  }, [gameId]);
+  }, [gameId, announceToScreenReader]);
 
   const resign = useCallback(async () => {
     try {

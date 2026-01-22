@@ -69,9 +69,16 @@ export const ChessBoard = ({
       case ' ':
         e.preventDefault();
         if (selectedSquare) {
-          onMove(selectedSquare, focusedSquare);
-          setSelectedSquare(null);
-          setOptionSquares({});
+          const success = onMove(selectedSquare, focusedSquare);
+          if (success) {
+            setSelectedSquare(null);
+            setOptionSquares({});
+          } else {
+            setSelectedSquare(focusedSquare);
+            setOptionSquares({
+              [focusedSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+            });
+          }
         } else {
           setSelectedSquare(focusedSquare);
           setOptionSquares({
@@ -105,9 +112,16 @@ export const ChessBoard = ({
 
   const onSquareClick = useCallback((square: string) => {
     if (selectedSquare) {
-      onMove(selectedSquare, square);
-      setSelectedSquare(null);
-      setOptionSquares({});
+      const success = onMove(selectedSquare, square);
+      if (success) {
+        setSelectedSquare(null);
+        setOptionSquares({});
+      } else {
+        setSelectedSquare(square);
+        setOptionSquares({
+          [square]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+        });
+      }
     } else {
       setSelectedSquare(square);
       setOptionSquares({
@@ -115,6 +129,20 @@ export const ChessBoard = ({
       });
     }
   }, [selectedSquare, onMove]);
+
+  const onPieceDragBegin = useCallback((piece: string, sourceSquare: string) => {
+    setSelectedSquare(sourceSquare);
+    setOptionSquares({
+      [sourceSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+    });
+  }, []);
+
+  const onPieceDrop = useCallback((sourceSquare: string, targetSquare: string): boolean => {
+    const success = onMove(sourceSquare, targetSquare);
+    setSelectedSquare(null);
+    setOptionSquares({});
+    return success;
+  }, [onMove]);
 
   const handleFlipBoard = useCallback(() => {
     setBoardOrientation((prev) => (prev === 'white' ? 'black' : 'white'));
@@ -161,6 +189,8 @@ export const ChessBoard = ({
         position={fen}
         boardOrientation={boardOrientation}
         onSquareClick={onSquareClick}
+        onPieceDragBegin={onPieceDragBegin}
+        onPieceDrop={onPieceDrop}
         customSquareStyles={optionSquares}
         customBoardStyle={{
           ...boardStyle,
@@ -170,7 +200,7 @@ export const ChessBoard = ({
         customDarkSquareStyle={darkSquareStyle}
         customLightSquareStyle={lightSquareStyle}
         animationDuration={200}
-        arePiecesDraggable={false}
+        arePiecesDraggable={true}
       />
 
       <fieldset

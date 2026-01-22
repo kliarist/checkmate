@@ -96,28 +96,10 @@ export const GamePage = () => {
           overflow: 'hidden',
         }}>
         <div style={{
-          backgroundColor: '#2a2a2a',
-          borderRadius: '4px',
-          padding: '1rem',
           height: '40%',
-          display: 'flex',
-          flexDirection: 'column',
           overflow: 'hidden',
         }}>
-          <h3 style={{
-            margin: '0 0 1rem 0',
-            color: '#e0e0e0',
-            fontSize: '1rem',
-            fontWeight: '500',
-          }}>
-            Move History
-          </h3>
-          <div style={{
-            flex: 1,
-            overflowY: 'auto',
-          }}>
-            <MoveList moves={moves} />
-          </div>
+          <MoveList moves={moves} />
         </div>
 
         <div style={{

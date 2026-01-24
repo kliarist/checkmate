@@ -2,9 +2,11 @@ import { useState, useRef, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import { ChessBoard } from './ChessBoard';
 
+const STARTING_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+
 export const TestBoard = () => {
     const chessRef = useRef(new Chess());
-    const [fen, setFen] = useState(chessRef.current.fen());
+    const [fen, setFen] = useState(STARTING_FEN);
 
     const makeMove = useCallback((from: string, to: string): boolean => {
         console.log('[TestBoard] makeMove called:', { from, to });
@@ -35,7 +37,7 @@ export const TestBoard = () => {
 
     const reset = useCallback(() => {
         chessRef.current = new Chess();
-        setFen(chessRef.current.fen());
+        setFen(STARTING_FEN);
     }, []);
 
     return (

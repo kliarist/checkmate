@@ -80,7 +80,7 @@ test.describe('Frontend Performance Tests', () => {
 
           try {
             observer.observe({ entryTypes: ['longtask'] });
-          } catch (e) {
+          } catch {
             resolve(performance.now() - startTime);
           }
         }
@@ -194,7 +194,7 @@ test.describe('Frontend Performance Tests', () => {
 
           try {
             observer.observe({ entryTypes: ['largest-contentful-paint'] });
-          } catch (e) {
+          } catch {
             resolve(0);
           }
 
@@ -233,7 +233,7 @@ test.describe('Frontend Performance Tests', () => {
 
           try {
             observer.observe({ entryTypes: ['layout-shift'] });
-          } catch (e) {
+          } catch {
             resolve(0);
           }
 

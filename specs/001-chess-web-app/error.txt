@@ -1,0 +1,117 @@
+Run bun run lint
+$ eslint . --ext .ts,.tsx
+(node:2293) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+/home/runner/work/checkmate/checkmate/frontend/.vite/deps/axios.js
+  451:3   warning  Unused eslint-disable directive (no problems were reported from 'func-names')
+  546:13  warning  Unused eslint-disable directive (no problems were reported from 'no-nested-ternary')
+  762:54  warning  Unused eslint-disable directive (no problems were reported from 'no-undef')
+
+/home/runner/work/checkmate/checkmate/frontend/.vite/deps/react-router-dom.js
+   5363:5  warning  Unused eslint-disable directive (no problems were reported from 'no-script-url')
+  10387:7  error    Definition for rule 'jsx-a11y/anchor-has-content' was not found                   jsx-a11y/anchor-has-content
+  10422:5  error    Definiton for rule 'react-hooks/rules-of-hooks' was not found                    react-hooks/rules-of-hooks
+  10553:5  error    Definition for rule 'react-hooks/exhaustive-deps' was not found                   react-hooks/exhaustive-deps
+
+/home/runner/work/checkmate/checkmate/frontend/e2e/performance.spec.ts
+   83:20  error  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  107:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  197:20  error  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  228:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  229:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  236:20  error  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  281:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  282:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  283:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/runner/work/checkmate/checkmate/frontend/src/__tests__/integration/guestGame.test.tsx
+  100:13  error  'container' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  313:38  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  349:38  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+/home/runner/work/checkmate/checkmate/frontend/src/api/websocket.ts
+  44:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  62:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/runner/work/checkmate/checkmate/frontend/src/components/game/ChessBoard.tsx
+  118:60  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:76  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/runner/work/checkmate/checkmate/frontend/src/components/game/TestBoard.tsx
+  7:36  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+/home/runner/work/checkmate/checkmate/frontend/src/components/game/TestBoard.tsx:7:36
+   5 | export const TestBoard = () => {
+   6 |     const chessRef = useRef(new Chess());
+>  7 |     const [fen, setFen] = useState(chessRef.current.fen());
+     |                                    ^^^^^^^^^^^^^^^^ Passing a ref to a function may read its value during render
+   8 |
+   9 |     const makeMove = useCallback((from: string, to: string): boolean => {
+  10 |         console.log('[TestBoard] makeMove called:', { from, to });      react-hooks/refs
+  7:36  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+/home/runner/work/checkmate/checkmate/frontend/src/components/game/TestBoard.tsx:7:36
+   5 | export const TestBoard = () => {
+   6 |     const chessRef = useRef(new Chess());
+>  7 |     const [fen, setFen] = useState(chessRef.current.fen());
+     |                                    ^^^^^^^^^^^^^^^^^^^^ Passing a ref to a function may read its value during render
+   8 |
+   9 |     const makeMove = useCallback((from: string, to: string): boolean => {
+  10 |         console.log('[TestBoard] makeMove called:', { from, to });  react-hooks/refs
+
+/home/runner/work/checkmate/checkmate/frontend/src/components/profile/GameHistoryList.tsx
+  29:6  warning  React Hook useEffect has a missing dependency: 'loadGames'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/runner/work/checkmate/checkmate/frontend/src/context/AuthContext.tsx
+  104:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/home/runner/work/checkmate/checkmate/frontend/src/context/WebSocketContext.tsx
+   7:56  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+   8:37  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  16:47  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  39:24  warning  The ref value 'subscriptionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'subscriptionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  44:75  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  63:56  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  81:14  error    Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                   react-refresh/only-export-components
+
+/home/runner/work/checkmate/checkmate/frontend/src/hooks/useChessGame.ts
+   11:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   97:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  107:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  135:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  168:16  error  'moveError' is defined but never used     @typescript-eslint/no-unused-vars
+  168:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  211:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  261:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/runner/work/checkmate/checkmate/frontend/src/pages/GuestLandingPage.tsx
+  20:16  error  'setMode' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  21:20  error  'setUsername' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  22:10  error  'email' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  22:17  error  'setEmail' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  23:10  error  'password' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  23:20  error  'setPassword' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  49:19  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+/home/runner/work/checkmate/checkmate/frontend/src/pages/LoginPage.tsx
+  31:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/runner/work/checkmate/checkmate/frontend/src/pages/ProfilePage.tsx
+  27:6   warning  React Hook useEffect has a missing dependency: 'loadProfile'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  39:19  error    Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+
+/home/runner/work/checkmate/checkmate/frontend/src/pages/RegistrationPage.tsx
+  32:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 55 problems (48 errors, 7 warnings)
+  0 errors and 4 warnings potentially fixable with the `--fix` option.
+
+error: script "lint" exited with code 1
+Error: Process completed with exit code 1.

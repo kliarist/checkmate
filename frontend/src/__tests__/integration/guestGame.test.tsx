@@ -97,7 +97,7 @@ describe('Guest Game Creation Flow', () => {
 
     vi.spyOn(apiClient, 'post').mockResolvedValue(mockResponse);
 
-    const { container } = render(
+    render(
       <BrowserRouter>
         <GuestLandingPage />
       </BrowserRouter>

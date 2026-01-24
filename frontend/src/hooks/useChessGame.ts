@@ -165,7 +165,7 @@ export const useChessGame = (gameId: string) => {
       let move = null;
       try {
         move = chess.move({ from, to });
-      } catch (moveError: any) {
+      } catch {
         try {
           move = chess.move({ from, to, promotion: 'q' });
         } catch (promotionError) {

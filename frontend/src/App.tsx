@@ -3,6 +3,9 @@ import { AuthProvider } from './context/AuthContext';
 import { WebSocketProvider } from './context/WebSocketContext';
 import { GuestLandingPage } from './pages/GuestLandingPage';
 import { GamePage } from './pages/GamePage';
+import { RegistrationPage } from './pages/RegistrationPage';
+import { LoginPage } from './pages/LoginPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { TestBoard } from './components/game/TestBoard';
 import './App.css';
 
@@ -13,8 +16,9 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<GuestLandingPage />} />
-            <Route path="/login" element={<div>Login</div>} />
-            <Route path="/register" element={<div>Register</div>} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/play" element={<div>Play</div>} />
             <Route path="/game/:id" element={<GamePage />} />
             <Route path="/test" element={<TestBoard />} />

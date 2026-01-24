@@ -216,23 +216,23 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Frontend Implementation for US2
 
-- [ ] T115 [P] [US2] Create RegistrationPage component in frontend/src/pages/RegistrationPage.tsx
-- [ ] T116 [P] [US2] Create LoginPage component in frontend/src/pages/LoginPage.tsx
-- [ ] T117 [P] [US2] Create ProfilePage component in frontend/src/pages/ProfilePage.tsx (displays stats and game history)
-- [ ] T118 [P] [US2] Create RegistrationForm component in frontend/src/components/auth/RegistrationForm.tsx (email, password, confirm password)
-- [ ] T119 [P] [US2] Create LoginForm component in frontend/src/components/auth/LoginForm.tsx (email, password)
-- [ ] T120 [P] [US2] Create UserStatsCard component in frontend/src/components/profile/UserStatsCard.tsx (displays wins/losses/draws)
-- [ ] T121 [P] [US2] Create GameHistoryList component in frontend/src/components/profile/GameHistoryList.tsx (paginated list)
-- [ ] T122 [US2] Implement authentication API calls in frontend/src/api/authApi.ts (register, login, logout)
-- [ ] T123 [US2] Implement JWT storage in localStorage with expiration handling
+- [x] T115 [P] [US2] Create RegistrationPage component in frontend/src/pages/RegistrationPage.tsx
+- [x] T116 [P] [US2] Create LoginPage component in frontend/src/pages/LoginPage.tsx
+- [x] T117 [P] [US2] Create ProfilePage component in frontend/src/pages/ProfilePage.tsx (displays stats and game history)
+- [x] T118 [P] [US2] Create RegistrationForm component in frontend/src/components/auth/RegistrationForm.tsx (email, password, confirm password)
+- [x] T119 [P] [US2] Create LoginForm component in frontend/src/components/auth/LoginForm.tsx (email, password)
+- [x] T120 [P] [US2] Create UserStatsCard component in frontend/src/components/profile/UserStatsCard.tsx (displays wins/losses/draws)
+- [x] T121 [P] [US2] Create GameHistoryList component in frontend/src/components/profile/GameHistoryList.tsx (paginated list)
+- [x] T122 [US2] Implement authentication API calls in frontend/src/api/authApi.ts (register, login, logout)
+- [x] T123 [US2] Implement JWT storage in localStorage with expiration handling
 - [ ] T124 [US2] Update AuthContext to persist auth state across page refreshes
 - [ ] T125 [US2] Add protected route wrapper for authenticated pages
-- [ ] T126 [US2] Implement form validation on frontend (email format, password requirements)
-- [ ] T127 [US2] Add client-side validation error messages (clear, actionable)
-- [ ] T128 [US2] Implement logout functionality (clear JWT, reset auth state)
+- [x] T126 [US2] Implement form validation on frontend (email format, password requirements)
+- [x] T127 [US2] Add client-side validation error messages (clear, actionable)
+- [x] T128 [US2] Implement logout functionality (clear JWT, reset auth state)
 - [ ] T129 [US2] Add "Remember me" checkbox for login (optional)
 - [ ] T130 [US2] Update navigation to show user email when logged in
-- [ ] T131 [US2] Add loading states for registration and login forms
+- [x] T131 [US2] Add loading states for registration and login forms
 
 ### Integration with US1
 

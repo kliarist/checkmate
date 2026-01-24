@@ -1,21 +1,26 @@
 package com.checkmate.chess.service;
 
-import com.checkmate.chess.model.User;
-import com.checkmate.chess.repository.UserRepository;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import com.checkmate.chess.model.User;
+import com.checkmate.chess.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -34,7 +39,6 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         testUser = new User();
-        testUser.setId(1L);
         testUser.setEmail("test@example.com");
         testUser.setUsername("testuser");
         testUser.setPasswordHash("hashedPassword");
@@ -149,9 +153,7 @@ class UserServiceTest {
     }
 
     @Test
-    void registerUser_ShouldNotStoreP
-
-lainPassword() {
+    void registerUser_ShouldNotStorePlainPassword() {
         // Arrange
         String plainPassword = "password123";
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());

@@ -1,20 +1,27 @@
 package com.checkmate.chess.controller;
 
-import com.checkmate.chess.dto.LoginRequest;
-import com.checkmate.chess.dto.RegisterRequest;
-import com.checkmate.chess.dto.AuthResponse;
-import com.checkmate.chess.dto.ErrorResponse;
-import com.checkmate.chess.model.User;
-import com.checkmate.chess.security.JwtService;
-import com.checkmate.chess.service.UserService;
-import com.checkmate.chess.service.CustomUserDetailsService;
-import jakarta.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import com.checkmate.chess.dto.AuthResponse;
+import com.checkmate.chess.dto.ErrorResponse;
+import com.checkmate.chess.dto.LoginRequest;
+import com.checkmate.chess.dto.RegisterRequest;
+import com.checkmate.chess.model.User;
+import com.checkmate.chess.security.JwtService;
+import com.checkmate.chess.service.UserDetailsServiceImpl;
+import com.checkmate.chess.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,9 +30,9 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtService jwtService;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public AuthController(UserService userService, JwtService jwtService, CustomUserDetailsService userDetailsService) {
+    public AuthController(UserService userService, JwtService jwtService, UserDetailsServiceImpl userDetailsService) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
@@ -51,8 +58,12 @@ public class AuthController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
-            ErrorResponse error = new ErrorResponse();
-            error.setMessage(e.getMessage());
+            ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                e.getMessage(),
+                LocalDateTime.now()
+            );
             return ResponseEntity.badRequest().body(error);
         }
     }
@@ -62,8 +73,12 @@ public class AuthController {
         Optional<User> userOpt = userService.login(request.getEmail(), request.getPassword());
 
         if (userOpt.isEmpty()) {
-            ErrorResponse error = new ErrorResponse();
-            error.setMessage("Invalid email or password");
+            ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                "Invalid email or password",
+                LocalDateTime.now()
+            );
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
 

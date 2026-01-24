@@ -1,8 +1,10 @@
 package com.checkmate.chess.dto;
 
+import java.util.UUID;
+
 public class AuthResponse {
     private String token;
-    private Long userId;
+    private UUID userId;
     private String email;
     private String username;
 
@@ -14,11 +16,11 @@ public class AuthResponse {
         this.token = token;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

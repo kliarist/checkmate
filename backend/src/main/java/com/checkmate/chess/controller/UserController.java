@@ -11,10 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -33,8 +35,12 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         if (authentication == null || authentication.getName() == null) {
-            ErrorResponse error = new ErrorResponse();
-            error.setMessage("Not authenticated");
+            ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                "Not authenticated",
+                LocalDateTime.now()
+            );
             return ResponseEntity.status(401).body(error);
         }
 
@@ -42,8 +48,12 @@ public class UserController {
         Optional<User> userOpt = userService.getUserByEmail(email);
 
         if (userOpt.isEmpty()) {
-            ErrorResponse error = new ErrorResponse();
-            error.setMessage("User not found");
+            ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                "User not found",
+                LocalDateTime.now()
+            );
             return ResponseEntity.status(404).body(error);
         }
 
@@ -69,8 +79,12 @@ public class UserController {
             @RequestParam(defaultValue = "20") int size
     ) {
         if (authentication == null || authentication.getName() == null) {
-            ErrorResponse error = new ErrorResponse();
-            error.setMessage("Not authenticated");
+            ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                "Not authenticated",
+                LocalDateTime.now()
+            );
             return ResponseEntity.status(401).body(error);
         }
 
@@ -78,8 +92,12 @@ public class UserController {
         Optional<User> userOpt = userService.getUserByEmail(email);
 
         if (userOpt.isEmpty()) {
-            ErrorResponse error = new ErrorResponse();
-            error.setMessage("User not found");
+            ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                "User not found",
+                LocalDateTime.now()
+            );
             return ResponseEntity.status(404).body(error);
         }
 
@@ -97,8 +115,12 @@ public class UserController {
     @GetMapping("/me/stats")
     public ResponseEntity<?> getUserStats(Authentication authentication) {
         if (authentication == null || authentication.getName() == null) {
-            ErrorResponse error = new ErrorResponse();
-            error.setMessage("Not authenticated");
+            ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                "Not authenticated",
+                LocalDateTime.now()
+            );
             return ResponseEntity.status(401).body(error);
         }
 
@@ -106,8 +128,12 @@ public class UserController {
         Optional<User> userOpt = userService.getUserByEmail(email);
 
         if (userOpt.isEmpty()) {
-            ErrorResponse error = new ErrorResponse();
-            error.setMessage("User not found");
+            ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                "User not found",
+                LocalDateTime.now()
+            );
             return ResponseEntity.status(404).body(error);
         }
 

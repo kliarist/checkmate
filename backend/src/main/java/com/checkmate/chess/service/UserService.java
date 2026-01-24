@@ -1,14 +1,16 @@
 package com.checkmate.chess.service;
 
-import com.checkmate.chess.model.User;
-import com.checkmate.chess.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.regex.Pattern;
+import com.checkmate.chess.model.User;
+import com.checkmate.chess.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -61,7 +63,7 @@ public class UserService {
         return Optional.empty();
     }
 
-    public Optional<User> getUserById(Long userId) {
+    public Optional<User> getUserById(UUID userId) {
         return userRepository.findById(userId);
     }
 

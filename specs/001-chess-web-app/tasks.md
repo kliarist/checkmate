@@ -225,13 +225,13 @@ description: "Implementation tasks for Chess Web Application"
 - [x] T121 [P] [US2] Create GameHistoryList component in frontend/src/components/profile/GameHistoryList.tsx (paginated list)
 - [x] T122 [US2] Implement authentication API calls in frontend/src/api/authApi.ts (register, login, logout)
 - [x] T123 [US2] Implement JWT storage in localStorage with expiration handling
-- [ ] T124 [US2] Update AuthContext to persist auth state across page refreshes
-- [ ] T125 [US2] Add protected route wrapper for authenticated pages
+- [x] T124 [US2] Update AuthContext to persist auth state across page refreshes
+- [x] T125 [US2] Add protected route wrapper for authenticated pages
 - [x] T126 [US2] Implement form validation on frontend (email format, password requirements)
 - [x] T127 [US2] Add client-side validation error messages (clear, actionable)
 - [x] T128 [US2] Implement logout functionality (clear JWT, reset auth state)
 - [ ] T129 [US2] Add "Remember me" checkbox for login (optional)
-- [ ] T130 [US2] Update navigation to show user email when logged in
+- [x] T130 [US2] Update navigation to show user email when logged in
 - [x] T131 [US2] Add loading states for registration and login forms
 
 ### Integration with US1

@@ -17,6 +17,6 @@ public interface GameRepository extends JpaRepository<Game, UUID> {
 
   List<Game> findByStatus(String status);
   
-  Page<Game> findByWhitePlayerIdOrBlackPlayerId(Long whitePlayerId, Long blackPlayerId, Pageable pageable);
+  Page<Game> findByWhitePlayerIdOrBlackPlayerId(UUID whitePlayerId, UUID blackPlayerId, Pageable pageable);
 }
 

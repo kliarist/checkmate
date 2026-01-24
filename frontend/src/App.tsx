@@ -6,6 +6,7 @@ import { GamePage } from './pages/GamePage';
 import { RegistrationPage } from './pages/RegistrationPage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { TestBoard } from './components/game/TestBoard';
 import './App.css';
 
@@ -18,7 +19,14 @@ function App() {
             <Route path="/" element={<GuestLandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegistrationPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="/play" element={<div>Play</div>} />
             <Route path="/game/:id" element={<GamePage />} />
             <Route path="/test" element={<TestBoard />} />

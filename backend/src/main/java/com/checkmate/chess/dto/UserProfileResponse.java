@@ -1,9 +1,10 @@
 package com.checkmate.chess.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class UserProfileResponse {
-    private Long userId;
+    private UUID userId;
     private String email;
     private String username;
     private Integer eloRating;
@@ -13,11 +14,11 @@ public class UserProfileResponse {
     private Integer draws;
     private LocalDateTime createdAt;
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

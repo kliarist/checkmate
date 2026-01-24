@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
+import { ResignConfirmModal } from './ResignConfirmModal';
+import { CapturedPieces } from './CapturedPieces';
 
 interface ChessBoardProps {
   fen: string;
@@ -8,6 +10,9 @@ interface ChessBoardProps {
   onFlipBoard?: () => void;
   onResign?: () => void;
   onOfferDraw?: () => void;
+  capturedByWhite?: string[];
+  capturedByBlack?: string[];
+  materialScore?: number;
 }
 
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -20,10 +25,14 @@ export const ChessBoard = ({
   onFlipBoard,
   onResign,
   onOfferDraw,
+  capturedByWhite = [],
+  capturedByBlack = [],
+  materialScore = 0,
 }: ChessBoardProps) => {
   const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>(playerColor);
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [optionSquares, setOptionSquares] = useState<Record<string, React.CSSProperties>>({});
+  const [showResignModal, setShowResignModal] = useState(false);
   const [focusedSquare, setFocusedSquare] = useState<string>('e2');
   const boardContainerRef = useRef<HTMLDivElement>(null);
 
@@ -130,7 +139,7 @@ export const ChessBoard = ({
     }
   }, [selectedSquare, onMove]);
 
-  const onPieceDragBegin = useCallback((piece: string, sourceSquare: string) => {
+  const onPieceDragBegin = useCallback((_piece: string, sourceSquare: string) => {
     setSelectedSquare(sourceSquare);
     setOptionSquares({
       [sourceSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
@@ -149,6 +158,19 @@ export const ChessBoard = ({
     onFlipBoard?.();
   }, [onFlipBoard]);
 
+  const handleResignClick = useCallback(() => {
+    setShowResignModal(true);
+  }, []);
+
+  const handleResignConfirm = useCallback(() => {
+    setShowResignModal(false);
+    onResign?.();
+  }, [onResign]);
+
+  const handleResignCancel = useCallback(() => {
+    setShowResignModal(false);
+  }, []);
+
   const boardStyle = useMemo(() => ({
     borderRadius: '4px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
@@ -156,6 +178,15 @@ export const ChessBoard = ({
 
   const darkSquareStyle = useMemo(() => ({ backgroundColor: '#b58863' }), []);
   const lightSquareStyle = useMemo(() => ({ backgroundColor: '#f0d9b5' }), []);
+
+  // Determine which captured pieces to show at top and bottom
+  const topCaptured = boardOrientation === 'white'
+    ? { pieces: capturedByBlack, color: 'white' as const, score: materialScore < 0 ? -materialScore : undefined }
+    : { pieces: capturedByWhite, color: 'black' as const, score: materialScore > 0 ? materialScore : undefined };
+
+  const bottomCaptured = boardOrientation === 'white'
+    ? { pieces: capturedByWhite, color: 'black' as const, score: materialScore > 0 ? materialScore : undefined }
+    : { pieces: capturedByBlack, color: 'white' as const, score: materialScore < 0 ? -materialScore : undefined };
 
   return (
     <div
@@ -168,7 +199,7 @@ export const ChessBoard = ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '1rem',
+        gap: '0.5rem',
         maxWidth: '700px',
         outline: 'none',
       }}
@@ -184,6 +215,15 @@ export const ChessBoard = ({
         aria-atomic="true"
         style={{ position: 'absolute', left: '-9999px' }}
       />
+
+      {/* Top Left Captured Pieces */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+        <CapturedPieces
+          pieces={topCaptured.pieces}
+          pieceColor={topCaptured.color}
+          score={topCaptured.score}
+        />
+      </div>
 
       <Chessboard
         position={fen}
@@ -203,6 +243,15 @@ export const ChessBoard = ({
         arePiecesDraggable={true}
       />
 
+      {/* Bottom Left Captured Pieces */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+        <CapturedPieces
+          pieces={bottomCaptured.pieces}
+          pieceColor={bottomCaptured.color}
+          score={bottomCaptured.score}
+        />
+      </div>
+
       <fieldset
         style={{
           display: 'flex',
@@ -211,6 +260,7 @@ export const ChessBoard = ({
           border: 'none',
           padding: 0,
           margin: 0,
+          marginTop: '0.5rem',
         }}
         aria-label="Game controls"
       >
@@ -265,7 +315,7 @@ export const ChessBoard = ({
         </button>
 
         <button
-          onClick={onResign}
+          onClick={handleResignClick}
           title="Resign"
           aria-label="Resign from game"
           style={{
@@ -289,6 +339,12 @@ export const ChessBoard = ({
           🏳
         </button>
       </fieldset>
+
+      <ResignConfirmModal
+        isOpen={showResignModal}
+        onConfirm={handleResignConfirm}
+        onCancel={handleResignCancel}
+      />
     </div>
   );
 };

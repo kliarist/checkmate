@@ -3,10 +3,12 @@ package com.checkmate.chess.service;
 import com.checkmate.chess.dto.CreateGuestGameResponse;
 import com.checkmate.chess.dto.GameStateResponse;
 import com.checkmate.chess.dto.MakeMoveResponse;
+import com.checkmate.chess.dto.MoveDto;
 import com.checkmate.chess.exception.ResourceNotFoundException;
 import com.checkmate.chess.model.Game;
 import com.checkmate.chess.repository.GameRepository;
 import com.checkmate.chess.security.JwtService;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +66,11 @@ public class GameService {
         game.getPgn(),
         game.getWhitePlayer().getId(),
         game.getBlackPlayer().getId());
+  }
+
+  public List<MoveDto> getGameMoves(final UUID gameId) {
+    final Game game = findById(gameId);
+    return moveService.getGameMovesAsDto(game);
   }
 
   @Transactional

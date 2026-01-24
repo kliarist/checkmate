@@ -96,9 +96,82 @@ public class ChessRulesService {
 
       final Square fromSquare = Square.valueOf(from.toUpperCase());
       final Square toSquare = Square.valueOf(to.toUpperCase());
-      final Move move = new Move(fromSquare, toSquare);
 
-      return move.toString();
+      Move matchingMove = null;
+      for (final Move legalMove : board.legalMoves()) {
+        if (legalMove.getFrom().equals(fromSquare) && legalMove.getTo().equals(toSquare)) {
+          matchingMove = legalMove;
+          break;
+        }
+      }
+
+      if (matchingMove == null) {
+        return from.toLowerCase() + to.toLowerCase();
+      }
+
+      final Piece piece = board.getPiece(fromSquare);
+      final Piece captured = board.getPiece(toSquare);
+      final boolean isCapture = captured != Piece.NONE;
+
+      board.doMove(matchingMove);
+      final boolean isCheck = board.isKingAttacked();
+      final boolean isCheckmate = board.isMated();
+      board.undoMove();
+
+      final StringBuilder san = new StringBuilder();
+
+      if (matchingMove.toString().equals("O-O") || matchingMove.toString().equals("O-O-O")) {
+        return matchingMove.toString() + (isCheckmate ? "#" : isCheck ? "+" : "");
+      }
+
+      final String pieceSymbol = piece.getFenSymbol().toUpperCase();
+
+      if (!pieceSymbol.equals("P")) {
+        san.append(pieceSymbol);
+
+        boolean needsDisambiguation = false;
+        String disambiguation = "";
+
+        for (final Move otherMove : board.legalMoves()) {
+          if (!otherMove.equals(matchingMove) &&
+              otherMove.getTo().equals(toSquare) &&
+              board.getPiece(otherMove.getFrom()) == piece) {
+            needsDisambiguation = true;
+            if (otherMove.getFrom().getFile() != fromSquare.getFile()) {
+              disambiguation = String.valueOf(fromSquare.getFile().getNotation()).toLowerCase();
+            } else if (otherMove.getFrom().getRank() != fromSquare.getRank()) {
+              disambiguation = String.valueOf(fromSquare.getRank().getNotation());
+            } else {
+              disambiguation = fromSquare.toString().toLowerCase();
+            }
+            break;
+          }
+        }
+
+        if (needsDisambiguation) {
+          san.append(disambiguation);
+        }
+      } else if (isCapture) {
+        san.append(String.valueOf(fromSquare.getFile().getNotation()).toLowerCase());
+      }
+
+      if (isCapture) {
+        san.append("x");
+      }
+
+      san.append(toSquare.toString().toLowerCase());
+
+      if (matchingMove.getPromotion() != Piece.NONE) {
+        san.append("=").append(matchingMove.getPromotion().getFenSymbol().toUpperCase());
+      }
+
+      if (isCheckmate) {
+        san.append("#");
+      } else if (isCheck) {
+        san.append("+");
+      }
+
+      return san.toString();
     } catch (Exception e) {
       return from + to;
     }

@@ -10,13 +10,21 @@ export const GamePage = () => {
   const {
     fen,
     moves,
+    currentMoveIndex,
     isGameOver,
     result,
     makeMove,
     resign,
+    goToMove,
+    nextMove,
+    previousMove,
+    resumeGame,
     loading,
     error,
     playerColor,
+    capturedByWhite,
+    capturedByBlack,
+    materialScore,
   } = useChessGame(id!);
 
   const handleOfferDraw = () => {
@@ -85,6 +93,9 @@ export const GamePage = () => {
             playerColor={playerColor}
             onResign={resign}
             onOfferDraw={handleOfferDraw}
+            capturedByWhite={capturedByWhite}
+            capturedByBlack={capturedByBlack}
+            materialScore={materialScore}
           />
         </div>
 
@@ -95,23 +106,30 @@ export const GamePage = () => {
           height: 'calc(100vh - 4rem)',
           overflow: 'hidden',
         }}>
-        <div style={{
-          height: '40%',
-          overflow: 'hidden',
-        }}>
-          <MoveList moves={moves} />
+          <div style={{
+            height: '40%',
+            overflow: 'hidden',
+          }}>
+            <MoveList
+              moves={moves}
+              currentMoveIndex={currentMoveIndex}
+              onMoveClick={goToMove}
+              onNext={nextMove}
+              onPrevious={previousMove}
+              onResume={resumeGame}
+            />
+          </div>
+
+          <div style={{
+            height: '60%',
+            overflow: 'hidden',
+          }}>
+            <ChatPanel />
+          </div>
         </div>
 
-        <div style={{
-          height: '60%',
-          overflow: 'hidden',
-        }}>
-          <ChatPanel />
-        </div>
+        {isGameOver && <GameEndModal result={result} onClose={() => window.location.href = '/'} />}
       </div>
-
-      {isGameOver && <GameEndModal result={result} onClose={() => window.location.href = '/'} />}
-    </div>
     </div>
   );
 };

@@ -7,15 +7,19 @@ export const useChessGame = (gameId: string) => {
   // Chess instance for move validation - use ref to maintain instance across renders
   const chessRef = useRef(new Chess());
 
-  // Game state
   const [fen, setFen] = useState(chessRef.current.fen());
   const [moves, setMoves] = useState<any[]>([]);
+  const [moveHistory, setMoveHistory] = useState<string[]>([chessRef.current.fen()]);
+  const [currentMoveIndex, setCurrentMoveIndex] = useState(-1);
   const [isGameOver, setIsGameOver] = useState(false);
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [connectionError, setConnectionError] = useState(false);
   const [playerColor, setPlayerColor] = useState<'white' | 'black'>('white');
+  const [capturedByWhite, setCapturedByWhite] = useState<string[]>([]);
+  const [capturedByBlack, setCapturedByBlack] = useState<string[]>([]);
+  const [materialScore, setMaterialScore] = useState(0);
 
   // WebSocket
   const { subscribe, send, isConnected } = useWebSocket();
@@ -90,6 +94,33 @@ export const useChessGame = (gameId: string) => {
       chessRef.current.load(loadedFen);
       setFen(loadedFen);
 
+      try {
+        const movesResponse = await apiClient.get(`/api/games/${gameId}/moves`);
+        const movesData = movesResponse.data.data;
+        const moveList = movesData.map((move: any) => ({
+          notation: move.algebraicNotation,
+          number: move.moveNumber
+        }));
+        setMoves(moveList);
+
+        const tempChess = new Chess();
+        const fenHistory = [tempChess.fen()];
+
+        moveList.forEach((move: any) => {
+          try {
+            tempChess.move(move.notation);
+            fenHistory.push(tempChess.fen());
+          } catch (e) {
+            console.error('Failed to replay move:', move.notation, e);
+          }
+        });
+
+        setMoveHistory(fenHistory);
+        setCurrentMoveIndex(moveList.length - 1);
+      } catch (movesErr) {
+        console.error('[useChessGame] Failed to load moves:', movesErr);
+      }
+
       const guestUserId = localStorage.getItem('guestUserId');
       if (guestUserId) {
         if (game.whitePlayerId === guestUserId) {
@@ -147,6 +178,8 @@ export const useChessGame = (gameId: string) => {
       const newFen = chess.fen();
       setFen(newFen);
       setMoves(prevMoves => [...prevMoves, { notation: move.san, number: chess.moveNumber() }]);
+      setMoveHistory(prevHistory => [...prevHistory, newFen]);
+      setCurrentMoveIndex(prev => prev + 1);
       setError('');
 
       announceToScreenReader(`You played ${move.san}`);
@@ -178,6 +211,34 @@ export const useChessGame = (gameId: string) => {
     }
   }, [gameId, announceToScreenReader]);
 
+  // Calculate captured pieces and score whenever fen changes
+  useEffect(() => {
+    const history = chessRef.current.history({ verbose: true });
+    const whiteCaptures: string[] = [];
+    const blackCaptures: string[] = [];
+
+    history.forEach(move => {
+      if (move.captured) {
+        if (move.color === 'w') {
+          whiteCaptures.push(move.captured);
+        } else {
+          blackCaptures.push(move.captured);
+        }
+      }
+    });
+
+    setCapturedByWhite(whiteCaptures);
+    setCapturedByBlack(blackCaptures);
+
+    const pieceValues: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9 };
+    const valueCapturedByWhite = whiteCaptures.reduce((sum, p) => sum + pieceValues[p], 0);
+    const valueCapturedByBlack = blackCaptures.reduce((sum, p) => sum + pieceValues[p], 0);
+
+    // Score = White Material Advantage
+    // If White captured more value (meaning Black lost more), White has advantage.
+    setMaterialScore(valueCapturedByWhite - valueCapturedByBlack);
+  }, [fen]);
+
   const resign = useCallback(async () => {
     try {
       const playerId = localStorage.getItem('guestUserId');
@@ -201,16 +262,63 @@ export const useChessGame = (gameId: string) => {
     }
   }, [gameId]);
 
+  const goToMove = useCallback((index: number) => {
+    if (index >= -1 && index < moveHistory.length - 1) {
+      setCurrentMoveIndex(index);
+      const targetFen = moveHistory[index + 1];
+      chessRef.current.load(targetFen);
+      setFen(targetFen);
+    }
+  }, [moveHistory]);
+
+  const nextMove = useCallback(() => {
+    if (currentMoveIndex < moveHistory.length - 2) {
+      const newIndex = currentMoveIndex + 1;
+      setCurrentMoveIndex(newIndex);
+      const targetFen = moveHistory[newIndex + 1];
+      chessRef.current.load(targetFen);
+      setFen(targetFen);
+    }
+  }, [currentMoveIndex, moveHistory]);
+
+  const previousMove = useCallback(() => {
+    if (currentMoveIndex >= 0) {
+      const newIndex = currentMoveIndex - 1;
+      setCurrentMoveIndex(newIndex);
+      const targetFen = moveHistory[newIndex + 1];
+      chessRef.current.load(targetFen);
+      setFen(targetFen);
+    }
+  }, [currentMoveIndex, moveHistory]);
+
+  const resumeGame = useCallback(() => {
+    const lastIndex = moveHistory.length - 2;
+    if (currentMoveIndex !== lastIndex) {
+      setCurrentMoveIndex(lastIndex);
+      const targetFen = moveHistory[moveHistory.length - 1];
+      chessRef.current.load(targetFen);
+      setFen(targetFen);
+    }
+  }, [currentMoveIndex, moveHistory]);
+
   return {
     fen,
     moves,
+    currentMoveIndex,
     isGameOver,
     result,
     makeMove,
     resign,
+    goToMove,
+    nextMove,
+    previousMove,
+    resumeGame,
     loading,
     error,
     connectionError,
     playerColor,
+    capturedByWhite,
+    capturedByBlack,
+    materialScore,
   };
 };

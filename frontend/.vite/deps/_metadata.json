@@ -1,0 +1,73 @@
+{
+  "hash": "65e4ebef",
+  "configHash": "2b6b6699",
+  "lockfileHash": "f5aa9367",
+  "browserHash": "f641d7fd",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "5606136b",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "4f92164a",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "c623aa1b",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "974246c2",
+      "needsInterop": false
+    },
+    "@stomp/stompjs": {
+      "src": "../../node_modules/@stomp/stompjs/esm6/index.js",
+      "file": "@stomp_stompjs.js",
+      "fileHash": "fbad93ad",
+      "needsInterop": false
+    },
+    "sockjs-client": {
+      "src": "../../node_modules/sockjs-client/lib/entry.js",
+      "file": "sockjs-client.js",
+      "fileHash": "5178afb8",
+      "needsInterop": true
+    },
+    "chess.js": {
+      "src": "../../node_modules/chess.js/dist/esm/chess.js",
+      "file": "chess__js.js",
+      "fileHash": "431774c8",
+      "needsInterop": false
+    },
+    "react-chessboard": {
+      "src": "../../node_modules/react-chessboard/dist/index.esm.js",
+      "file": "react-chessboard.js",
+      "fileHash": "c945ee59",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "37c07ed8",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-R3E4LXVO": {
+      "file": "chunk-R3E4LXVO.js"
+    },
+    "chunk-P6RTVJOB": {
+      "file": "chunk-P6RTVJOB.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}

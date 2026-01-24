@@ -91,9 +91,6 @@ export const useChessGame = (gameId: string) => {
       const game = response.data.data;
       const loadedFen = game.currentFen;
 
-      chessRef.current.load(loadedFen);
-      setFen(loadedFen);
-
       try {
         const movesResponse = await apiClient.get(`/api/games/${gameId}/moves`);
         const movesData = movesResponse.data.data;
@@ -103,22 +100,28 @@ export const useChessGame = (gameId: string) => {
         }));
         setMoves(moveList);
 
-        const tempChess = new Chess();
-        const fenHistory = [tempChess.fen()];
+        // Reset chess instance and replay all moves to rebuild history
+        chessRef.current.reset();
+        const fenHistory = [chessRef.current.fen()];
 
         moveList.forEach((move: any) => {
           try {
-            tempChess.move(move.notation);
-            fenHistory.push(tempChess.fen());
+            chessRef.current.move(move.notation);
+            fenHistory.push(chessRef.current.fen());
           } catch (e) {
             console.error('Failed to replay move:', move.notation, e);
           }
         });
 
+        // Now chessRef.current has the full history and captured pieces
+        setFen(chessRef.current.fen());
         setMoveHistory(fenHistory);
         setCurrentMoveIndex(moveList.length - 1);
       } catch (movesErr) {
         console.error('[useChessGame] Failed to load moves:', movesErr);
+        // Fallback: just load the FEN without history
+        chessRef.current.load(loadedFen);
+        setFen(loadedFen);
       }
 
       const guestUserId = localStorage.getItem('guestUserId');

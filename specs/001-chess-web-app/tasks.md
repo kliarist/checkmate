@@ -183,8 +183,8 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Backend Tests for US2 (TDD - Write First)
 
-- [ ] T091 [P] [US2] Unit tests for User registration validation in backend/src/test/java/com/checkmate/chess/service/UserServiceTest.java
-- [ ] T092 [P] [US2] Unit tests for password hashing (BCrypt) in UserService
+- [x] T091 [P] [US2] Unit tests for User registration validation in backend/src/test/java/com/checkmate/chess/service/UserServiceTest.java
+- [x] T092 [P] [US2] Unit tests for password hashing (BCrypt) in UserService
 - [ ] T093 [P] [US2] Unit tests for JWT token generation and validation
 - [ ] T094 [P] [US2] Integration test for registration endpoint (POST /api/auth/register)
 - [ ] T095 [P] [US2] Integration test for login endpoint (POST /api/auth/login)
@@ -200,7 +200,7 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Backend Implementation for US2
 
-- [ ] T102 [P] [US2] Implement UserService in backend/src/main/java/com/checkmate/chess/service/UserService.java (registration, login, profile retrieval)
+- [-] T102 [P] [US2] Implement UserService in backend/src/main/java/com/checkmate/chess/service/UserService.java (registration, login, profile retrieval)
 - [ ] T103 [P] [US2] Implement password hashing with BCrypt (10 rounds minimum per NFR-031)
 - [ ] T104 [P] [US2] Implement AuthController in backend/src/main/java/com/checkmate/chess/controller/AuthController.java (POST /api/auth/register, POST /api/auth/login)
 - [ ] T105 [P] [US2] Implement UserController in backend/src/main/java/com/checkmate/chess/controller/UserController.java (GET /api/users/me, GET /api/users/me/games)

@@ -8,7 +8,7 @@ interface CapturedPiecesProps {
 
 const PIECE_ICONS: Record<string, Record<string, string>> = {
     white: {
-        p: '♙', n: '♘', b: '♗', r: '♖', q: '♕', k: '♔'
+        p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚'  // Use solid pieces for white
     },
     black: {
         p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚'
@@ -36,11 +36,17 @@ export const CapturedPieces: React.FC<CapturedPiecesProps> = ({ pieces, pieceCol
                     <span
                         key={i}
                         style={{
-                            fontSize: '1.1rem',
+                            fontSize: '1.5rem',
                             lineHeight: '1',
                             color: pieceColor === 'white' ? '#fff' : '#000',
-                            textShadow: pieceColor === 'black' ? '0 0 1px rgba(255,255,255,0.8)' : '0 0 1px rgba(0,0,0,0.5)',
+                            filter: pieceColor === 'white' 
+                                ? 'drop-shadow(0 0 1px rgba(0,0,0,0.5))' 
+                                : 'drop-shadow(0 0 1px rgba(255,255,255,0.8))',
                             cursor: 'default',
+                            fontWeight: '900',
+                            WebkitFontSmoothing: 'antialiased',
+                            MozOsxFontSmoothing: 'grayscale',
+                            textRendering: 'optimizeLegibility',
                         }}
                         title={p}
                     >

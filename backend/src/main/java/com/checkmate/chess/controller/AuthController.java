@@ -5,11 +5,13 @@ import com.checkmate.chess.dto.RegisterRequest;
 import com.checkmate.chess.dto.AuthResponse;
 import com.checkmate.chess.dto.ErrorResponse;
 import com.checkmate.chess.model.User;
-import com.checkmate.chess.security.JwtUtils;
+import com.checkmate.chess.security.JwtService;
 import com.checkmate.chess.service.UserService;
+import com.checkmate.chess.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -20,11 +22,13 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserService userService;
-    private final JwtUtils jwtUtils;
+    private final JwtService jwtService;
+    private final CustomUserDetailsService userDetailsService;
 
-    public AuthController(UserService userService, JwtUtils jwtUtils) {
+    public AuthController(UserService userService, JwtService jwtService, CustomUserDetailsService userDetailsService) {
         this.userService = userService;
-        this.jwtUtils = jwtUtils;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/register")
@@ -36,7 +40,8 @@ public class AuthController {
                 request.getPassword()
             );
 
-            String token = jwtUtils.generateToken(user.getEmail());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+            String token = jwtService.generateToken(userDetails);
 
             AuthResponse response = new AuthResponse();
             response.setToken(token);
@@ -63,7 +68,8 @@ public class AuthController {
         }
 
         User user = userOpt.get();
-        String token = jwtUtils.generateToken(user.getEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        String token = jwtService.generateToken(userDetails);
 
         AuthResponse response = new AuthResponse();
         response.setToken(token);

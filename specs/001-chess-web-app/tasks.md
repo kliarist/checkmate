@@ -208,11 +208,11 @@ description: "Implementation tasks for Chess Web Application"
 - [x] T107 [US2] Add password validation (min 8 chars, at least one number per FR-002)
 - [x] T108 [US2] Implement game history retrieval with pagination (page size 20)
 - [x] T109 [US2] Calculate and return user statistics (total games, wins, losses, draws, win rate)
-- [ ] T110 [US2] Add JWT token expiration (24 hours per NFR-032)
+- [x] T110 [US2] Add JWT token expiration (24 hours per NFR-032)
 - [ ] T111 [US2] Implement JWT refresh logic (optional for MVP)
 - [ ] T112 [US2] Add rate limiting on auth endpoints (100 requests/minute per IP per NFR-036)
-- [ ] T113 [US2] Add SQL injection prevention (use parameterized queries, JPA handles this)
-- [ ] T114 [US2] Add XSS prevention (sanitize user inputs, escape outputs)
+- [x] T113 [US2] Add SQL injection prevention (use parameterized queries, JPA handles this)
+- [x] T114 [US2] Add XSS prevention (sanitize user inputs, escape outputs)
 
 ### Frontend Implementation for US2
 

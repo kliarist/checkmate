@@ -185,11 +185,11 @@ description: "Implementation tasks for Chess Web Application"
 
 - [x] T091 [P] [US2] Unit tests for User registration validation in backend/src/test/java/com/checkmate/chess/service/UserServiceTest.java
 - [x] T092 [P] [US2] Unit tests for password hashing (BCrypt) in UserService
-- [ ] T093 [P] [US2] Unit tests for JWT token generation and validation
-- [ ] T094 [P] [US2] Integration test for registration endpoint (POST /api/auth/register)
-- [ ] T095 [P] [US2] Integration test for login endpoint (POST /api/auth/login)
-- [ ] T096 [P] [US2] Integration test for profile endpoint (GET /api/users/me)
-- [ ] T097 [P] [US2] Integration test for game history endpoint (GET /api/users/me/games)
+- [x] T093 [P] [US2] Unit tests for JWT token generation and validation
+- [x] T094 [P] [US2] Integration test for registration endpoint (POST /api/auth/register)
+- [x] T095 [P] [US2] Integration test for login endpoint (POST /api/auth/login)
+- [x] T096 [P] [US2] Integration test for profile endpoint (GET /api/users/me)
+- [x] T097 [P] [US2] Integration test for game history endpoint (GET /api/users/me/games)
 
 ### Frontend Tests for US2 (TDD - Write First)
 
@@ -236,16 +236,16 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Integration with US1
 
-- [ ] T132 [US2] Update GameService to associate games with registered users (not guest IDs)
-- [ ] T133 [US2] Persist game history for registered users automatically after game end
-- [ ] T134 [US2] Update GamePage to show user information if logged in
+- [x] T132 [US2] Update GameService to associate games with registered users (not guest IDs)
+- [x] T133 [US2] Persist game history for registered users automatically after game end
+- [x] T134 [US2] Update GamePage to show user information if logged in
 
 ### Constitution Verification for US2
 
-- [ ] T135 [US2] Code review: Verify password hashing, JWT security, input validation
-- [ ] T136 [US2] Verify test coverage ≥80% for auth and user services
-- [ ] T137 [US2] Security audit: Check for SQL injection, XSS, CSRF vulnerabilities
-- [ ] T138 [US2] Run static analysis and fix all warnings
+- [x] T135 [US2] Code review: Verify password hashing, JWT security, input validation
+- [x] T136 [US2] Verify test coverage ≥80% for auth and user services
+- [x] T137 [US2] Security audit: Check for SQL injection, XSS, CSRF vulnerabilities
+- [x] T138 [US2] Run static analysis and fix all warnings
 
 **Checkpoint**: At this point, users can create accounts and track their game history. US1 and US2 work independently.
 

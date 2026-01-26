@@ -13,6 +13,7 @@ interface ChessBoardProps {
   capturedByWhite?: string[];
   capturedByBlack?: string[];
   materialScore?: number;
+  lastMove?: { from: string; to: string } | null;
 }
 
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -28,6 +29,7 @@ export const ChessBoard = ({
   capturedByWhite = [],
   capturedByBlack = [],
   materialScore = 0,
+  lastMove = null,
 }: ChessBoardProps) => {
   const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>(playerColor);
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
@@ -179,6 +181,25 @@ export const ChessBoard = ({
   const darkSquareStyle = useMemo(() => ({ backgroundColor: '#b58863' }), []);
   const lightSquareStyle = useMemo(() => ({ backgroundColor: '#f0d9b5' }), []);
 
+  // Combine last move highlighting with selection highlighting
+  const customSquareStyles = useMemo(() => {
+    const styles: Record<string, React.CSSProperties> = { ...optionSquares };
+    
+    // Add last move highlighting (dull yellow like chess.com)
+    if (lastMove) {
+      styles[lastMove.from] = {
+        ...styles[lastMove.from],
+        backgroundColor: 'rgba(205, 210, 106, 0.5)', // Dull yellow
+      };
+      styles[lastMove.to] = {
+        ...styles[lastMove.to],
+        backgroundColor: 'rgba(205, 210, 106, 0.5)', // Dull yellow
+      };
+    }
+    
+    return styles;
+  }, [optionSquares, lastMove]);
+
   // Determine which captured pieces to show at top and bottom
   const topCaptured = boardOrientation === 'white'
     ? { pieces: capturedByBlack, color: 'white' as const, score: materialScore < 0 ? -materialScore : undefined }
@@ -231,7 +252,7 @@ export const ChessBoard = ({
         onSquareClick={onSquareClick}
         onPieceDragBegin={onPieceDragBegin}
         onPieceDrop={onPieceDrop}
-        customSquareStyles={optionSquares}
+        customSquareStyles={customSquareStyles}
         customBoardStyle={{
           ...boardStyle,
           width: '700px',
@@ -239,7 +260,7 @@ export const ChessBoard = ({
         }}
         customDarkSquareStyle={darkSquareStyle}
         customLightSquareStyle={lightSquareStyle}
-        animationDuration={200}
+        animationDuration={100}
         arePiecesDraggable={true}
       />
 

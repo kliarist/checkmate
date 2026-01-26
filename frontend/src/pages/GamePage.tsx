@@ -25,6 +25,7 @@ export const GamePage = () => {
     capturedByWhite,
     capturedByBlack,
     materialScore,
+    lastMove,
   } = useChessGame(id!);
 
   const handleOfferDraw = () => {
@@ -96,6 +97,7 @@ export const GamePage = () => {
             capturedByWhite={capturedByWhite}
             capturedByBlack={capturedByBlack}
             materialScore={materialScore}
+            lastMove={lastMove}
           />
         </div>
 

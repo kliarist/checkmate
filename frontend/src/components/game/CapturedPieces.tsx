@@ -28,10 +28,11 @@ export const CapturedPieces: React.FC<CapturedPiecesProps> = ({ pieces, pieceCol
             alignItems: 'center',
             gap: '0.25rem',
             padding: '2px 0',
-            minHeight: '1.2rem',
+            minHeight: '2rem',
+            height: '2rem',
             boxSizing: 'border-box',
         }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1px', minHeight: '1.5rem' }}>
                 {sortedPieces.map((p, i) => (
                     <span
                         key={i}
@@ -54,16 +55,16 @@ export const CapturedPieces: React.FC<CapturedPiecesProps> = ({ pieces, pieceCol
                     </span>
                 ))}
             </div>
-            {score !== undefined && score > 0 && (
-                <span style={{
-                    fontSize: '0.8rem',
-                    fontWeight: 'bold',
-                    color: '#888',
-                    marginLeft: '4px',
-                }}>
-                    +{score}
-                </span>
-            )}
+            <span style={{
+                fontSize: '0.8rem',
+                fontWeight: 'bold',
+                color: '#888',
+                marginLeft: '4px',
+                minWidth: '2rem',
+                visibility: (score !== undefined && score > 0) ? 'visible' : 'hidden',
+            }}>
+                +{score || 0}
+            </span>
         </div>
     );
 };

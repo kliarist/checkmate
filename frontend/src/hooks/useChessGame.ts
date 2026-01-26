@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import apiClient from '../api/client';
 import { useWebSocket } from '../context/WebSocketContext';
+import { soundManager } from '../utils/soundManager';
 
 export const useChessGame = (gameId: string) => {
   // Chess instance for move validation - use ref to maintain instance across renders
@@ -20,6 +21,8 @@ export const useChessGame = (gameId: string) => {
   const [capturedByWhite, setCapturedByWhite] = useState<string[]>([]);
   const [capturedByBlack, setCapturedByBlack] = useState<string[]>([]);
   const [materialScore, setMaterialScore] = useState(0);
+  const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null);
+  const [moveDetails, setMoveDetails] = useState<Array<{ from: string; to: string; notation: string }>>([]);
 
   // WebSocket
   const { subscribe, send, isConnected } = useWebSocket();
@@ -61,21 +64,44 @@ export const useChessGame = (gameId: string) => {
     try {
       chessRef.current.load(message.fen);
       setFen(message.fen);
+      
+      // Try to extract move details from the message or by comparing positions
+      const moveFrom = message.from;
+      const moveTo = message.to;
+      
+      // If not provided in message, we'll need to parse the algebraic notation
+      // For now, we'll store what we have
       setMoves(prevMoves => [...prevMoves, {
         notation: moveNotation,
         number: chessRef.current.moveNumber()
       }]);
+
+      // Track last move from WebSocket message
+      if (moveFrom && moveTo) {
+        setLastMove({ from: moveFrom, to: moveTo });
+        setMoveDetails(prevDetails => [...prevDetails, { from: moveFrom, to: moveTo, notation: moveNotation }]);
+      }
+
+      // Play sound for opponent move
+      if (message.captured || moveNotation.includes('x')) {
+        soundManager.play('capture');
+      } else {
+        soundManager.play('move');
+      }
 
       announceToScreenReader(`Opponent played ${moveNotation}`);
 
       if (message.isCheckmate) {
         setIsGameOver(true);
         setResult('Checkmate!');
+        soundManager.play('checkmate');
         announceToScreenReader('Checkmate! Game over.');
       } else if (message.isStalemate) {
         setIsGameOver(true);
         setResult('Stalemate - Draw');
         announceToScreenReader('Stalemate. Game is a draw.');
+      } else if (chessRef.current.inCheck()) {
+        soundManager.play('check');
       }
     } catch (err) {
       console.error('[useChessGame] Failed to process move:', err);
@@ -103,10 +129,18 @@ export const useChessGame = (gameId: string) => {
         // Reset chess instance and replay all moves to rebuild history
         chessRef.current.reset();
         const fenHistory = [chessRef.current.fen()];
+        const detailedMoves: Array<{ from: string; to: string; notation: string }> = [];
 
         moveList.forEach((move: any) => {
           try {
-            chessRef.current.move(move.notation);
+            const moveResult = chessRef.current.move(move.notation);
+            if (moveResult) {
+              detailedMoves.push({
+                from: moveResult.from,
+                to: moveResult.to,
+                notation: moveResult.san
+              });
+            }
             fenHistory.push(chessRef.current.fen());
           } catch (e) {
             console.error('Failed to replay move:', move.notation, e);
@@ -116,6 +150,7 @@ export const useChessGame = (gameId: string) => {
         // Now chessRef.current has the full history and captured pieces
         setFen(chessRef.current.fen());
         setMoveHistory(fenHistory);
+        setMoveDetails(detailedMoves);
         setCurrentMoveIndex(moveList.length - 1);
       } catch (movesErr) {
         console.error('[useChessGame] Failed to load moves:', movesErr);
@@ -182,8 +217,17 @@ export const useChessGame = (gameId: string) => {
       setFen(newFen);
       setMoves(prevMoves => [...prevMoves, { notation: move.san, number: chess.moveNumber() }]);
       setMoveHistory(prevHistory => [...prevHistory, newFen]);
+      setMoveDetails(prevDetails => [...prevDetails, { from: move.from, to: move.to, notation: move.san }]);
       setCurrentMoveIndex(prev => prev + 1);
+      setLastMove({ from: move.from, to: move.to });
       setError('');
+
+      // Play sound based on move type
+      if (move.captured) {
+        soundManager.play('capture');
+      } else {
+        soundManager.play('move');
+      }
 
       announceToScreenReader(`You played ${move.san}`);
 
@@ -200,11 +244,14 @@ export const useChessGame = (gameId: string) => {
       if (chess.isCheckmate()) {
         setIsGameOver(true);
         setResult('Checkmate!');
+        soundManager.play('checkmate');
         announceToScreenReader('Checkmate! You won the game.');
       } else if (chess.isStalemate()) {
         setIsGameOver(true);
         setResult('Stalemate - Draw');
         announceToScreenReader('Stalemate. Game is a draw.');
+      } else if (chess.inCheck()) {
+        soundManager.play('check');
       }
 
       return true;
@@ -214,21 +261,28 @@ export const useChessGame = (gameId: string) => {
     }
   }, [gameId, announceToScreenReader]);
 
-  // Calculate captured pieces and score whenever fen changes
+  // Calculate captured pieces and score based on current position in move history
   useEffect(() => {
-    const history = chessRef.current.history({ verbose: true });
+    // Create a temporary chess instance to replay moves up to currentMoveIndex
+    const tempChess = new Chess();
     const whiteCaptures: string[] = [];
     const blackCaptures: string[] = [];
 
-    history.forEach(move => {
-      if (move.captured) {
-        if (move.color === 'w') {
-          whiteCaptures.push(move.captured);
-        } else {
-          blackCaptures.push(move.captured);
+    // Replay moves up to the current index
+    for (let i = 0; i <= currentMoveIndex && i < moves.length; i++) {
+      try {
+        const move = tempChess.move(moves[i].notation);
+        if (move && move.captured) {
+          if (move.color === 'w') {
+            whiteCaptures.push(move.captured);
+          } else {
+            blackCaptures.push(move.captured);
+          }
         }
+      } catch (e) {
+        console.error('Failed to replay move for captures:', moves[i].notation, e);
       }
-    });
+    }
 
     setCapturedByWhite(whiteCaptures);
     setCapturedByBlack(blackCaptures);
@@ -240,7 +294,17 @@ export const useChessGame = (gameId: string) => {
     // Score = White Material Advantage
     // If White captured more value (meaning Black lost more), White has advantage.
     setMaterialScore(valueCapturedByWhite - valueCapturedByBlack);
-  }, [fen]);
+  }, [currentMoveIndex, moves]);
+
+  // Update lastMove based on currentMoveIndex for historical navigation
+  useEffect(() => {
+    if (currentMoveIndex >= 0 && currentMoveIndex < moveDetails.length) {
+      const move = moveDetails[currentMoveIndex];
+      setLastMove({ from: move.from, to: move.to });
+    } else {
+      setLastMove(null);
+    }
+  }, [currentMoveIndex, moveDetails]);
 
   const resign = useCallback(async () => {
     try {
@@ -323,5 +387,6 @@ export const useChessGame = (gameId: string) => {
     capturedByWhite,
     capturedByBlack,
     materialScore,
+    lastMove,
   };
 };

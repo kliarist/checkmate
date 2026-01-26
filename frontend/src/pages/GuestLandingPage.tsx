@@ -17,10 +17,10 @@ const RookLogo = () => (
 );
 
 export const GuestLandingPage = () => {
-  const [_mode, _setMode] = useState<'main' | 'signin' | 'signup'>('main');
-  const [_username, _setUsername] = useState('');
-  const [_email, _setEmail] = useState('');
-  const [_password, _setPassword] = useState('');
+  const [mode, setMode] = useState<'main' | 'signin' | 'signup'>('main');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();

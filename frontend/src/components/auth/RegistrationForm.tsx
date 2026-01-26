@@ -74,6 +74,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, lo
             backgroundColor: '#2a2a2a',
             color: '#e0e0e0',
             fontSize: '1rem',
+            boxSizing: 'border-box',
           }}
           disabled={loading}
         />
@@ -101,6 +102,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, lo
             backgroundColor: '#2a2a2a',
             color: '#e0e0e0',
             fontSize: '1rem',
+            boxSizing: 'border-box',
           }}
           disabled={loading}
         />
@@ -128,6 +130,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, lo
             backgroundColor: '#2a2a2a',
             color: '#e0e0e0',
             fontSize: '1rem',
+            boxSizing: 'border-box',
           }}
           disabled={loading}
         />
@@ -155,6 +158,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, lo
             backgroundColor: '#2a2a2a',
             color: '#e0e0e0',
             fontSize: '1rem',
+            boxSizing: 'border-box',
           }}
           disabled={loading}
         />
@@ -171,7 +175,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, lo
         style={{
           width: '100%',
           padding: '0.75rem',
-          backgroundColor: loading ? '#555' : '#4a9eff',
+          backgroundColor: loading ? '#555' : '#b58863',
           color: 'white',
           border: 'none',
           borderRadius: '4px',

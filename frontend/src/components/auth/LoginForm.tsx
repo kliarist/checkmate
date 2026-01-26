@@ -56,6 +56,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, loading = false 
             backgroundColor: '#2a2a2a',
             color: '#e0e0e0',
             fontSize: '1rem',
+            boxSizing: 'border-box',
           }}
           disabled={loading}
         />
@@ -83,6 +84,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, loading = false 
             backgroundColor: '#2a2a2a',
             color: '#e0e0e0',
             fontSize: '1rem',
+            boxSizing: 'border-box',
           }}
           disabled={loading}
         />
@@ -99,7 +101,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, loading = false 
         style={{
           width: '100%',
           padding: '0.75rem',
-          backgroundColor: loading ? '#555' : '#4a9eff',
+          backgroundColor: loading ? '#555' : '#b58863',
           color: 'white',
           border: 'none',
           borderRadius: '4px',

@@ -82,13 +82,6 @@ export const useChessGame = (gameId: string) => {
         setMoveDetails(prevDetails => [...prevDetails, { from: moveFrom, to: moveTo, notation: moveNotation }]);
       }
 
-      // Play sound for opponent move
-      if (message.captured || moveNotation.includes('x')) {
-        soundManager.play('capture');
-      } else {
-        soundManager.play('move');
-      }
-
       announceToScreenReader(`Opponent played ${moveNotation}`);
 
       if (message.isCheckmate) {
@@ -101,7 +94,20 @@ export const useChessGame = (gameId: string) => {
         setResult('Stalemate - Draw');
         announceToScreenReader('Stalemate. Game is a draw.');
       } else if (chessRef.current.inCheck()) {
+        // Only play check sound, not the move sound
         soundManager.play('check');
+      } else {
+        // Play sound for opponent move (only if not check)
+        if (moveNotation === 'O-O' || moveNotation === 'O-O-O') {
+          soundManager.play('castle');
+        } else if (moveNotation.includes('=')) {
+          // Promotion (e.g., e8=Q)
+          soundManager.play('promote');
+        } else if (message.captured || moveNotation.includes('x')) {
+          soundManager.play('capture');
+        } else {
+          soundManager.play('move');
+        }
       }
     } catch (err) {
       console.error('[useChessGame] Failed to process move:', err);
@@ -222,13 +228,6 @@ export const useChessGame = (gameId: string) => {
       setLastMove({ from: move.from, to: move.to });
       setError('');
 
-      // Play sound based on move type
-      if (move.captured) {
-        soundManager.play('capture');
-      } else {
-        soundManager.play('move');
-      }
-
       announceToScreenReader(`You played ${move.san}`);
 
       if (isConnectedRef.current) {
@@ -251,7 +250,21 @@ export const useChessGame = (gameId: string) => {
         setResult('Stalemate - Draw');
         announceToScreenReader('Stalemate. Game is a draw.');
       } else if (chess.inCheck()) {
+        // Only play check sound, not the move sound
         soundManager.play('check');
+      } else {
+        // Play sound based on move type (only if not check)
+        if (move.flags.includes('k') || move.flags.includes('q')) {
+          // Castling move (kingside or queenside)
+          soundManager.play('castle');
+        } else if (move.flags.includes('p')) {
+          // Promotion
+          soundManager.play('promote');
+        } else if (move.captured) {
+          soundManager.play('capture');
+        } else {
+          soundManager.play('move');
+        }
       }
 
       return true;
@@ -335,8 +348,22 @@ export const useChessGame = (gameId: string) => {
       const targetFen = moveHistory[index + 1];
       chessRef.current.load(targetFen);
       setFen(targetFen);
+
+      // Play sound for the move we're navigating to
+      if (index >= 0 && index < moves.length) {
+        const moveNotation = moves[index].notation;
+        if (moveNotation === 'O-O' || moveNotation === 'O-O-O') {
+          soundManager.play('castle');
+        } else if (moveNotation.includes('=')) {
+          soundManager.play('promote');
+        } else if (moveNotation.includes('x')) {
+          soundManager.play('capture');
+        } else {
+          soundManager.play('move');
+        }
+      }
     }
-  }, [moveHistory]);
+  }, [moveHistory, moves]);
 
   const nextMove = useCallback(() => {
     if (currentMoveIndex < moveHistory.length - 2) {
@@ -345,8 +372,22 @@ export const useChessGame = (gameId: string) => {
       const targetFen = moveHistory[newIndex + 1];
       chessRef.current.load(targetFen);
       setFen(targetFen);
+
+      // Play sound for the move we're navigating to
+      if (newIndex >= 0 && newIndex < moves.length) {
+        const moveNotation = moves[newIndex].notation;
+        if (moveNotation === 'O-O' || moveNotation === 'O-O-O') {
+          soundManager.play('castle');
+        } else if (moveNotation.includes('=')) {
+          soundManager.play('promote');
+        } else if (moveNotation.includes('x')) {
+          soundManager.play('capture');
+        } else {
+          soundManager.play('move');
+        }
+      }
     }
-  }, [currentMoveIndex, moveHistory]);
+  }, [currentMoveIndex, moveHistory, moves]);
 
   const previousMove = useCallback(() => {
     if (currentMoveIndex >= 0) {
@@ -355,8 +396,22 @@ export const useChessGame = (gameId: string) => {
       const targetFen = moveHistory[newIndex + 1];
       chessRef.current.load(targetFen);
       setFen(targetFen);
+
+      // Play sound for the move we're navigating to (or silence if going back to start)
+      if (newIndex >= 0 && newIndex < moves.length) {
+        const moveNotation = moves[newIndex].notation;
+        if (moveNotation === 'O-O' || moveNotation === 'O-O-O') {
+          soundManager.play('castle');
+        } else if (moveNotation.includes('=')) {
+          soundManager.play('promote');
+        } else if (moveNotation.includes('x')) {
+          soundManager.play('capture');
+        } else {
+          soundManager.play('move');
+        }
+      }
     }
-  }, [currentMoveIndex, moveHistory]);
+  }, [currentMoveIndex, moveHistory, moves]);
 
   const resumeGame = useCallback(() => {
     const lastIndex = moveHistory.length - 2;

@@ -1,9 +1,20 @@
-type SoundType = 'move' | 'capture' | 'check' | 'checkmate' | 'gameStart' | 'gameEnd';
+type SoundType = 'move' | 'capture' | 'check' | 'checkmate' | 'castle' | 'promote' | 'gameStart' | 'gameEnd';
 
 class SoundManager {
   private audioContext: AudioContext | null = null;
   private enabled: boolean = true;
   private volume: number = 0.3;
+  private audioCache: Map<SoundType, AudioBuffer> = new Map();
+  private soundUrls: Record<SoundType, string> = {
+    move: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3',
+    capture: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3',
+    check: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-check.mp3',
+    castle: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/castle.mp3',
+    promote: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/promote.mp3',
+    checkmate: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3',
+    gameStart: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3',
+    gameEnd: 'https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3',
+  };
 
   constructor() {
     // Initialize AudioContext lazily on first use
@@ -16,57 +27,44 @@ class SoundManager {
     return this.audioContext;
   }
 
-  private playTone(frequency: number, duration: number, type: OscillatorType = 'sine'): void {
+  private async loadSound(type: SoundType): Promise<AudioBuffer | null> {
+    if (this.audioCache.has(type)) {
+      return this.audioCache.get(type)!;
+    }
+
+    try {
+      const ctx = this.getAudioContext();
+      const response = await fetch(this.soundUrls[type]);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+      this.audioCache.set(type, audioBuffer);
+      return audioBuffer;
+    } catch (error) {
+      console.warn('Failed to load sound:', type, error);
+      return null;
+    }
+  }
+
+  async play(type: SoundType): Promise<void> {
     if (!this.enabled) return;
 
     try {
       const ctx = this.getAudioContext();
-      const oscillator = ctx.createOscillator();
+      const buffer = await this.loadSound(type);
+      
+      if (!buffer) return;
+
+      const source = ctx.createBufferSource();
       const gainNode = ctx.createGain();
 
-      oscillator.connect(gainNode);
+      source.buffer = buffer;
+      source.connect(gainNode);
       gainNode.connect(ctx.destination);
+      gainNode.gain.value = this.volume;
 
-      oscillator.frequency.value = frequency;
-      oscillator.type = type;
-
-      gainNode.gain.setValueAtTime(this.volume, ctx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
-
-      oscillator.start(ctx.currentTime);
-      oscillator.stop(ctx.currentTime + duration);
+      source.start(0);
     } catch (error) {
       console.warn('Failed to play sound:', error);
-    }
-  }
-
-  play(type: SoundType): void {
-    if (!this.enabled) return;
-
-    switch (type) {
-      case 'move':
-        // Simple click sound - short high-pitched tone
-        this.playTone(800, 0.05, 'sine');
-        break;
-      case 'capture':
-        // Slightly different tone for captures
-        this.playTone(600, 0.08, 'sine');
-        break;
-      case 'check':
-        // Higher pitched for check
-        this.playTone(1000, 0.1, 'sine');
-        break;
-      case 'checkmate':
-        // Two tones for checkmate
-        this.playTone(800, 0.15, 'sine');
-        setTimeout(() => this.playTone(600, 0.2, 'sine'), 100);
-        break;
-      case 'gameStart':
-        this.playTone(600, 0.1, 'sine');
-        break;
-      case 'gameEnd':
-        this.playTone(500, 0.2, 'sine');
-        break;
     }
   }
 

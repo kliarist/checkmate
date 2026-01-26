@@ -34,7 +34,7 @@ export const GuestLandingPage = () => {
 
     try {
       const response = await apiClient.post('/api/games/guest', {
-        guestUsername: username || null,
+        guestUsername: 'Guest',
       });
       const { gameId, guestUserId, token } = response.data.data;
 
@@ -63,22 +63,21 @@ export const GuestLandingPage = () => {
   };
 
   // Main menu view
-  if (mode === 'main') {
-    return (
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#242424',
-        margin: 0,
-        padding: 0,
-      }}>
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#242424',
+      margin: 0,
+      padding: 0,
+    }}>
         {/* User info bar at top if logged in */}
         {isLoggedIn && (
           <div style={{
@@ -217,10 +216,4 @@ export const GuestLandingPage = () => {
         )}
       </div>
     );
-  }
-
-  // Sign In view - removed, now using dedicated LoginPage
-  // Sign Up view - removed, now using dedicated RegistrationPage
-  
-  return null; // Should never reach here
 };

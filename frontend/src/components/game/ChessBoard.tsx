@@ -220,7 +220,7 @@ export const ChessBoard = ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '0.5rem',
+        gap: '0.25rem',
         maxWidth: '700px',
         outline: 'none',
       }}
@@ -238,7 +238,7 @@ export const ChessBoard = ({
       />
 
       {/* Top Left Captured Pieces */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+      <div style={{ width: '700px', display: 'flex', justifyContent: 'flex-start', paddingLeft: '8px' }}>
         <CapturedPieces
           pieces={topCaptured.pieces}
           pieceColor={topCaptured.color}
@@ -265,7 +265,7 @@ export const ChessBoard = ({
       />
 
       {/* Bottom Left Captured Pieces */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+      <div style={{ width: '700px', display: 'flex', justifyContent: 'flex-start', paddingLeft: '8px' }}>
         <CapturedPieces
           pieces={bottomCaptured.pieces}
           pieceColor={bottomCaptured.color}

@@ -274,19 +274,19 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Backend Implementation for US3
 
-- [ ] T148 Create Rating entity in backend/src/main/java/com/checkmate/chess/model/Rating.java (tracks rating history)
+- [x] T148 Create Rating entity in backend/src/main/java/com/checkmate/chess/model/Rating.java (tracks rating history)
 - [ ] T149 Create MatchmakingQueue entity in backend/src/main/java/com/checkmate/chess/model/MatchmakingQueue.java
-- [ ] T150 Create GameClock entity in backend/src/main/java/com/checkmate/chess/model/GameClock.java
-- [ ] T151 [P] [US3] Create RatingRepository in backend/src/main/java/com/checkmate/chess/repository/RatingRepository.java
-- [ ] T152 [P] [US3] Create MatchmakingQueueRepository
-- [ ] T153 [P] [US3] Implement RatingService in backend/src/main/java/com/checkmate/chess/service/RatingService.java (ELO calculation algorithm, verify functions <20 lines)
-- [ ] T154 [US3] Implement MatchmakingService in backend/src/main/java/com/checkmate/chess/service/MatchmakingService.java (queue management, pairing within ±200 ELO)
-- [ ] T155 [US3] Implement ChessClockService in backend/src/main/java/com/checkmate/chess/service/ChessClockService.java (track time, handle increment/delay)
-- [ ] T156 [US3] Create MatchmakingController (POST /api/matchmaking/queue, DELETE /api/matchmaking/queue/{userId})
-- [ ] T157 [US3] Implement matchmaking pairing scheduler (runs every 2 seconds, pairs waiting users)
+- [x] T150 Create GameClock entity in backend/src/main/java/com/checkmate/chess/model/GameClock.java
+- [x] T151 [P] [US3] Create RatingRepository in backend/src/main/java/com/checkmate/chess/repository/RatingRepository.java
+- [x] T152 [P] [US3] Create MatchmakingQueueRepository
+- [x] T153 [P] [US3] Implement RatingService in backend/src/main/java/com/checkmate/chess/service/RatingService.java (ELO calculation algorithm, verify functions <20 lines)
+- [x] T154 [US3] Implement MatchmakingService in backend/src/main/java/com/checkmate/chess/service/MatchmakingService.java (queue management, pairing within ±200 ELO)
+- [x] T155 [US3] Implement ChessClockService in backend/src/main/java/com/checkmate/chess/service/ChessClockService.java (track time, handle increment/delay)
+- [x] T156 [US3] Create MatchmakingController (POST /api/matchmaking/queue, DELETE /api/matchmaking/queue/{userId})
+- [x] T157 [US3] Implement matchmaking pairing scheduler (runs every 2 seconds, pairs waiting users)
 - [ ] T158 [US3] Update GameWebSocketHandler to send clock updates (every second via WebSocket)
 - [ ] T159 [US3] Implement timeout detection in ChessClockService (game ends when time reaches zero)
-- [ ] T160 [US3] Update GameService to update ratings after ranked game completion
+- [x] T160 [US3] Update GameService to update ratings after ranked game completion
 - [ ] T161 [US3] Add time control validation (bullet: <3min, blitz: 3-10min, rapid: 10-30min, classical: 30min+)
 - [ ] T162 [US3] Implement queue cancellation logic in MatchmakingService
 - [ ] T163 [US3] Add matchmaking timeout (remove from queue after 5 minutes)

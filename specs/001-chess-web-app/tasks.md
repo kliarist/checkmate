@@ -259,9 +259,9 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Backend Tests for US3 (TDD - Write First)
 
-- [ ] T139 [P] [US3] Unit tests for ELO rating calculation in backend/src/test/java/com/checkmate/chess/service/RatingServiceTest.java (100% coverage required)
-- [ ] T140 [P] [US3] Unit tests for matchmaking algorithm in backend/src/test/java/com/checkmate/chess/service/MatchmakingServiceTest.java
-- [ ] T141 [P] [US3] Unit tests for chess clock logic in backend/src/test/java/com/checkmate/chess/service/ChessClockServiceTest.java
+- [x] T139 [P] [US3] Unit tests for ELO rating calculation in backend/src/test/java/com/checkmate/chess/service/RatingServiceTest.java (100% coverage required)
+- [x] T140 [P] [US3] Unit tests for matchmaking algorithm in backend/src/test/java/com/checkmate/chess/service/MatchmakingServiceTest.java
+- [x] T141 [P] [US3] Unit tests for chess clock logic in backend/src/test/java/com/checkmate/chess/service/ChessClockServiceTest.java
 - [ ] T142 [P] [US3] Integration test for matchmaking queue (POST /api/matchmaking/queue)
 - [ ] T143 [P] [US3] Integration test for chess clock WebSocket events
 - [ ] T144 [P] [US3] Integration test for rating updates after game completion

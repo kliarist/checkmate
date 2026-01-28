@@ -197,17 +197,17 @@ describe('Chess Validation Utilities', () => {
     });
 
     it('should validate FEN string', () => {
-      const chess = new Chess();
       const validFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
-      expect(chess.validateFen(validFen).ok).toBe(true);
+      // chess.js validates FEN in constructor, so we test by trying to load it
+      expect(() => new Chess(validFen)).not.toThrow();
     });
 
     it('should reject invalid FEN string', () => {
-      const chess = new Chess();
       const invalidFen = 'invalid-fen';
 
-      expect(chess.validateFen(invalidFen).ok).toBe(false);
+      // chess.js throws on invalid FEN
+      expect(() => new Chess(invalidFen)).toThrow();
     });
   });
 

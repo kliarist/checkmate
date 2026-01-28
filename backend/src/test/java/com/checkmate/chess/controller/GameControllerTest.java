@@ -1,11 +1,6 @@
 package com.checkmate.chess.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import com.checkmate.chess.dto.CreateGuestGameRequest;
-import com.checkmate.chess.dto.CreateGuestGameResponse;
-import com.checkmate.chess.dto.GameStateResponse;
-import com.checkmate.chess.dto.SuccessResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.checkmate.chess.dto.CreateGuestGameRequest;
+import com.checkmate.chess.dto.CreateGuestGameResponse;
+import com.checkmate.chess.dto.GameStateResponse;
+import com.checkmate.chess.dto.SuccessResponse;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -128,6 +128,128 @@ class GameControllerTest {
 
     final String color = response.getBody().data().color();
     assertThat(color).isIn("white", "black");
+  }
+
+  @Test
+  @DisplayName("Should create computer game with beginner difficulty")
+  void shouldCreateComputerGameBeginner() {
+    // Given
+    String difficulty = "beginner";
+    String playerColor = "white";
+    
+    // Create a player first
+    final CreateGuestGameRequest createRequest = new CreateGuestGameRequest("TestPlayer");
+    final ResponseEntity<SuccessResponse<CreateGuestGameResponse>> playerResponse =
+        gameController.createGuestGame(createRequest);
+    final java.util.UUID playerId = playerResponse.getBody().data().guestUserId();
+
+    // Mock authentication
+    org.springframework.security.core.Authentication auth = 
+        new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+            playerId.toString(), null);
+
+    // When
+    final ResponseEntity<SuccessResponse<com.checkmate.chess.dto.CreateComputerGameResponse>> response =
+        gameController.createComputerGame(
+            new com.checkmate.chess.dto.CreateComputerGameRequest(difficulty, playerColor), 
+            auth);
+
+    // Then
+    assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().data().gameId()).isNotNull();
+    assertThat(response.getBody().data().playerId()).isEqualTo(playerId);
+    assertThat(response.getBody().data().color()).isEqualTo("white");
+    assertThat(response.getBody().data().difficulty()).isEqualTo("beginner");
+  }
+
+  @Test
+  @DisplayName("Should create computer game with intermediate difficulty")
+  void shouldCreateComputerGameIntermediate() {
+    // Given
+    String difficulty = "intermediate";
+    String playerColor = "black";
+    
+    // Create a player first
+    final CreateGuestGameRequest createRequest = new CreateGuestGameRequest("TestPlayer");
+    final ResponseEntity<SuccessResponse<CreateGuestGameResponse>> playerResponse =
+        gameController.createGuestGame(createRequest);
+    final java.util.UUID playerId = playerResponse.getBody().data().guestUserId();
+
+    // Mock authentication
+    org.springframework.security.core.Authentication auth = 
+        new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+            playerId.toString(), null);
+
+    // When
+    final ResponseEntity<SuccessResponse<com.checkmate.chess.dto.CreateComputerGameResponse>> response =
+        gameController.createComputerGame(
+            new com.checkmate.chess.dto.CreateComputerGameRequest(difficulty, playerColor), 
+            auth);
+
+    // Then
+    assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().data().gameId()).isNotNull();
+    assertThat(response.getBody().data().difficulty()).isEqualTo("intermediate");
+  }
+
+  @Test
+  @DisplayName("Should create computer game with advanced difficulty")
+  void shouldCreateComputerGameAdvanced() {
+    // Given
+    String difficulty = "advanced";
+    String playerColor = "white";
+    
+    // Create a player first
+    final CreateGuestGameRequest createRequest = new CreateGuestGameRequest("TestPlayer");
+    final ResponseEntity<SuccessResponse<CreateGuestGameResponse>> playerResponse =
+        gameController.createGuestGame(createRequest);
+    final java.util.UUID playerId = playerResponse.getBody().data().guestUserId();
+
+    // Mock authentication
+    org.springframework.security.core.Authentication auth = 
+        new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+            playerId.toString(), null);
+
+    // When
+    final ResponseEntity<SuccessResponse<com.checkmate.chess.dto.CreateComputerGameResponse>> response =
+        gameController.createComputerGame(
+            new com.checkmate.chess.dto.CreateComputerGameRequest(difficulty, playerColor), 
+            auth);
+
+    // Then
+    assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().data().gameId()).isNotNull();
+    assertThat(response.getBody().data().difficulty()).isEqualTo("advanced");
+  }
+
+  @Test
+  @DisplayName("Should reject invalid difficulty level")
+  void shouldRejectInvalidDifficulty() {
+    // Given
+    String difficulty = "invalid";
+    String playerColor = "white";
+    
+    // Create a player first
+    final CreateGuestGameRequest createRequest = new CreateGuestGameRequest("TestPlayer");
+    final ResponseEntity<SuccessResponse<CreateGuestGameResponse>> playerResponse =
+        gameController.createGuestGame(createRequest);
+    final java.util.UUID playerId = playerResponse.getBody().data().guestUserId();
+
+    // Mock authentication
+    org.springframework.security.core.Authentication auth = 
+        new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+            playerId.toString(), null);
+
+    // When/Then
+    org.junit.jupiter.api.Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () -> gameController.createComputerGame(
+            new com.checkmate.chess.dto.CreateComputerGameRequest(difficulty, playerColor), 
+            auth)
+    );
   }
 }
 

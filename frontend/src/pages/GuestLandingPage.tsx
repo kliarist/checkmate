@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/client';
+import { menuStyles } from '../styles/menuStyles';
 
 // Rook SVG logo component - same as favicon
 const RookLogo = () => (
@@ -49,6 +50,22 @@ export const GuestLandingPage = () => {
     }
   };
 
+  const handlePlayComputer = () => {
+    navigate('/computer');
+  };
+
+  const handlePlayPrivate = () => {
+    navigate('/private');
+  };
+
+  const handlePlayRanked = () => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    navigate('/ranked');
+  };
+
   const handleSignIn = () => {
     navigate('/login');
   };
@@ -64,66 +81,58 @@ export const GuestLandingPage = () => {
 
   // Main menu view
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#242424',
-      margin: 0,
-      padding: 0,
-    }}>
-        {/* User info bar at top if logged in */}
-        {isLoggedIn && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            padding: '1rem 2rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-          }}>
-            <span style={{ color: '#e0e0e0' }}>
-              {userName || userEmail}
-            </span>
-            <button
-              onClick={() => navigate('/profile')}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: '#3a3a3a',
-                color: '#e0e0e0',
-                border: '1px solid #4a4a4a',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '0.9rem',
-              }}
-            >
-              Profile
-            </button>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: 'transparent',
-                color: '#999',
-                border: '1px solid #3a3a3a',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '0.9rem',
-              }}
-            >
-              Logout
-            </button>
-          </div>
-        )}
+    <div style={menuStyles.container}>
+      {/* User info bar at top if logged in */}
+      {isLoggedIn && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          padding: '1rem 2rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+        }}>
+          <span style={{ color: '#e0e0e0' }}>
+            {userName || userEmail}
+          </span>
+          <button
+            onClick={() => navigate('/profile')}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#3a3a3a',
+              color: '#e0e0e0',
+              border: '1px solid #4a4a4a',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+            }}
+          >
+            Profile
+          </button>
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: 'transparent',
+              color: '#999',
+              border: '1px solid #3a3a3a',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      )}
 
-        <div style={{ marginBottom: '1rem' }}>
+      <div style={{ ...menuStyles.card, maxWidth: '400px' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center',
+          marginBottom: '1rem' 
+        }}>
           <RookLogo />
         </div>
 
@@ -134,80 +143,78 @@ export const GuestLandingPage = () => {
           margin: '0 0 3rem 0',
           color: '#e0e0e0',
           textTransform: 'uppercase',
+          textAlign: 'center',
         }}>
           CheckMate
         </h1>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '280px' }}>
-          {!isLoggedIn && (
-            <>
-              <button
-                onClick={handleSignIn}
-                style={{
-                  width: '100%',
-                  padding: '0.875rem',
-                  fontSize: '1rem',
-                  fontWeight: '500',
-                  backgroundColor: '#b58863',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
-              >
-                Sign In
-              </button>
+        {!isLoggedIn && (
+          <>
+            <button
+              onClick={handleSignIn}
+              style={menuStyles.signInButton}
+            >
+              Sign In
+            </button>
 
-              <button
-                onClick={handleSignUp}
-                style={{
-                  width: '100%',
-                  padding: '0.875rem',
-                  fontSize: '1rem',
-                  fontWeight: '500',
-                  backgroundColor: '#3a3a3a',
-                  color: '#e0e0e0',
-                  border: '1px solid #4a4a4a',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
-              >
-                Sign Up
-              </button>
+            <button
+              onClick={handleSignUp}
+              style={{ ...menuStyles.signUpButton, marginTop: '0.75rem' }}
+            >
+              Sign Up
+            </button>
 
-              <div style={{
-                textAlign: 'center',
-                margin: '0.5rem 0',
-                color: '#666',
-                fontSize: '0.85rem',
-              }}>
-                or
-              </div>
-            </>
-          )}
+            <div style={{
+              textAlign: 'center',
+              margin: '1.5rem 0 1rem 0',
+              color: '#666',
+              fontSize: '0.85rem',
+            }}>
+              or play as guest
+            </div>
+          </>
+        )}
 
+        {/* Game Mode Buttons */}
+        <button
+          onClick={handlePlayComputer}
+          style={{ ...menuStyles.computerButton, marginTop: isLoggedIn ? '0' : '0.75rem' }}
+        >
+          🤖 Play vs Computer
+        </button>
+
+        <button
+          onClick={handlePlayPrivate}
+          style={{ ...menuStyles.privateButton, marginTop: '0.75rem' }}
+        >
+          👥 Play with Friend
+        </button>
+
+        {isLoggedIn && (
+          <button
+            onClick={handlePlayRanked}
+            style={{ ...menuStyles.rankedButton, marginTop: '0.75rem' }}
+          >
+            🏆 Ranked Game
+          </button>
+        )}
+
+        {!isLoggedIn && (
           <button
             onClick={handlePlayAnonymously}
             disabled={loading}
-            style={{
-              width: '100%',
-              padding: '0.875rem',
-              fontSize: '1rem',
-              fontWeight: '500',
-              backgroundColor: isLoggedIn ? '#b58863' : 'transparent',
-              color: isLoggedIn ? '#fff' : '#999',
-              border: isLoggedIn ? 'none' : '1px solid #3a3a3a',
-              borderRadius: '4px',
-              cursor: loading ? 'not-allowed' : 'pointer',
+            style={{ 
+              ...(loading ? menuStyles.guestButtonDisabled : menuStyles.guestButton),
+              marginTop: '0.75rem'
             }}
           >
-            {loading ? '...' : isLoggedIn ? 'Play Now' : 'Play Anonymously'}
+            {loading ? '...' : '🎲 Quick Play (Anonymous)'}
           </button>
-        </div>
+        )}
 
         {error && (
           <div style={{
-            color: '#ff6b6b',
+            ...menuStyles.errorBox,
             marginTop: '1rem',
             fontSize: '0.85rem',
           }}>
@@ -215,5 +222,6 @@ export const GuestLandingPage = () => {
           </div>
         )}
       </div>
-    );
+    </div>
+  );
 };

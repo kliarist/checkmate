@@ -9,5 +9,16 @@ public record GameStateResponse(
     String result,
     String pgn,
     UUID whitePlayerId,
-    UUID blackPlayerId) {}
+    UUID blackPlayerId,
+    String gameType,
+    String timeControl,
+    PlayerInfo whitePlayer,
+    PlayerInfo blackPlayer) {
+  
+  public record PlayerInfo(
+      UUID id,
+      String username,
+      Integer eloRating,
+      Boolean isGuest) {}
+}
 

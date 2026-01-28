@@ -31,6 +31,10 @@ spring:
         order_updates: true
     open-in-view: false
 
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+
 management:
   endpoints:
     web:

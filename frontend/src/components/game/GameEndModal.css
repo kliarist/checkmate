@@ -1,0 +1,42 @@
+.game-end-content {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.game-result {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: #e0e0e0;
+}
+
+.rating-change-container {
+  background: #3a3a3a;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.rating-change-label {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.rating-change {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+.rating-change.positive {
+  color: #4caf50;
+}
+
+.rating-change.negative {
+  color: #f44336;
+}

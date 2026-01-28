@@ -1,8 +1,8 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
-import { GuestLandingPage } from '../../../pages/GuestLandingPage';
-import apiClient from '../../../api/client';
+import { GuestLandingPage } from '../../pages/GuestLandingPage';
+import apiClient from '../../api/client';
 
 describe('Guest Game Creation Flow', () => {
   beforeEach(() => {
@@ -309,7 +309,8 @@ describe('Guest Game Creation Flow', () => {
       expect(apiClient.post).toHaveBeenCalled();
     });
 
-    const call = apiClient.post.mock.results[0];
+    const mockPost = apiClient.post as any;
+    const call = mockPost.mock.results[0];
     await call.value.then((response: any) => {
       expect(response.data.data.currentFen).toBe(
         'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -345,7 +346,8 @@ describe('Guest Game Creation Flow', () => {
       expect(apiClient.post).toHaveBeenCalled();
     });
 
-    const call = apiClient.post.mock.results[0];
+    const mockPost = apiClient.post as any;
+    const call = mockPost.mock.results[0];
     await call.value.then((response: any) => {
       expect(response.data.data.status).toBe('IN_PROGRESS');
     });

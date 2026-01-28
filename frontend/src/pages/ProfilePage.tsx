@@ -99,9 +99,27 @@ export const ProfilePage: React.FC = () => {
           alignItems: 'center',
           marginBottom: '2rem',
         }}>
-          <h1 style={{ color: '#e0e0e0', margin: 0 }}>
-            {profile.username}'s Profile
-          </h1>
+          <div>
+            <h1 style={{ color: '#e0e0e0', margin: 0 }}>
+              {profile.username}'s Profile
+            </h1>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              marginTop: '0.5rem',
+            }}>
+              <span style={{ color: '#999', fontSize: '0.9rem' }}>Rating:</span>
+              <span style={{
+                fontSize: '2rem',
+                fontWeight: '700',
+                color: '#c9a068',
+                fontFamily: 'monospace',
+              }}>
+                {profile.eloRating}
+              </span>
+            </div>
+          </div>
           <button
             onClick={handleLogout}
             style={{

@@ -57,7 +57,7 @@ export const GameHistoryList: React.FC<GameHistoryListProps> = ({ userId }) => {
                 (game.result === 'BLACK_WINS' && !isWhite);
     
     return won 
-      ? { text: 'Won', color: '#4caf50' }
+      ? { text: 'Won', color: '#c9a068' }
       : { text: 'Lost', color: '#ff6b6b' };
   };
 

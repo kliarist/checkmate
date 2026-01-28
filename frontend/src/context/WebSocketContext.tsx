@@ -47,7 +47,9 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       return () => {};
     }
 
+    console.log('[WebSocket] Subscribing to:', destination);
     const subscription = clientRef.current.subscribe(destination, (message) => {
+      console.log('[WebSocket] Message received on', destination, ':', message.body);
       const body = JSON.parse(message.body);
       callback(body);
     });
@@ -55,6 +57,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     subscriptionsRef.current.set(destination, subscription);
 
     return () => {
+      console.log('[WebSocket] Unsubscribing from:', destination);
       subscription.unsubscribe();
       subscriptionsRef.current.delete(destination);
     };

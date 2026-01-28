@@ -1,0 +1,72 @@
+.timeout-modal {
+  text-align: center;
+  padding: 1rem;
+}
+
+.timeout-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.timeout-modal h2 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.timeout-message {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.timeout-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.result-label {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.result-label.win {
+  color: #27ae60;
+}
+
+.result-label.loss {
+  color: #e74c3c;
+}
+
+.result-reason {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.close-button {
+  background: #b58863;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 1rem;
+}
+
+.close-button:hover {
+  background: #357abd;
+}
+
+.close-button:focus {
+  outline: 2px solid #b58863;
+  outline-offset: 2px;
+}

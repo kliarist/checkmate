@@ -275,7 +275,7 @@ description: "Implementation tasks for Chess Web Application"
 ### Backend Implementation for US3
 
 - [x] T148 Create Rating entity in backend/src/main/java/com/checkmate/chess/model/Rating.java (tracks rating history)
-- [ ] T149 Create MatchmakingQueue entity in backend/src/main/java/com/checkmate/chess/model/MatchmakingQueue.java
+- [x] T149 Create MatchmakingQueue entity in backend/src/main/java/com/checkmate/chess/model/MatchmakingQueue.java
 - [x] T150 Create GameClock entity in backend/src/main/java/com/checkmate/chess/model/GameClock.java
 - [x] T151 [P] [US3] Create RatingRepository in backend/src/main/java/com/checkmate/chess/repository/RatingRepository.java
 - [x] T152 [P] [US3] Create MatchmakingQueueRepository
@@ -284,41 +284,41 @@ description: "Implementation tasks for Chess Web Application"
 - [x] T155 [US3] Implement ChessClockService in backend/src/main/java/com/checkmate/chess/service/ChessClockService.java (track time, handle increment/delay)
 - [x] T156 [US3] Create MatchmakingController (POST /api/matchmaking/queue, DELETE /api/matchmaking/queue/{userId})
 - [x] T157 [US3] Implement matchmaking pairing scheduler (runs every 2 seconds, pairs waiting users)
-- [ ] T158 [US3] Update GameWebSocketHandler to send clock updates (every second via WebSocket)
-- [ ] T159 [US3] Implement timeout detection in ChessClockService (game ends when time reaches zero)
+- [x] T158 [US3] Update GameWebSocketHandler to send clock updates (every second via WebSocket)
+- [x] T159 [US3] Implement timeout detection in ChessClockService (game ends when time reaches zero)
 - [x] T160 [US3] Update GameService to update ratings after ranked game completion
-- [ ] T161 [US3] Add time control validation (bullet: <3min, blitz: 3-10min, rapid: 10-30min, classical: 30min+)
-- [ ] T162 [US3] Implement queue cancellation logic in MatchmakingService
-- [ ] T163 [US3] Add matchmaking timeout (remove from queue after 5 minutes)
+- [x] T161 [US3] Add time control validation (bullet: <3min, blitz: 3-10min, rapid: 10-30min, classical: 30min+)
+- [x] T162 [US3] Implement queue cancellation logic in MatchmakingService
+- [x] T163 [US3] Add matchmaking timeout (remove from queue after 5 minutes)
 
 ### Frontend Implementation for US3
 
-- [ ] T164 [P] [US3] Create RankedGamePage component in frontend/src/pages/RankedGamePage.tsx
-- [ ] T165 [P] [US3] Create TimeControlSelector component in frontend/src/components/matchmaking/TimeControlSelector.tsx (buttons for bullet, blitz, rapid, classical)
-- [ ] T166 [P] [US3] Create MatchmakingModal component in frontend/src/components/matchmaking/MatchmakingModal.tsx (searching animation, cancel button)
-- [ ] T167 [P] [US3] Create ChessClock component in frontend/src/components/game/ChessClock.tsx (displays time remaining, increments)
-- [ ] T168 [US3] Create matchmaking API calls in frontend/src/api/matchmakingApi.ts (join queue, cancel queue)
-- [ ] T169 [US3] Create WebSocket subscription for matchmaking events in useGameWebSocket hook
-- [ ] T170 [US3] Implement clock display logic (format mm:ss, show increment)
-- [ ] T171 [US3] Implement clock update handling via WebSocket (sync from server)
-- [ ] T172 [US3] Add visual time pressure indicator (clock turns red when <10 seconds)
-- [ ] T173 [US3] Add timeout notification (modal showing "Time's up!")
-- [ ] T174 [US3] Display rating change after game completion (+15, -12, etc.)
-- [ ] T175 [US3] Update ProfilePage to show current ELO rating prominently
-- [ ] T176 [US3] Add matchmaking timeout notification (after 5 minutes)
+- [x] T164 [P] [US3] Create RankedGamePage component in frontend/src/pages/RankedGamePage.tsx
+- [x] T165 [P] [US3] Create TimeControlSelector component in frontend/src/components/matchmaking/TimeControlSelector.tsx (buttons for bullet, blitz, rapid, classical)
+- [x] T166 [P] [US3] Create MatchmakingModal component in frontend/src/components/matchmaking/MatchmakingModal.tsx (searching animation, cancel button)
+- [x] T167 [P] [US3] Create ChessClock component in frontend/src/components/game/ChessClock.tsx (displays time remaining, increments)
+- [x] T168 [US3] Create matchmaking API calls in frontend/src/api/matchmakingApi.ts (join queue, cancel queue)
+- [x] T169 [US3] Create WebSocket subscription for matchmaking events in useGameWebSocket hook
+- [x] T170 [US3] Implement clock display logic (format mm:ss, show increment)
+- [x] T171 [US3] Implement clock update handling via WebSocket (sync from server)
+- [x] T172 [US3] Add visual time pressure indicator (clock turns red when <10 seconds)
+- [x] T173 [US3] Add timeout notification (modal showing "Time's up!")
+- [x] T174 [US3] Display rating change after game completion (+15, -12, etc.)
+- [x] T175 [US3] Update ProfilePage to show current ELO rating prominently
+- [x] T176 [US3] Add matchmaking timeout notification (after 5 minutes)
 
 ### Integration with US1 and US2
 
-- [ ] T177 [US3] Update Game entity to include time_control and game_type (casual/ranked)
-- [ ] T178 [US3] Ensure rated games only available to logged-in users (authentication check)
+- [x] T177 [US3] Update Game entity to include time_control and game_type (casual/ranked)
+- [x] T178 [US3] Ensure rated games only available to logged-in users (authentication check)
 
 ### Constitution Verification for US3
 
-- [ ] T179 [US3] Code review: Verify ELO algorithm correctness, clock accuracy
-- [ ] T180 [US3] Verify 100% test coverage for ELO calculation (critical business logic per NFR-007)
-- [ ] T181 [US3] Performance test: Verify clock updates <100ms latency
-- [ ] T182 [US3] Load test: 100 concurrent ranked games with clocks
-- [ ] T183 [US3] Run static analysis and fix warnings
+- [x] T179 [US3] Code review: Verify ELO algorithm correctness, clock accuracy
+- [x] T180 [US3] Verify 100% test coverage for ELO calculation (critical business logic per NFR-007)
+- [x] T181 [US3] Performance test: Verify clock updates <100ms latency
+- [x] T182 [US3] Load test: 100 concurrent ranked games with clocks
+- [x] T183 [US3] Run static analysis and fix warnings
 
 **Checkpoint**: Users can play competitive ranked games with ratings. All three core stories (P1, P2, P3) are complete.
 
@@ -332,34 +332,34 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Backend Tests for US4 (TDD - Write First)
 
-- [ ] T184 [P] [US4] Unit tests for Stockfish integration in backend/src/test/java/com/checkmate/chess/service/StockfishServiceTest.java
-- [ ] T185 [P] [US4] Unit tests for difficulty level configuration
-- [ ] T186 [P] [US4] Integration test for computer game creation endpoint
+- [x] T184 [P] [US4] Unit tests for Stockfish integration in backend/src/test/java/com/checkmate/chess/service/StockfishServiceTest.java
+- [x] T185 [P] [US4] Unit tests for difficulty level configuration
+- [x] T186 [P] [US4] Integration test for computer game creation endpoint
 
 ### Backend Implementation for US4
 
-- [ ] T187 [P] [US4] Research Stockfish integration options (Java UCI library or REST API)
-- [ ] T188 [US4] Implement StockfishService in backend/src/main/java/com/checkmate/chess/service/StockfishService.java (send position, get move, configure skill level)
-- [ ] T189 [US4] Add computer opponent endpoints to GameController (POST /api/games/computer)
-- [ ] T190 [US4] Implement difficulty level mapping (beginner: skill 1-5, intermediate: 10-15, advanced: 18-20)
-- [ ] T191 [US4] Implement computer move generation on player move (async, respond via WebSocket)
-- [ ] T192 [US4] Add 1-second timeout for computer moves (per NFR-017)
-- [ ] T193 [US4] Handle Stockfish errors gracefully (restart engine, notify user)
+- [x] T187 [P] [US4] Research Stockfish integration options (Java UCI library or REST API)
+- [x] T188 [US4] Implement StockfishService in backend/src/main/java/com/checkmate/chess/service/StockfishService.java (send position, get move, configure skill level)
+- [x] T189 [US4] Add computer opponent endpoints to GameController (POST /api/games/computer)
+- [x] T190 [US4] Implement difficulty level mapping (beginner: skill 1-5, intermediate: 10-15, advanced: 18-20)
+- [x] T191 [US4] Implement computer move generation on player move (async, respond via WebSocket)
+- [x] T192 [US4] Add 1-second timeout for computer moves (per NFR-017)
+- [x] T193 [US4] Handle Stockfish errors gracefully (restart engine, notify user)
 
 ### Frontend Implementation for US4
 
-- [ ] T194 [P] [US4] Create ComputerGamePage component in frontend/src/pages/ComputerGamePage.tsx
-- [ ] T195 [P] [US4] Create DifficultySelector component in frontend/src/components/computer/DifficultySelector.tsx (beginner, intermediate, advanced)
-- [ ] T196 [US4] Create computer game API calls in frontend/src/api/gameApi.ts
-- [ ] T197 [US4] Update useChessGame hook to handle computer responses via WebSocket
-- [ ] T198 [US4] Add "New Game" button on game end for quick restart against computer
-- [ ] T199 [US4] Add visual indicator when computer is "thinking"
+- [x] T194 [P] [US4] Create ComputerGamePage component in frontend/src/pages/ComputerGamePage.tsx
+- [x] T195 [P] [US4] Create DifficultySelector component in frontend/src/components/computer/DifficultySelector.tsx (beginner, intermediate, advanced)
+- [x] T196 [US4] Create computer game API calls in frontend/src/api/gameApi.ts
+- [x] T197 [US4] Update useChessGame hook to handle computer responses via WebSocket
+- [x] T198 [US4] Add "New Game" button on game end for quick restart against computer
+- [x] T199 [US4] Add visual indicator when computer is "thinking"
 
 ### Constitution Verification for US4
 
-- [ ] T200 [US4] Verify computer response time <1 second (99% of cases per SC-011)
-- [ ] T201 [US4] Verify test coverage ≥80% for Stockfish integration
-- [ ] T202 [US4] Code review and static analysis
+- [x] T200 [US4] Verify computer response time <1 second (99% of cases per SC-011)
+- [x] T201 [US4] Verify test coverage ≥80% for Stockfish integration
+- [x] T202 [US4] Code review and static analysis
 
 **Checkpoint**: Users can practice against computer. US1-US4 all independently functional.
 
@@ -373,33 +373,33 @@ description: "Implementation tasks for Chess Web Application"
 
 ### Backend Tests for US5 (TDD - Write First)
 
-- [ ] T203 [P] [US5] Unit tests for invitation code generation in backend/src/test/java/com/checkmate/chess/service/InvitationServiceTest.java
-- [ ] T204 [P] [US5] Integration test for create invitation endpoint
-- [ ] T205 [P] [US5] Integration test for join via invitation code
+- [x] T203 [P] [US5] Unit tests for invitation code generation in backend/src/test/java/com/checkmate/chess/service/InvitationServiceTest.java
+- [x] T204 [P] [US5] Integration test for create invitation endpoint
+- [x] T205 [P] [US5] Integration test for join via invitation code
 
 ### Backend Implementation for US5
 
-- [ ] T206 Create GameInvitation entity (already in schema from T016)
-- [ ] T207 [P] [US5] Create GameInvitationRepository
-- [ ] T208 [US5] Implement InvitationService (create unique codes, validate, expire after 10 minutes)
-- [ ] T209 [US5] Add invitation endpoints to GameController (POST /api/games/invite, POST /api/games/join/{code})
-- [ ] T210 [US5] Implement invitation expiration scheduler (runs every minute, expires old invitations)
-- [ ] T211 [US5] Validate invitation: check expiry, check not already joined, check capacity
+- [x] T206 Create GameInvitation entity (already in schema from T016)
+- [x] T207 [P] [US5] Create GameInvitationRepository
+- [x] T208 [US5] Implement InvitationService (create unique codes, validate, expire after 10 minutes)
+- [x] T209 [US5] Add invitation endpoints to GameController (POST /api/games/invite, POST /api/games/join/{code})
+- [x] T210 [US5] Implement invitation expiration scheduler (runs every minute, expires old invitations)
+- [x] T211 [US5] Validate invitation: check expiry, check not already joined, check capacity
 
 ### Frontend Implementation for US5
 
-- [ ] T212 [P] [US5] Create PrivateGamePage component in frontend/src/pages/PrivateGamePage.tsx
-- [ ] T213 [P] [US5] Create InvitationModal component in frontend/src/components/invite/InvitationModal.tsx (shows link, copy button)
-- [ ] T214 [US5] Implement invitation creation API call
-- [ ] T215 [US5] Implement "Copy Link" functionality with clipboard API
-- [ ] T216 [US5] Implement join via invitation code (extract from URL params)
-- [ ] T217 [US5] Add "Waiting for opponent" state while friend hasn't joined
-- [ ] T218 [US5] Add invitation expired notification
+- [x] T212 [P] [US5] Create PrivateGamePage component in frontend/src/pages/PrivateGamePage.tsx
+- [x] T213 [P] [US5] Create InvitationModal component in frontend/src/components/invite/InvitationModal.tsx (shows link, copy button)
+- [x] T214 [US5] Implement invitation creation API call
+- [x] T215 [US5] Implement "Copy Link" functionality with clipboard API
+- [x] T216 [US5] Implement join via invitation code (extract from URL params)
+- [x] T217 [US5] Add "Waiting for opponent" state while friend hasn't joined
+- [x] T218 [US5] Add invitation expired notification
 
 ### Constitution Verification for US5
 
-- [ ] T219 [US5] Verify test coverage ≥80%
-- [ ] T220 [US5] Code review and static analysis
+- [x] T219 [US5] Verify test coverage ≥80%
+- [x] T220 [US5] Code review and static analysis
 
 **Checkpoint**: Users can play private games with friends. US1-US5 all functional.
 

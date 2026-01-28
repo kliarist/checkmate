@@ -23,6 +23,13 @@ export const useChessGame = (gameId: string) => {
   const [materialScore, setMaterialScore] = useState(0);
   const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null);
   const [moveDetails, setMoveDetails] = useState<Array<{ from: string; to: string; notation: string }>>([]);
+  const [difficulty, setDifficulty] = useState<string | undefined>(undefined);
+  const [isViewingHistory, setIsViewingHistory] = useState(false);
+  const [pendingPromotion, setPendingPromotion] = useState<{ from: string; to: string } | null>(null);
+  const [whitePlayerInfo, setWhitePlayerInfo] = useState<any>(null);
+  const [blackPlayerInfo, setBlackPlayerInfo] = useState<any>(null);
+  const [gameType, setGameType] = useState<string>('');
+  const [currentTurn, setCurrentTurn] = useState<'white' | 'black'>('white');
 
   // WebSocket
   const { subscribe, send, isConnected } = useWebSocket();
@@ -32,6 +39,8 @@ export const useChessGame = (gameId: string) => {
   sendRef.current = send;
   const isConnectedRef = useRef(isConnected);
   isConnectedRef.current = isConnected;
+  const difficultyRef = useRef(difficulty);
+  difficultyRef.current = difficulty;
 
   // Track pending moves we've sent to avoid processing our own WebSocket echoes
   const pendingMoveRef = useRef<string | null>(null);
@@ -50,9 +59,11 @@ export const useChessGame = (gameId: string) => {
    * Handle moves received via WebSocket (from opponent or echoed back from our own move)
    */
   const handleWebSocketMove = useCallback((message: any) => {
+    console.log('[useChessGame] WebSocket move received:', message);
     const moveNotation = message.algebraicNotation;
 
     if (pendingMoveRef.current && moveNotation === pendingMoveRef.current) {
+      console.log('[useChessGame] Ignoring echo of our own move:', moveNotation);
       pendingMoveRef.current = null;
       if (message.fen && message.fen !== chessRef.current.fen()) {
         chessRef.current.load(message.fen);
@@ -61,9 +72,15 @@ export const useChessGame = (gameId: string) => {
       return;
     }
 
+    console.log('[useChessGame] Processing opponent move:', moveNotation);
+
     try {
       chessRef.current.load(message.fen);
       setFen(message.fen);
+      
+      // Update current turn
+      const fenParts = message.fen.split(' ');
+      setCurrentTurn(fenParts[1] === 'w' ? 'white' : 'black');
       
       // Try to extract move details from the message or by comparing positions
       const moveFrom = message.from;
@@ -76,11 +93,18 @@ export const useChessGame = (gameId: string) => {
         number: chessRef.current.moveNumber()
       }]);
 
+      // Update move history
+      setMoveHistory(prevHistory => [...prevHistory, message.fen]);
+      setCurrentMoveIndex(prev => prev + 1);
+
       // Track last move from WebSocket message
       if (moveFrom && moveTo) {
         setLastMove({ from: moveFrom, to: moveTo });
         setMoveDetails(prevDetails => [...prevDetails, { from: moveFrom, to: moveTo, notation: moveNotation }]);
       }
+
+      // Ensure we're not viewing history after receiving a new move
+      setIsViewingHistory(false);
 
       announceToScreenReader(`Opponent played ${moveNotation}`);
 
@@ -122,6 +146,15 @@ export const useChessGame = (gameId: string) => {
       const response = await apiClient.get(`/api/games/${gameId}`);
       const game = response.data.data;
       const loadedFen = game.currentFen;
+      
+      // Store player info
+      setWhitePlayerInfo(game.whitePlayer);
+      setBlackPlayerInfo(game.blackPlayer);
+      setGameType(game.gameType);
+      
+      // Determine current turn from FEN
+      const fenParts = loadedFen.split(' ');
+      setCurrentTurn(fenParts[1] === 'w' ? 'white' : 'black');
 
       try {
         const movesResponse = await apiClient.get(`/api/games/${gameId}/moves`);
@@ -166,12 +199,26 @@ export const useChessGame = (gameId: string) => {
       }
 
       const guestUserId = localStorage.getItem('guestUserId');
-      if (guestUserId) {
-        if (game.whitePlayerId === guestUserId) {
+      const userId = localStorage.getItem('userId');
+      
+      // Check both guest and regular user IDs to determine player color
+      const currentUserId = userId || guestUserId;
+      if (currentUserId) {
+        if (game.whitePlayerId === currentUserId) {
           setPlayerColor('white');
-        } else if (game.blackPlayerId === guestUserId) {
+        } else if (game.blackPlayerId === currentUserId) {
           setPlayerColor('black');
         }
+      }
+      
+      // For computer games, extract difficulty from timeControl field
+      if (game.gameType === 'COMPUTER') {
+        const loadedDifficulty = game.timeControl || 'intermediate'; // Default to intermediate if not set
+        console.log('[useChessGame] Computer game detected. timeControl:', game.timeControl, 'using difficulty:', loadedDifficulty);
+        setDifficulty(loadedDifficulty);
+        difficultyRef.current = loadedDifficulty; // Immediately update ref to ensure it's available
+      } else {
+        console.log('[useChessGame] Not a computer game:', { gameType: game.gameType });
       }
     } catch (err: any) {
       console.error('[useChessGame] Failed to load game:', err);
@@ -199,41 +246,86 @@ export const useChessGame = (gameId: string) => {
     return subscribe(`/topic/game/${gameId}/moves`, handleWebSocketMove);
   }, [gameId, isConnected, subscribe, handleWebSocketMove]);
 
-  const makeMove = useCallback((from: string, to: string): boolean => {
+  const makeMove = useCallback((from: string, to: string, promotion?: 'q' | 'r' | 'b' | 'n'): boolean => {
+    console.log('[useChessGame] makeMove called:', { from, to, promotion, isViewingHistory, difficulty });
+    
+    // Don't allow moves when viewing history
+    if (isViewingHistory) {
+      setError('Cannot make moves while viewing history. Click "Resume" to return to current position.');
+      setTimeout(() => setError(''), 3000);
+      return false;
+    }
+
     const chess = chessRef.current;
+
+    // Check if this is a promotion move
+    const piece = chess.get(from as any);
+    const isPromotion = piece?.type === 'p' && 
+      ((piece.color === 'w' && to[1] === '8') || (piece.color === 'b' && to[1] === '1'));
+
+    console.log('[useChessGame] Is promotion move:', isPromotion, 'piece:', piece, 'promotion param:', promotion);
+
+    // If it's a promotion and no piece selected, store the move and show dialog
+    if (isPromotion && !promotion) {
+      console.log('[useChessGame] Setting pending promotion');
+      setPendingPromotion({ from, to });
+      return false;
+    }
 
     try {
       let move = null;
       try {
-        move = chess.move({ from, to });
-      } catch {
-        try {
-          move = chess.move({ from, to, promotion: 'q' });
-        } catch (promotionError) {
-          console.error('[useChessGame] Invalid move with promotion:', promotionError);
-          return false;
-        }
+        move = chess.move({ from: from as any, to: to as any, promotion });
+        console.log('[useChessGame] Move executed:', move);
+      } catch (moveError) {
+        console.error('[useChessGame] Invalid move:', moveError);
+        return false;
       }
 
       if (!move) {
+        console.log('[useChessGame] Move returned null');
         return false;
       }
 
       const newFen = chess.fen();
       setFen(newFen);
+      
+      // Update current turn
+      const fenParts = newFen.split(' ');
+      setCurrentTurn(fenParts[1] === 'w' ? 'white' : 'black');
+      
       setMoves(prevMoves => [...prevMoves, { notation: move.san, number: chess.moveNumber() }]);
       setMoveHistory(prevHistory => [...prevHistory, newFen]);
       setMoveDetails(prevDetails => [...prevDetails, { from: move.from, to: move.to, notation: move.san }]);
       setCurrentMoveIndex(prev => prev + 1);
       setLastMove({ from: move.from, to: move.to });
       setError('');
+      
+      // Clear pending promotion BEFORE sending to server
+      // This ensures the dialog closes immediately
+      setPendingPromotion(null);
 
       announceToScreenReader(`You played ${move.san}`);
 
       if (isConnectedRef.current) {
         try {
+          // Ensure difficulty is never undefined - use 'intermediate' as fallback
+          const effectiveDifficulty = difficultyRef.current || difficulty || 'intermediate';
+          console.log('[useChessGame] Sending move to server:', { 
+            from, 
+            to, 
+            promotion: move.promotion, 
+            difficulty: effectiveDifficulty,
+            difficultyRef: difficultyRef.current,
+            difficultyState: difficulty
+          });
           pendingMoveRef.current = move.san;
-          sendRef.current(`/app/game/${gameId}/move`, { from, to, promotion: move.promotion || null });
+          sendRef.current(`/app/game/${gameId}/move`, { 
+            from, 
+            to, 
+            promotion: move.promotion || null,
+            difficulty: effectiveDifficulty
+          });
         } catch (e) {
           console.error('[useChessGame] Failed to send move:', e);
           pendingMoveRef.current = null;
@@ -272,7 +364,7 @@ export const useChessGame = (gameId: string) => {
       console.error('[useChessGame] Invalid move exception:', err);
       return false;
     }
-  }, [gameId, announceToScreenReader]);
+  }, [gameId, announceToScreenReader, isViewingHistory, difficulty]);
 
   // Calculate captured pieces and score based on current position in move history
   useEffect(() => {
@@ -348,6 +440,7 @@ export const useChessGame = (gameId: string) => {
       const targetFen = moveHistory[index + 1];
       chessRef.current.load(targetFen);
       setFen(targetFen);
+      setIsViewingHistory(index < moveHistory.length - 2);
 
       // Play sound for the move we're navigating to
       if (index >= 0 && index < moves.length) {
@@ -372,6 +465,7 @@ export const useChessGame = (gameId: string) => {
       const targetFen = moveHistory[newIndex + 1];
       chessRef.current.load(targetFen);
       setFen(targetFen);
+      setIsViewingHistory(newIndex < moveHistory.length - 2);
 
       // Play sound for the move we're navigating to
       if (newIndex >= 0 && newIndex < moves.length) {
@@ -396,6 +490,7 @@ export const useChessGame = (gameId: string) => {
       const targetFen = moveHistory[newIndex + 1];
       chessRef.current.load(targetFen);
       setFen(targetFen);
+      setIsViewingHistory(true);
 
       // Play sound for the move we're navigating to (or silence if going back to start)
       if (newIndex >= 0 && newIndex < moves.length) {
@@ -420,8 +515,20 @@ export const useChessGame = (gameId: string) => {
       const targetFen = moveHistory[moveHistory.length - 1];
       chessRef.current.load(targetFen);
       setFen(targetFen);
+      setIsViewingHistory(false);
     }
   }, [currentMoveIndex, moveHistory]);
+
+  const handlePromotionSelect = useCallback((piece: 'q' | 'r' | 'b' | 'n') => {
+    console.log('[useChessGame] Promotion selected:', piece, 'pendingPromotion:', pendingPromotion);
+    if (pendingPromotion) {
+      const success = makeMove(pendingPromotion.from, pendingPromotion.to, piece);
+      console.log('[useChessGame] Promotion move success:', success);
+      if (success) {
+        setPendingPromotion(null);
+      }
+    }
+  }, [pendingPromotion, makeMove]);
 
   return {
     fen,
@@ -443,5 +550,12 @@ export const useChessGame = (gameId: string) => {
     capturedByBlack,
     materialScore,
     lastMove,
+    isViewingHistory,
+    pendingPromotion,
+    handlePromotionSelect,
+    whitePlayerInfo,
+    blackPlayerInfo,
+    gameType,
+    currentTurn,
   };
 };

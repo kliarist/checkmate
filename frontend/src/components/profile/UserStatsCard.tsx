@@ -61,7 +61,7 @@ export const UserStatsCard: React.FC<UserStatsCardProps> = ({
           <div style={{
             fontSize: '2.5rem',
             fontWeight: 'bold',
-            color: '#4caf50',
+            color: '#c9a068',
             marginBottom: '0.5rem',
           }}>
             {wins}

@@ -1,19 +1,13 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
-import { ResignConfirmModal } from './ResignConfirmModal';
-import { CapturedPieces } from './CapturedPieces';
+import { Chess } from 'chess.js';
 
 interface ChessBoardProps {
   fen: string;
-  onMove: (from: string, to: string) => boolean;
+  onMove: (from: string, to: string, promotion?: 'q' | 'r' | 'b' | 'n') => boolean;
   playerColor?: 'white' | 'black';
-  onFlipBoard?: () => void;
-  onResign?: () => void;
-  onOfferDraw?: () => void;
-  capturedByWhite?: string[];
-  capturedByBlack?: string[];
-  materialScore?: number;
   lastMove?: { from: string; to: string } | null;
+  isViewingHistory?: boolean;
 }
 
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -23,20 +17,24 @@ export const ChessBoard = ({
   fen,
   onMove,
   playerColor = 'white',
-  onFlipBoard,
-  onResign,
-  onOfferDraw,
-  capturedByWhite = [],
-  capturedByBlack = [],
-  materialScore = 0,
   lastMove = null,
+  isViewingHistory = false,
 }: ChessBoardProps) => {
   const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>(playerColor);
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [optionSquares, setOptionSquares] = useState<Record<string, React.CSSProperties>>({});
-  const [showResignModal, setShowResignModal] = useState(false);
   const [focusedSquare, setFocusedSquare] = useState<string>('e2');
   const boardContainerRef = useRef<HTMLDivElement>(null);
+  const chessRef = useRef(new Chess());
+
+  // Update chess instance when FEN changes
+  useEffect(() => {
+    try {
+      chessRef.current.load(fen);
+    } catch (e) {
+      console.error('Failed to load FEN:', e);
+    }
+  }, [fen]);
 
   useEffect(() => {
     setBoardOrientation(playerColor);
@@ -121,57 +119,91 @@ export const ChessBoard = ({
     return () => container.removeEventListener('keydown', handleKeyDown as any);
   }, [handleKeyDown]);
 
-  const onSquareClick = useCallback((square: string) => {
+  const onSquareClick = useCallback(({ square }: any) => {
     if (selectedSquare) {
       const success = onMove(selectedSquare, square);
       if (success) {
         setSelectedSquare(null);
         setOptionSquares({});
       } else {
+        // Try selecting the new square instead
         setSelectedSquare(square);
-        setOptionSquares({
-          [square]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+        
+        // Get legal moves for the newly selected square
+        const moves = chessRef.current.moves({ square: square as any, verbose: true });
+        const newSquares: Record<string, React.CSSProperties> = {};
+        
+        // Highlight the selected square
+        newSquares[square] = { backgroundColor: 'rgba(255, 255, 0, 0.4)' };
+        
+        // Highlight legal move destinations
+        moves.forEach((move: any) => {
+          newSquares[move.to] = {
+            background: move.captured
+              ? 'radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)'
+              : 'radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)',
+            borderRadius: '50%',
+          };
         });
+        
+        setOptionSquares(newSquares);
       }
     } else {
       setSelectedSquare(square);
-      setOptionSquares({
-        [square]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+      
+      // Get legal moves for the selected square
+      const moves = chessRef.current.moves({ square: square as any, verbose: true });
+      const newSquares: Record<string, React.CSSProperties> = {};
+      
+      // Highlight the selected square
+      newSquares[square] = { backgroundColor: 'rgba(255, 255, 0, 0.4)' };
+      
+      // Highlight legal move destinations
+      moves.forEach((move: any) => {
+        newSquares[move.to] = {
+          background: move.captured
+            ? 'radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)'
+            : 'radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)',
+          borderRadius: '50%',
+        };
       });
+      
+      setOptionSquares(newSquares);
     }
   }, [selectedSquare, onMove]);
 
-  const onPieceDragBegin = useCallback((_piece: string, sourceSquare: string) => {
-    setSelectedSquare(sourceSquare);
-    setOptionSquares({
-      [sourceSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
-    });
+  const onPieceDragBegin = useCallback(({ square }: any) => {
+    if (square) {
+      setSelectedSquare(square);
+      
+      // Get legal moves for the selected square
+      const moves = chessRef.current.moves({ square: square as any, verbose: true });
+      const newSquares: Record<string, React.CSSProperties> = {};
+      
+      // Highlight the selected square
+      newSquares[square] = { backgroundColor: 'rgba(255, 255, 0, 0.4)' };
+      
+      // Highlight legal move destinations
+      moves.forEach((move: any) => {
+        newSquares[move.to] = {
+          background: move.captured
+            ? 'radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)'
+            : 'radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)',
+          borderRadius: '50%',
+        };
+      });
+      
+      setOptionSquares(newSquares);
+    }
   }, []);
 
-  const onPieceDrop = useCallback((sourceSquare: string, targetSquare: string): boolean => {
+  const onPieceDrop = useCallback(({ sourceSquare, targetSquare }: any): boolean => {
+    if (!targetSquare) return false;
     const success = onMove(sourceSquare, targetSquare);
     setSelectedSquare(null);
     setOptionSquares({});
     return success;
   }, [onMove]);
-
-  const handleFlipBoard = useCallback(() => {
-    setBoardOrientation((prev) => (prev === 'white' ? 'black' : 'white'));
-    onFlipBoard?.();
-  }, [onFlipBoard]);
-
-  const handleResignClick = useCallback(() => {
-    setShowResignModal(true);
-  }, []);
-
-  const handleResignConfirm = useCallback(() => {
-    setShowResignModal(false);
-    onResign?.();
-  }, [onResign]);
-
-  const handleResignCancel = useCallback(() => {
-    setShowResignModal(false);
-  }, []);
 
   const boardStyle = useMemo(() => ({
     borderRadius: '4px',
@@ -199,15 +231,6 @@ export const ChessBoard = ({
     
     return styles;
   }, [optionSquares, lastMove]);
-
-  // Determine which captured pieces to show at top and bottom
-  const topCaptured = boardOrientation === 'white'
-    ? { pieces: capturedByBlack, color: 'white' as const, score: materialScore < 0 ? -materialScore : undefined }
-    : { pieces: capturedByWhite, color: 'black' as const, score: materialScore > 0 ? materialScore : undefined };
-
-  const bottomCaptured = boardOrientation === 'white'
-    ? { pieces: capturedByWhite, color: 'black' as const, score: materialScore > 0 ? materialScore : undefined }
-    : { pieces: capturedByBlack, color: 'white' as const, score: materialScore < 0 ? -materialScore : undefined };
 
   return (
     <div
@@ -237,134 +260,25 @@ export const ChessBoard = ({
         style={{ position: 'absolute', left: '-9999px' }}
       />
 
-      {/* Top Left Captured Pieces */}
-      <div style={{ width: '700px', display: 'flex', justifyContent: 'flex-start', paddingLeft: '8px' }}>
-        <CapturedPieces
-          pieces={topCaptured.pieces}
-          pieceColor={topCaptured.color}
-          score={topCaptured.score}
-        />
-      </div>
-
       <Chessboard
-        position={fen}
-        boardOrientation={boardOrientation}
-        onSquareClick={onSquareClick}
-        onPieceDragBegin={onPieceDragBegin}
-        onPieceDrop={onPieceDrop}
-        customSquareStyles={customSquareStyles}
-        customBoardStyle={{
-          ...boardStyle,
-          width: '700px',
-          height: '700px',
+        key={fen}
+        options={{
+          position: fen,
+          boardOrientation: boardOrientation,
+          squareStyles: customSquareStyles,
+          boardStyle: {
+            ...boardStyle,
+            width: '700px',
+            height: '700px',
+          },
+          darkSquareStyle: darkSquareStyle,
+          lightSquareStyle: lightSquareStyle,
+          animationDurationInMs: 100,
+          allowDragging: !isViewingHistory,
+          onSquareClick: isViewingHistory ? undefined : onSquareClick,
+          onPieceDrag: isViewingHistory ? undefined : onPieceDragBegin,
+          onPieceDrop: isViewingHistory ? undefined : onPieceDrop,
         }}
-        customDarkSquareStyle={darkSquareStyle}
-        customLightSquareStyle={lightSquareStyle}
-        animationDuration={100}
-        arePiecesDraggable={true}
-      />
-
-      {/* Bottom Left Captured Pieces */}
-      <div style={{ width: '700px', display: 'flex', justifyContent: 'flex-start', paddingLeft: '8px' }}>
-        <CapturedPieces
-          pieces={bottomCaptured.pieces}
-          pieceColor={bottomCaptured.color}
-          score={bottomCaptured.score}
-        />
-      </div>
-
-      <fieldset
-        style={{
-          display: 'flex',
-          gap: '0.5rem',
-          justifyContent: 'center',
-          border: 'none',
-          padding: 0,
-          margin: 0,
-          marginTop: '0.5rem',
-        }}
-        aria-label="Game controls"
-      >
-        <button
-          onClick={handleFlipBoard}
-          title="Flip Board"
-          aria-label="Flip board orientation"
-          style={{
-            padding: '0.5rem',
-            width: '36px',
-            height: '36px',
-            backgroundColor: '#3a3a3a',
-            color: '#e0e0e0',
-            border: '2px solid transparent',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '1.1rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'all 0.2s',
-          }}
-          onFocus={(e) => e.currentTarget.style.borderColor = '#4a9eff'}
-          onBlur={(e) => e.currentTarget.style.borderColor = 'transparent'}
-        >
-          ⇅
-        </button>
-
-        <button
-          onClick={onOfferDraw}
-          title="Offer Draw"
-          aria-label="Offer draw to opponent"
-          style={{
-            padding: '0.5rem',
-            width: '36px',
-            height: '36px',
-            backgroundColor: '#3a3a3a',
-            color: '#e0e0e0',
-            border: '2px solid transparent',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '1.1rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'all 0.2s',
-          }}
-          onFocus={(e) => e.currentTarget.style.borderColor = '#4a9eff'}
-          onBlur={(e) => e.currentTarget.style.borderColor = 'transparent'}
-        >
-          🤝
-        </button>
-
-        <button
-          onClick={handleResignClick}
-          title="Resign"
-          aria-label="Resign from game"
-          style={{
-            padding: '0.5rem',
-            width: '36px',
-            height: '36px',
-            backgroundColor: '#f44336',
-            color: '#fff',
-            border: '2px solid transparent',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '1.1rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'all 0.2s',
-          }}
-          onFocus={(e) => e.currentTarget.style.borderColor = '#4a9eff'}
-          onBlur={(e) => e.currentTarget.style.borderColor = 'transparent'}
-        >
-          🏳
-        </button>
-      </fieldset>
-
-      <ResignConfirmModal
-        isOpen={showResignModal}
-        onConfirm={handleResignConfirm}
-        onCancel={handleResignCancel}
       />
     </div>
   );

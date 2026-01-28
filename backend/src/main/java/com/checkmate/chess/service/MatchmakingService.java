@@ -50,6 +50,9 @@ public class MatchmakingService {
    */
   @Transactional
   public void joinQueue(UUID userId, String timeControl) {
+    // Validate time control
+    validateTimeControl(timeControl);
+    
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -62,6 +65,26 @@ public class MatchmakingService {
 
     logger.info("User {} joined {} queue with rating {}", 
         user.getUsername(), timeControl, user.getEloRating());
+  }
+
+  /**
+   * Validate time control format.
+   * Valid formats: bullet, blitz, rapid, classical
+   *
+   * @param timeControl the time control to validate
+   * @throws IllegalArgumentException if invalid
+   */
+  private void validateTimeControl(String timeControl) {
+    if (timeControl == null || timeControl.trim().isEmpty()) {
+      throw new IllegalArgumentException("Time control cannot be null or empty");
+    }
+    
+    String normalized = timeControl.toLowerCase().trim();
+    if (!List.of("bullet", "blitz", "rapid", "classical").contains(normalized)) {
+      throw new IllegalArgumentException(
+          "Invalid time control: " + timeControl + 
+          ". Must be one of: bullet, blitz, rapid, classical");
+    }
   }
 
   /**

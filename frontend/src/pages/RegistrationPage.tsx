@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RegistrationForm } from '../components/auth/RegistrationForm';
 import apiClient from '../api/client';
+import { menuStyles } from '../styles/menuStyles';
 
-// Rook SVG logo component - same as splash screen
+// Rook SVG logo component - same as landing page
 const RookLogo = () => (
-  <svg width="60" height="60" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
+  <svg width="80" height="80" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
     <g fill="none" fillRule="evenodd" stroke="#b58863" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z" fill="#b58863"/>
       <path d="M 12,36 L 12,32 L 33,32 L 33,36 L 12,36 z" fill="#b58863"/>
@@ -21,6 +22,16 @@ export const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
+
+  // Check if user is already logged in
+  const isLoggedIn = !!localStorage.getItem('token');
+  const userName = localStorage.getItem('username');
+  const userEmail = localStorage.getItem('userEmail');
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
 
   const handleRegister = async (email: string, username: string, password: string) => {
     setError('');
@@ -52,24 +63,56 @@ export const RegistrationPage: React.FC = () => {
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#242424',
-      margin: 0,
-      padding: '2rem',
-    }}>
-      <div style={{
-        maxWidth: '400px',
-        width: '100%',
-      }}>
+    <div style={menuStyles.container}>
+      {/* User info bar at top if logged in */}
+      {isLoggedIn && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          padding: '1rem 2rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+        }}>
+          <span style={{ color: '#e0e0e0' }}>
+            {userName || userEmail}
+          </span>
+          <button
+            onClick={() => navigate('/profile')}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#3a3a3a',
+              color: '#e0e0e0',
+              border: '1px solid #4a4a4a',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+            }}
+          >
+            Profile
+          </button>
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: 'transparent',
+              color: '#999',
+              border: '1px solid #3a3a3a',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      )}
+
+      <button onClick={() => navigate('/')} style={menuStyles.backButton}>
+        ← Back
+      </button>
+      <div style={{ ...menuStyles.card, maxWidth: '400px' }}>
         <div style={{ 
           display: 'flex', 
           justifyContent: 'center',
@@ -91,25 +134,14 @@ export const RegistrationPage: React.FC = () => {
         </h1>
 
         <h2 style={{
-          textAlign: 'center',
-          marginBottom: '2rem',
-          color: '#e0e0e0',
+          ...menuStyles.title,
           fontSize: '1.2rem',
-          fontWeight: '400',
         }}>
           Create Account
         </h2>
 
         {error && (
-          <div style={{
-            padding: '0.75rem',
-            marginBottom: '1rem',
-            backgroundColor: 'rgba(255, 107, 107, 0.1)',
-            color: '#ff6b6b',
-            border: '1px solid rgba(255, 107, 107, 0.3)',
-            borderRadius: '4px',
-            fontSize: '0.9rem',
-          }}>
+          <div style={menuStyles.errorBox}>
             {error}
           </div>
         )}
@@ -130,22 +162,6 @@ export const RegistrationPage: React.FC = () => {
             }}
           >
             Sign In
-          </a>
-        </p>
-
-        <p style={{
-          textAlign: 'center',
-          marginTop: '1rem',
-        }}>
-          <a
-            href="/"
-            style={{
-              color: '#666',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-            }}
-          >
-            ← Back to Home
           </a>
         </p>
       </div>

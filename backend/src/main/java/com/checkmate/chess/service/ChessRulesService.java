@@ -1,10 +1,11 @@
 package com.checkmate.chess.service;
 
+import org.springframework.stereotype.Service;
+
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChessRulesService {
@@ -16,9 +17,16 @@ public class ChessRulesService {
 
       final Square fromSquare = Square.valueOf(from.toUpperCase());
       final Square toSquare = Square.valueOf(to.toUpperCase());
-      final Move move = new Move(fromSquare, toSquare);
 
-      return board.legalMoves().contains(move);
+      // For promotion moves, we need to check if ANY promotion move from->to is legal
+      // because the promotion piece will be specified separately
+      for (final Move legalMove : board.legalMoves()) {
+        if (legalMove.getFrom().equals(fromSquare) && legalMove.getTo().equals(toSquare)) {
+          return true;
+        }
+      }
+
+      return false;
     } catch (Exception e) {
       return false;
     }
@@ -86,6 +94,16 @@ public class ChessRulesService {
       return board.isKingAttacked();
     } catch (Exception e) {
       return false;
+    }
+  }
+
+  public String getCurrentTurn(final String fen) {
+    try {
+      final Board board = new Board();
+      board.loadFromFen(fen);
+      return board.getSideToMove().name().toLowerCase();
+    } catch (Exception e) {
+      return "white";
     }
   }
 

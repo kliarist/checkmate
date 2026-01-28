@@ -1,0 +1,76 @@
+.time-control-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+  max-width: 900px;
+}
+
+.time-control-card {
+  background: #3d3d3d;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.time-control-card:hover:not(.disabled) {
+  border-color: #8b6f47;
+  background: #4a4a4a;
+  transform: translateY(-2px);
+}
+
+.time-control-card.selected {
+  border-color: #c9a068;
+  background: #b58863;
+}
+
+.time-control-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.time-control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.time-control-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #e0e0e0;
+}
+
+.time-control-time {
+  font-weight: 600;
+  color: #c9a068;
+  font-size: 0.9rem;
+}
+
+.time-control-card.selected .time-control-time {
+  color: #fff;
+}
+
+.time-control-card.selected .time-control-header h3 {
+  color: #fff;
+}
+
+.time-control-description {
+  margin: 0;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.time-control-card.selected .time-control-description {
+  color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .time-control-selector {
+    grid-template-columns: 1fr;
+  }
+}

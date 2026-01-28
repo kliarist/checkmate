@@ -201,17 +201,12 @@ public class ChessClockService {
    * Get increment for time control.
    */
   private Long getIncrementForTimeControl(String timeControl) {
-    switch (timeControl) {
-      case "bullet":
-        return 0L; // No increment for bullet
-      case "blitz":
-        return 2000L; // 2 seconds
-      case "rapid":
-        return 5000L; // 5 seconds
-      case "classical":
-        return 30000L; // 30 seconds
-      default:
-        return 0L;
-    }
+    return switch (timeControl) {
+      case "bullet" -> 0L; // No increment for bullet
+      case "blitz" -> 2000L; // 2 seconds
+      case "rapid" -> 5000L; // 5 seconds
+      case "classical" -> 30000L; // 30 seconds
+      default -> 0L;
+    };
   }
 }

@@ -241,6 +241,57 @@ class MatchmakingServiceTest {
     verify(gameRepository).save(any(Game.class));
   }
 
+  @Test
+  @DisplayName("Should reject invalid time control")
+  void testRejectInvalidTimeControl() {
+    // When/Then
+    org.junit.jupiter.api.Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () -> matchmakingService.joinQueue(player1Id, "invalid")
+    );
+  }
+
+  @Test
+  @DisplayName("Should reject null time control")
+  void testRejectNullTimeControl() {
+    // When/Then
+    org.junit.jupiter.api.Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () -> matchmakingService.joinQueue(player1Id, null)
+    );
+  }
+
+  @Test
+  @DisplayName("Should reject empty time control")
+  void testRejectEmptyTimeControl() {
+    // When/Then
+    org.junit.jupiter.api.Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () -> matchmakingService.joinQueue(player1Id, "")
+    );
+  }
+
+  @Test
+  @DisplayName("Should accept valid time controls: bullet, blitz, rapid, classical")
+  void testAcceptValidTimeControls() {
+    // Given
+    when(userRepository.findById(player1Id)).thenReturn(Optional.of(player1));
+
+    // When/Then: All valid time controls should work
+    org.junit.jupiter.api.Assertions.assertDoesNotThrow(
+        () -> matchmakingService.joinQueue(player1Id, "bullet")
+    );
+    org.junit.jupiter.api.Assertions.assertDoesNotThrow(
+        () -> matchmakingService.joinQueue(player1Id, "blitz")
+    );
+    org.junit.jupiter.api.Assertions.assertDoesNotThrow(
+        () -> matchmakingService.joinQueue(player1Id, "rapid")
+    );
+    org.junit.jupiter.api.Assertions.assertDoesNotThrow(
+        () -> matchmakingService.joinQueue(player1Id, "classical")
+    );
+  }
+
   private MatchmakingQueue createQueueEntry(UUID userId, int rating, String timeControl) {
     MatchmakingQueue queue = new MatchmakingQueue();
     queue.setId(UUID.randomUUID());

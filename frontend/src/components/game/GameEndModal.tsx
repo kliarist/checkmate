@@ -1,24 +1,48 @@
 import { Modal, ModalButton } from '../common/Modal';
+import './GameEndModal.css';
 
 interface GameEndModalProps {
   result: string;
-  onClose: () => void;
+  ratingChange?: number;
+  isRanked?: boolean;
+  onPlayAgain: () => void;
+  onGoToMenu: () => void;
 }
 
-export const GameEndModal = ({ result, onClose }: GameEndModalProps) => {
+export const GameEndModal = ({ 
+  result, 
+  ratingChange, 
+  isRanked = false, 
+  onPlayAgain,
+  onGoToMenu 
+}: GameEndModalProps) => {
   return (
     <Modal
       isOpen={true}
-      onClose={onClose}
+      onClose={onGoToMenu}
       title="Game Over"
       actions={
-        <ModalButton onClick={onClose} variant="primary">
-          Play Again
-        </ModalButton>
+        <>
+          <ModalButton onClick={onGoToMenu} variant="secondary">
+            Go to Menu
+          </ModalButton>
+          <ModalButton onClick={onPlayAgain} variant="primary">
+            Play Again
+          </ModalButton>
+        </>
       }
     >
-      <div style={{ textAlign: 'center', fontSize: '1.25rem', padding: '1rem 0' }}>
-        {result}
+      <div className="game-end-content">
+        <div className="game-result">{result}</div>
+        
+        {isRanked && ratingChange !== undefined && (
+          <div className="rating-change-container">
+            <div className="rating-change-label">Rating Change</div>
+            <div className={`rating-change ${ratingChange >= 0 ? 'positive' : 'negative'}`}>
+              {ratingChange >= 0 ? '+' : ''}{ratingChange}
+            </div>
+          </div>
+        )}
       </div>
     </Modal>
   );

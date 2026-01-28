@@ -1,11 +1,15 @@
 package com.checkmate.chess.service;
 
-import com.checkmate.chess.model.User;
-import com.checkmate.chess.repository.UserRepository;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.checkmate.chess.exception.ResourceNotFoundException;
+import com.checkmate.chess.model.User;
+import com.checkmate.chess.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,11 @@ public class GuestService {
 
     final User guest = User.createGuest(guestUsername);
     return userRepository.save(guest);
+  }
+
+  public User findById(final UUID userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
   }
 }
 

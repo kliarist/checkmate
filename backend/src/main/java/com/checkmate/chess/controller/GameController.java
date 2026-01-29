@@ -39,6 +39,7 @@ public class GameController {
   private final GameService gameService;
   private final InvitationService invitationService;
   private final UserService userService;
+  private final PgnService pgnService;
 
   @PostMapping("/guest")
   public ResponseEntity<SuccessResponse<CreateGuestGameResponse>> createGuestGame(
@@ -121,6 +122,17 @@ public class GameController {
     );
     
     return ResponseEntity.ok(new SuccessResponse<>("Joined game successfully", response));
+  }
+
+  @GetMapping("/{gameId}/pgn")
+  public ResponseEntity<String> exportPgn(@PathVariable final UUID gameId) {
+    final Game game = gameService.getGame(gameId);
+    final String pgn = pgnService.generatePgn(game);
+    
+    return ResponseEntity.ok()
+        .header("Content-Type", "application/x-chess-pgn")
+        .header("Content-Disposition", "attachment; filename=\"game-" + gameId + ".pgn\"")
+        .body(pgn);
   }
 }
 

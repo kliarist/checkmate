@@ -19,9 +19,6 @@ export const PlayerInfo: React.FC<PlayerInfoProps> = ({
   capturedPieces,
   materialAdvantage,
 }) => {
-  // Debug logging
-  console.log('[PlayerInfo]', { username, color, capturedPieces, materialAdvantage });
-  
   // Generate avatar based on whether it's a computer or human
   const getAvatar = () => {
     if (isComputer) {

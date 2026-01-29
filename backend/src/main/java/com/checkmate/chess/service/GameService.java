@@ -156,6 +156,11 @@ public class GameService {
         blackPlayerInfo);
   }
 
+  @Transactional(readOnly = true)
+  public Game getGame(final UUID gameId) {
+    return findById(gameId);
+  }
+
   public List<MoveDto> getGameMoves(final UUID gameId) {
     final Game game = findById(gameId);
     return moveService.getGameMovesAsDto(game);

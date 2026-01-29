@@ -36,3 +36,19 @@ export const createGuestGame = async (
   const response = await apiClient.post('/api/games/guest', request);
   return response.data.data;
 };
+
+export const downloadPgn = async (gameId: string): Promise<void> => {
+  const response = await apiClient.get(`/api/games/${gameId}/pgn`, {
+    responseType: 'blob',
+  });
+  
+  const blob = new Blob([response.data], { type: 'application/x-chess-pgn' });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `game-${gameId}.pgn`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+};

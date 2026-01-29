@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/client';
+import { downloadPgn } from '../../api/gameApi';
 
 interface Game {
   id: string;
@@ -69,6 +70,15 @@ export const GameHistoryList: React.FC<GameHistoryListProps> = ({ userId }) => {
     });
   };
 
+  const handleExportPgn = async (e: React.MouseEvent, gameId: string) => {
+    e.stopPropagation();
+    try {
+      await downloadPgn(gameId);
+    } catch (err) {
+      console.error('Failed to export PGN:', err);
+    }
+  };
+
   if (loading && page === 0) {
     return <div style={{ color: '#999' }}>Loading games...</div>;
   }
@@ -120,14 +130,36 @@ export const GameHistoryList: React.FC<GameHistoryListProps> = ({ userId }) => {
                 </div>
               </div>
 
-              <div style={{
-                padding: '0.5rem 1rem',
-                borderRadius: '4px',
-                backgroundColor: result.color + '20',
-                color: result.color,
-                fontWeight: '600',
-              }}>
-                {result.text}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                {game.status === 'COMPLETED' && (
+                  <button
+                    onClick={(e) => handleExportPgn(e, game.id)}
+                    style={{
+                      padding: '0.5rem 0.75rem',
+                      backgroundColor: '#2a2a2a',
+                      color: '#c9a068',
+                      border: '1px solid #444',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '0.85rem',
+                      fontWeight: '600',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#333'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2a2a2a'}
+                  >
+                    Export PGN
+                  </button>
+                )}
+                <div style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: '4px',
+                  backgroundColor: result.color + '20',
+                  color: result.color,
+                  fontWeight: '600',
+                }}>
+                  {result.text}
+                </div>
               </div>
             </div>
           );

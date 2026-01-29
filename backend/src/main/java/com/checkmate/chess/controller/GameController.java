@@ -27,6 +27,7 @@ import com.checkmate.chess.model.Game;
 import com.checkmate.chess.model.GameInvitation;
 import com.checkmate.chess.service.GameService;
 import com.checkmate.chess.service.InvitationService;
+import com.checkmate.chess.service.PgnService;
 import com.checkmate.chess.service.UserService;
 
 import lombok.RequiredArgsConstructor;

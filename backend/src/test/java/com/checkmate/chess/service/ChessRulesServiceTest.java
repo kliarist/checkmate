@@ -2,7 +2,6 @@ package com.checkmate.chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -207,6 +206,68 @@ class ChessRulesServiceTest {
     final boolean isValid = chessRulesService.isLegalMove(fen, "e5", "d6");
 
     assertThat(isValid).isTrue();
+  }
+
+  @Test
+  @DisplayName("Should detect threefold repetition")
+  void shouldDetectThreefoldRepetition() {
+    final String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    final java.util.List<String> history = java.util.Arrays.asList(
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    );
+
+    final boolean result = chessRulesService.isThreefoldRepetition(fen, history);
+
+    assertThat(result).isTrue();
+  }
+
+  @Test
+  @DisplayName("Should not detect threefold repetition with only two occurrences")
+  void shouldNotDetectThreefoldRepetitionWithTwoOccurrences() {
+    final String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    final java.util.List<String> history = java.util.Arrays.asList(
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    );
+
+    final boolean result = chessRulesService.isThreefoldRepetition(fen, history);
+
+    assertThat(result).isFalse();
+  }
+
+  @Test
+  @DisplayName("Should detect fifty-move rule")
+  void shouldDetectFiftyMoveRule() {
+    final String fen = "8/8/8/8/8/4k3/4K3/8 w - - 100 75";
+
+    final boolean result = chessRulesService.isFiftyMoveRule(fen);
+
+    assertThat(result).isTrue();
+  }
+
+  @Test
+  @DisplayName("Should not detect fifty-move rule with less than 100 halfmoves")
+  void shouldNotDetectFiftyMoveRuleWithLessThan100Halfmoves() {
+    final String fen = "8/8/8/8/8/4k3/4K3/8 w - - 50 50";
+
+    final boolean result = chessRulesService.isFiftyMoveRule(fen);
+
+    assertThat(result).isFalse();
+  }
+
+  @Test
+  @DisplayName("Should not detect fifty-move rule at starting position")
+  void shouldNotDetectFiftyMoveRuleAtStartingPosition() {
+    final String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+    final boolean result = chessRulesService.isFiftyMoveRule(fen);
+
+    assertThat(result).isFalse();
   }
 }
 

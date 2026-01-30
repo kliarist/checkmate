@@ -194,4 +194,67 @@ public class ChessRulesService {
       return from + to;
     }
   }
+
+  /**
+   * Check if the current position has occurred three times (threefold repetition).
+   * 
+   * @param fen The current FEN position
+   * @param positionHistory List of all FEN positions in the game
+   * @return true if threefold repetition has occurred
+   */
+  public boolean isThreefoldRepetition(final String fen, final java.util.List<String> positionHistory) {
+    if (positionHistory == null || positionHistory.isEmpty()) {
+      return false;
+    }
+
+    // Extract just the position part of FEN (ignore move counters)
+    final String currentPosition = extractPosition(fen);
+    
+    int count = 0;
+    for (final String historicalFen : positionHistory) {
+      if (extractPosition(historicalFen).equals(currentPosition)) {
+        count++;
+        if (count >= 3) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Check if the fifty-move rule applies (50 moves without capture or pawn move).
+   * 
+   * @param fen The current FEN position
+   * @return true if fifty-move rule applies
+   */
+  public boolean isFiftyMoveRule(final String fen) {
+    try {
+      final Board board = new Board();
+      board.loadFromFen(fen);
+      
+      // The halfmove clock is the 5th field in FEN notation
+      final String[] fenParts = fen.split(" ");
+      if (fenParts.length >= 5) {
+        final int halfmoveClock = Integer.parseInt(fenParts[4]);
+        return halfmoveClock >= 100; // 100 half-moves = 50 full moves
+      }
+      
+      return false;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * Extract the position part of FEN (first 4 fields, ignoring move counters).
+   */
+  private String extractPosition(final String fen) {
+    final String[] parts = fen.split(" ");
+    if (parts.length >= 4) {
+      return String.join(" ", parts[0], parts[1], parts[2], parts[3]);
+    }
+    return fen;
+  }
 }
